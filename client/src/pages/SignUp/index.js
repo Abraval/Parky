@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 
+
 class SignUp extends Component {
   constructor() {
     super();
@@ -41,7 +42,9 @@ class SignUp extends Component {
         console.log(response);
         if (!response.data.errmsg) {
           console.log("successful signup");
-          this.setState((window.location.href = "/main"));
+          this.setState(
+            window.location.href = "/main"
+          );
         } else {
           console.log("username already taken");
         }
