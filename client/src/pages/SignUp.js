@@ -41,10 +41,9 @@ class SignUp extends Component {
         console.log(response);
         if (!response.data.errmsg) {
           console.log("successful signup");
-          this.setState({
-            //redirect to login page
-            redirectTo: "/login"
-          });
+          this.setState(
+            window.location.href = "/main"
+          );
         } else {
           console.log("username already taken");
         }
