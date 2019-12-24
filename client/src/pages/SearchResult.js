@@ -8,7 +8,6 @@ state = {
 };
 
 
-
 componentDidMount() {
     this.renderMap();
 }
