@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 mongoose.Promise = global.Promise
 
-const uri = (process.env.MONGODB_URI || "mongodb://localhost/ghostwriter")
+const uri = (process.env.MONGODB_URI || "mongodb://localhost/parky")
 
 mongoose.connect(uri).then(
     () => { 
