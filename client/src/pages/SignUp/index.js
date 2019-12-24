@@ -43,7 +43,7 @@ class SignUp extends Component {
         if (!response.data.errmsg) {
           console.log("successful signup");
           this.setState(
-            window.location.href = "/main"
+            window.location.href = "/"
           );
         } else {
           console.log("username already taken");
