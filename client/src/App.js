@@ -9,6 +9,8 @@ import Main from "./pages/Main/index";
 import AddListing from "./pages/AddListing";
 import Profile from "./pages/Profile";
 
+
+
 import SearchResult from "./pages/SearchResult/SearchResult";
 
 class App extends Component {
