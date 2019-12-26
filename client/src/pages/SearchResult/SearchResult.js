@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import "./style.css";
+import axios from "axios";
 // import Map from "../components/Map";
 
 class SearchResult extends Component {
   state = {
-    addressQuery: ""
+    addressQuery: "",
+    latitude: 39.952583,
+    longitude: -75.165222
   };
 
   componentDidMount() {
@@ -40,25 +43,57 @@ class SearchResult extends Component {
 
   initMap = () => {
     var map = new window.google.maps.Map(document.getElementById("map"), {
-      center: { lat: -34.397, lng: 150.644 },
-      zoom: 8
+      center: { lat: this.state.latitude, lng: this.state.longitude },
+      zoom: 16
+    });
+
+    // Create An InfoWindow
+    var infowindow = new window.google.maps.InfoWindow();
+
+    // We will need to change this
+    var contentString = this.state.address;
+
+    var marker = new window.google.maps.Marker({
+      position: {
+        lat: this.state.latitude,
+        lng: this.state.longitude
+      },
+      map: map
+    });
+
+    // Click on A Marker!
+    marker.addListener("click", function() {
+      // Change the content
+      infowindow.setContent(contentString);
+
+      // Open An InfoWindow
+      infowindow.open(map, marker);
     });
   };
 
-  // getAddress = async () => {
+  getAddress = async () => {
+    console.log("a string");
+    let location = this.state.addressQuery;
+    console.log(location);
 
-  //     // axios.get("https://maps.googleapis.com/maps/api/geocode/json",{
-  //     //     params:{
-  //     //         address:location,
-  //     //         key: "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo"
-  //     //     }
-  //     // }).then(function(response) {
+    axios
+      .get("https://maps.googleapis.com/maps/api/geocode/json", {
+        params: {
+          address: location,
+          key: "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo"
+        }
+      })
+      .then(response => {
+        console.log("Response data is", response.data);
+        var latitude = response.data.results[0].geometry.location.lat;
+        console.log("latitude: " + latitude);
 
-  //     // console.log("Response data is", response.data);
-
-  //     // });
-
-  // }
+        var longitude = response.data.results[0].geometry.location.lng;
+        console.log("longitude: " + longitude);
+        this.setState({ latitude: latitude, longitude: longitude });
+        this.renderMap();
+      });
+  };
 
   render() {
     console.log(this.state);
