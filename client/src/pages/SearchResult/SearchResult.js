@@ -46,6 +46,29 @@ class SearchResult extends Component {
       center: { lat: this.state.latitude, lng: this.state.longitude },
       zoom: 16
     });
+
+    // Create An InfoWindow
+    var infowindow = new window.google.maps.InfoWindow();
+
+    // We will need to change this
+    var contentString = this.state.address;
+
+    var marker = new window.google.maps.Marker({
+      position: {
+        lat: this.state.latitude,
+        lng: this.state.longitude
+      },
+      map: map
+    });
+
+    // Click on A Marker!
+    marker.addListener("click", function() {
+      // Change the content
+      infowindow.setContent(contentString);
+
+      // Open An InfoWindow
+      infowindow.open(map, marker);
+    });
   };
 
   getAddress = async () => {
