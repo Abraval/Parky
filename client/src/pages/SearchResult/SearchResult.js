@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./style.css";
+import axios from "axios";
 // import Map from "../components/Map";
 
 class SearchResult extends Component {
@@ -45,20 +46,26 @@ class SearchResult extends Component {
     });
   };
 
-  // getAddress = async () => {
+  getAddress = async () => {
+    console.log("a string");
+    let location = this.state.addressQuery;
+    console.log(location);
 
-  //     // axios.get("https://maps.googleapis.com/maps/api/geocode/json",{
-  //     //     params:{
-  //     //         address:location,
-  //     //         key: "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo"
-  //     //     }
-  //     // }).then(function(response) {
-
-  //     // console.log("Response data is", response.data);
-
-  //     // });
-
-  // }
+    axios
+      .get("https://maps.googleapis.com/maps/api/geocode/json", {
+        params: {
+          address: location,
+          key: "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo"
+        }
+      })
+      .then(function(response) {
+        console.log("Response data is", response.data);
+        var latitude = response.data.results[0].geometry.location.lat;
+        console.log("latitude: " + latitude);
+        var longitude = response.data.results[0].geometry.location.lng;
+        console.log("longitude: " + longitude);
+      });
+  };
 
   render() {
     console.log(this.state);
