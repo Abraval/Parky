@@ -4,11 +4,13 @@ const session = require("express-session");
 const dbConnection = require("./client/dbconnection");
 const MongoStore = require("connect-mongo")(session);
 const passport = require("./client/src/utils/passport");
-// const routes = require("./routes/api");
+// const routes = require("./routes/api"); uncomment
 const mongoose = require("mongoose");
 const app = express();
 const PORT = process.env.PORT || 3001;
 const user = require("./routes/user");
+// const listing = require("./routes/api/listing");
+
 
 // Define middleware here
 app.use(express.urlencoded({ extended: true }));
@@ -37,8 +39,10 @@ app.use(passport.initialize());
 app.use(passport.session()); // calls serializeUser and deserializeUser
 
 // Add routes, both API and view
-// app.use("/api", routes);
+
+// app.use("/api", routes); uncomment 
 app.use("/user", user);
+
 
 // Connect to the Mongo DB
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/parky", {
