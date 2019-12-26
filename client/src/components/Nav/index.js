@@ -1,14 +1,60 @@
-import React from "react";
+import React, { Component } from 'react'
+import { Redirect, Link } from 'react-router-dom'
+import axios from 'axios'
 import "./style.css";
 
-function Nav() {
-  return (
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/main">
+
+class Nav extends Component {
+  constructor() {
+    super()
+    this.logout = this.logout.bind(this)
+    this.state = {
+      redirect: false,
+      user: {}
+    }
+  }
+
+  componentDidMount() {
+    this.userInfo()
+      .then(response => this.setState({
+        user: response.data.user
+      }, () =>
+        this.tester()));
+  };
+
+  tester() {
+    console.log(this.state.user);
+  };
+
+  userInfo() {
+    return axios.get('/user/');
+  };
+
+  logout(event) {
+    event.preventDefault()
+    console.log('logging out')
+    axios.post('/user/logout').then(response => {
+      console.log(response.data)
+      this.setState({ redirect: true })
+    }).catch(error => {
+      console.log('Logout error')
+    })
+  }
+
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      return <Redirect to="/" />
+    }
+  }
+
+render(){
+return(
+    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <a className="navbar-brand" href="/main">
         PARKY
       </a>
       <button
-        class="navbar-toggler"
+        className="navbar-toggler"
         type="button"
         data-toggle="collapse"
         data-target="#navbarColor03"
@@ -16,29 +62,30 @@ function Nav() {
         aria-expanded="false"
         aria-label="Toggle navigation"
       >
-        <span class="navbar-toggler-icon"></span>
+        <span className="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarColor03">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/main">
-              Search<span class="sr-only">(current)</span>
+      <div className="collapse navbar-collapse" id="navbarColor03">
+        <ul className="navbar-nav ml-auto">
+          <li className="nav-item active">
+            <a className="nav-link" href="/main">
+              Search<span className="sr-only">(current)</span>
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/addlisting">
+          <li className="nav-item">
+            <a className="nav-link" href="/addlisting">
               Add Listing
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/profile">
+          <li className="nav-item">
+            <a className="nav-link" href="/profile">
               Profile
             </a>
           </li>
+          {this.renderRedirect()}
           <li className="nav-item ">
           <a
-            className="btn nav-link border"
+            className="btn nav-link border" onClick={this.logout}
             href="/"
           >
             LogOut
@@ -47,6 +94,7 @@ function Nav() {
         </ul>
       </div>
     </nav>
-  );
+)
+}
 }
 export default Nav;

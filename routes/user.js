@@ -34,7 +34,7 @@ router.post('/', (req, res) => {
 })
 
 router.post(
-    '/signin',
+    '/login',
     function (req, res, next) {
         console.log(req.body)
         next()
