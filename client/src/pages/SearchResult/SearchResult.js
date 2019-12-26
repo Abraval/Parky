@@ -60,12 +60,15 @@ class SearchResult extends Component {
           key: "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo"
         }
       })
-      .then(function(response) {
+      .then(response => {
         console.log("Response data is", response.data);
         var latitude = response.data.results[0].geometry.location.lat;
         console.log("latitude: " + latitude);
+
         var longitude = response.data.results[0].geometry.location.lng;
         console.log("longitude: " + longitude);
+        this.setState({ latitude: latitude, longitude: longitude });
+        this.renderMap();
       });
   };
 
