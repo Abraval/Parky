@@ -46,6 +46,14 @@ class SearchResult extends Component {
       center: { lat: this.state.latitude, lng: this.state.longitude },
       zoom: 16
     });
+
+    var marker = new window.google.maps.Marker({
+      position: {
+        lat: this.state.latitude,
+        lng: this.state.longitude
+      },
+      map: map
+    });
   };
 
   getAddress = async () => {
