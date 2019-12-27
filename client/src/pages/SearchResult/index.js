@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Nav from "../../components/Nav";
 import "./style.css";
 import axios from "axios";
 
@@ -98,6 +99,7 @@ class SearchResult extends Component {
     console.log(this.state);
     return (
       <div>
+        <Nav/>
         <form onSubmit={this.handleSubmitSearch}>
           <input
             type="text"
