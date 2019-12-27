@@ -56,9 +56,14 @@ app.get('*', function(req, res) {
 	})
   })
 
+// Serve up static assets (usually on heroku)
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+}
+
 
 // Connect to the Mongo DB
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/parky", {
+mongoose.connect(process.env.MONGODB_URI || "mongodb://parky:Parky2020@ds237563.mlab.com:37563/heroku_rfhkxmv5", {
   useCreateIndex: true,
   useNewUrlParser: true
 });
