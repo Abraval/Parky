@@ -43,7 +43,9 @@ app.use(passport.session()); // calls serializeUser and deserializeUser
 
 // Add routes, both API and view
 
+
 app.use("/api", routes); 
+
 app.use("/user", user);
 
 app.get('*', function(req, res) {

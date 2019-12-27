@@ -23,20 +23,6 @@ class AddListing extends Component {
     });
   };
 
-  // componentDidMount() {
-  //   this.userInfo();
-  // };
-
-  // userInfo = () => {
-  //   axios.get('/api/user').then(response => {
-  //     console.log(response.data)
-  //     if (response.data.user) {
-  //       this.setState({
-  //         user: response.data.user
-  //       })
-  //     }
-  //   })
-  // }
 
   handleFormSubmit = event => {
     event.preventDefault();
@@ -54,7 +40,7 @@ class AddListing extends Component {
     })
       .then(res => console.log(res))
       .catch(err => console.log(err));
-  };
+  }
 
   render() {
     return (
@@ -65,6 +51,7 @@ class AddListing extends Component {
 
           <form>
             <div className="form-group">
+
               <label for="title">Title</label>
               <input
               value={this.state.title}
@@ -78,6 +65,7 @@ class AddListing extends Component {
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
+
                 <label for="parkingType">Parking Type</label>
                 <select className="form-control" id="parkingType" name="parkingType" value={this.state.parkingType}
               onChange={this.handleInputChange}>
@@ -89,7 +77,9 @@ class AddListing extends Component {
                 </select>
               </div>
               <div className="form-group col-md-6">
+
                 <label for="photo">Photo</label>
+
                 <input
                 value={this.state.photo}
                 onChange={this.handleInputChange}
@@ -102,7 +92,9 @@ class AddListing extends Component {
               </div>
             </div>
             <div className="form-group">
+
               <label for="address">Address</label>
+
               <input
               value={this.state.address}
               onChange={this.handleInputChange}
@@ -115,6 +107,7 @@ class AddListing extends Component {
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
+
                 <label for="city">City</label>
                 <input type="text" className="form-control" id="city" name="city" value={this.state.city}
                 onChange={this.handleInputChange} />
@@ -132,6 +125,7 @@ class AddListing extends Component {
             </select>
           </div> */}
               <div className="form-group col-md-2">
+
                 <label for="inputZip">Zip</label>
                 <input type="text" className="form-control" id="zipcode" name="zipcode" 
                 value={this.state.zipcode}

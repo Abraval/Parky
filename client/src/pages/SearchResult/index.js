@@ -1,7 +1,7 @@
 import React, { Component } from "react";
+import Nav from "../../components/Nav";
 import "./style.css";
 import axios from "axios";
-// import Map from "../components/Map";
 
 class SearchResult extends Component {
   state = {
@@ -28,9 +28,9 @@ class SearchResult extends Component {
     const address = this.getAddress();
     address.then(data => {
       console.log(data);
-      this.setState({
-        address: "worked"
-      });
+      // this.setState({
+      //   address: "worked"
+      // });
     });
   };
 
@@ -99,6 +99,7 @@ class SearchResult extends Component {
     console.log(this.state);
     return (
       <div>
+        <Nav/>
         <form onSubmit={this.handleSubmitSearch}>
           <input
             type="text"
@@ -107,6 +108,7 @@ class SearchResult extends Component {
             onChange={this.handleInputChange}
             placeholder="Search for your address here"
           />
+          <button type="submit" className="btn btn-primary" id="queryAddress">Search</button>
         </form>
         <main>
           <div id="map"></div>
