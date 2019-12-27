@@ -11,7 +11,7 @@ import Profile from "./pages/Profile";
 
 
 
-import SearchResult from "./pages/SearchResult/SearchResult";
+import SearchResult from "./pages/SearchResult";
 
 class App extends Component {
   constructor() {

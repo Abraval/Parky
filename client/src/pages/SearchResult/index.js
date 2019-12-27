@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import "./style.css";
 import axios from "axios";
-// import Map from "../components/Map";
 
 class SearchResult extends Component {
   state = {
@@ -28,9 +27,9 @@ class SearchResult extends Component {
     const address = this.getAddress();
     address.then(data => {
       console.log(data);
-      this.setState({
-        address: "worked"
-      });
+      // this.setState({
+      //   address: "worked"
+      // });
     });
   };
 
