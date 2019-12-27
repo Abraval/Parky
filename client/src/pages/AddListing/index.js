@@ -14,7 +14,20 @@ class AddListing extends Component {
     zipcode: "",
     user: {}
   };
+  componentDidMount() {
+    this.userInfo();
+  };
 
+  userInfo = () => {
+    axios.get('/user/').then(response => {
+      console.log(response.data)
+      if (response.data.user) {
+        this.setState({
+          user: response.data.user
+        })
+      }
+    })
+  }
 
   handleInputChange = event => {
     const { name, value } = event.target;
@@ -30,6 +43,7 @@ class AddListing extends Component {
     console.log("form submitted!");
 
     API.saveListing({
+      user: this.state.user._id,
       title: this.state.title,
       parkingType: this.state.parkingType,
       photo: this.state.photo,
