@@ -15,15 +15,15 @@ class AddListing extends Component {
   };
 
 
-// handleFormSubmit = event => {
+handleFormSubmit = event => {
 
-//   event.preventDefault();
+  event.preventDefault();
 
-//   console.log("form submitted!")
+  console.log("form submitted!")
 
-//   API.saveListing()
+  API.saveListing()
 
-// }
+}
 
   render() {
     return (

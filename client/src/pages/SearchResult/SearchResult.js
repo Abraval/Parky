@@ -107,6 +107,7 @@ class SearchResult extends Component {
             onChange={this.handleInputChange}
             placeholder="Search for your address here"
           />
+          <button type="submit" className="btn btn-primary" id="queryAddress">Search</button>
         </form>
         <main>
           <div id="map"></div>
