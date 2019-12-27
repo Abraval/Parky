@@ -9,7 +9,7 @@ const listingController = require("../../controllers/listingController");
 //   .post(listingController.createListing);
 
 router.route("/listing")
-.post(listingController.createListing);
-// .get(listingController.findAll)
+.get(listingController.findAll)
+.post(listingController.createListing)
 
 module.exports = router;

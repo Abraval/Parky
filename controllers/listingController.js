@@ -2,16 +2,16 @@ const db = require("../models");
 
 module.exports = {
 
-    // findAll: function(req, res) {
-    //     db.Listings
-    //       .find(req.query)
-    //       .then(dbModel => res.json(dbModel))
-    //       .catch(err => res.status(422).json(err));
-    //   },
+    findAll: function(req, res) {
+        db.Listings
+          .find(req.query)
+          .then(dbModel => res.json(dbModel))
+          .catch(err => res.status(422).json(err));
+      },
   createListing: function(req, res) {
     let newListing = {
         title: req.body.title,
-        parkingtype: req.body.parkingtype,
+        parkingtype: req.body.parkingType,
         photo: req.body.photo,
         address: req.body.address,
         city: req.body.city,

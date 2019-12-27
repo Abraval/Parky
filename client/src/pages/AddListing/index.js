@@ -6,7 +6,7 @@ import axios from "axios";
 class AddListing extends Component {
   state = {
     title: "",
-    parkingtype: "",
+    parkingType: "",
     photo: "",
     address: "",
     city: "",
@@ -14,16 +14,30 @@ class AddListing extends Component {
     zipcode: ""
   };
 
+  handleInputChange = event => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value
+    });
+  };
 
-// handleFormSubmit = event => {
+  handleFormSubmit = event => {
+    event.preventDefault();
 
-//   event.preventDefault();
+    console.log("form submitted!");
 
-//   console.log("form submitted!")
-
-//   API.saveListing()
-
-// }
+    API.saveListing({
+      title: this.state.title,
+      parkingType: this.state.parkingType,
+      photo: this.state.photo,
+      address: this.state.address,
+      city: this.state.city,
+      state: this.state.state,
+      zipcode: this.state.zipcode
+    })
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+  };
 
   render() {
     return (
@@ -34,18 +48,22 @@ class AddListing extends Component {
 
           <form>
             <div className="form-group">
-              <label for="listingTitle">Title</label>
+              <label for="title">Title</label>
               <input
+              value={this.state.title}
+              onChange={this.handleInputChange}
                 type="text"
+                name="title"
                 className="form-control"
-                id="inputTitle"
+                id="title"
                 placeholder="Open driveway on quiet street"
               />
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
                 <label for="parkingType">Parking Type</label>
-                <select className="form-control" id="parkingType">
+                <select className="form-control" id="parkingType" name="parkingType" value={this.state.parkingType}
+              onChange={this.handleInputChange}>
                   <option></option>
                   <option>Garage</option>
                   <option>Street</option>
@@ -54,32 +72,40 @@ class AddListing extends Component {
                 </select>
               </div>
               <div className="form-group col-md-6">
-                <label for="uploadPhoto">Photo</label>
+                <label for="photo">Photo</label>
                 <input
+                value={this.state.photo}
+                onChange={this.handleInputChange}
                   type="text"
                   className="form-control"
-                  id="uploadPhoto"
+                  id="photo"
+                  name="photo"
                   placeholder="Link to the photo here"
                 />
               </div>
             </div>
             <div className="form-group">
-              <label for="inputAddress">Address</label>
+              <label for="address">Address</label>
               <input
+              value={this.state.address}
+              onChange={this.handleInputChange}
                 type="text"
                 className="form-control"
-                id="inputAddress"
+                name="address"
+                id="address"
                 placeholder="1234 Main St"
               />
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label for="inputCity">City</label>
-                <input type="text" className="form-control" id="inputCity" />
+                <label for="city">City</label>
+                <input type="text" className="form-control" id="city" name="city" value={this.state.city}
+                onChange={this.handleInputChange} />
               </div>
               <div className="form-group col-md-4">
-                <label for="inputState">State</label>
-                <input type="text" className="form-control" id="inputState" />
+                <label for="state">State</label>
+                <input type="text" className="form-control" id="state" name="state" value={this.state.state}
+                onChange={this.handleInputChange} />
               </div>
               {/* <div className="form-group col-md-4">
             <label for="inputState">State</label>
@@ -90,11 +116,18 @@ class AddListing extends Component {
           </div> */}
               <div className="form-group col-md-2">
                 <label for="inputZip">Zip</label>
-                <input type="text" className="form-control" id="inputZip" />
+                <input type="text" className="form-control" id="zipcode" name="zipcode" 
+                value={this.state.zipcode}
+                onChange={this.handleInputChange}/>
               </div>
             </div>
             <div className="form-group"></div>
-            <button type="submit" className="btn btn-primary" id="addListing">
+            <button
+              type="submit"
+              onClick={this.handleFormSubmit}
+              className="btn btn-primary"
+              id="addListing"
+            >
               Add Listing
             </button>
           </form>
