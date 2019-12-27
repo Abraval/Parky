@@ -11,8 +11,10 @@ class AddListing extends Component {
     address: "",
     city: "",
     state: "",
-    zipcode: ""
+    zipcode: "",
+    user: {}
   };
+
 
   handleInputChange = event => {
     const { name, value } = event.target;
@@ -20,6 +22,21 @@ class AddListing extends Component {
       [name]: value
     });
   };
+
+  // componentDidMount() {
+  //   this.userInfo();
+  // };
+
+  // userInfo = () => {
+  //   axios.get('/api/user').then(response => {
+  //     console.log(response.data)
+  //     if (response.data.user) {
+  //       this.setState({
+  //         user: response.data.user
+  //       })
+  //     }
+  //   })
+  // }
 
   handleFormSubmit = event => {
     event.preventDefault();
@@ -33,7 +50,7 @@ class AddListing extends Component {
       address: this.state.address,
       city: this.state.city,
       state: this.state.state,
-      zipcode: this.state.zipcode
+      zipcode: this.state.zipcode 
     })
       .then(res => console.log(res))
       .catch(err => console.log(err));

@@ -8,7 +8,7 @@ const listingController = require("../../controllers/listingController");
 //   .get(listingController.findAll)
 //   .post(listingController.createListing);
 
-router.route("/listing")
+router.route("/")
 .get(listingController.findAll)
 .post(listingController.createListing)
 

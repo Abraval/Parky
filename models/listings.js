@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 mongoose.promise = Promise;
 
 const listingSchema = new Schema({
+  user: { type: Schema.Types.ObjectId, ref: "User" },
   title: { type: String, unique: false, required: false },
   parkingtype: { type: String, unique: false, required: false },
   photo: { type: String, unique: false, required: false },

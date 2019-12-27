@@ -3,12 +3,13 @@ const db = require("../models");
 module.exports = {
 
     findAll: function(req, res) {
-        db.Listings
+        db.Listing
           .find(req.query)
           .then(dbModel => res.json(dbModel))
           .catch(err => res.status(422).json(err));
       },
   createListing: function(req, res) {
+    console.log(req.body)
     let newListing = {
         title: req.body.title,
         parkingtype: req.body.parkingType,
@@ -19,7 +20,7 @@ module.exports = {
         zipcode: req.body.zipcode
     
     };
-    db.Listings.create(newListing)
+    db.Listing.create(req.body)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   }
