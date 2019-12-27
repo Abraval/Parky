@@ -7,7 +7,8 @@ import Nav from "../../components/Nav";
 class Profile extends Component {
   state = {
     listing: [],
-    user: {}
+    user: {},
+    userId: ""
   };
   componentDidMount() {
     this.userInfo();
@@ -18,7 +19,8 @@ class Profile extends Component {
       .then(res => {
         console.log("=======");
         this.setState({ user: res.data });
-        console.log(res.data);
+        this.setState({ userId: res.data.user._id });
+        console.log(res.data.user._id);
         console.log(this.state.user);
         console.log("=======");
         this.loadListings();
@@ -48,35 +50,37 @@ class Profile extends Component {
   render() {
     console.log("##################");
     console.log(this.state.listing.length);
-    
+    console.log(this.state.listing.filter(item => console.log(item.user === this.state.userId)));
+    console.log(this.state.userId);
     return (
+ 
       <div>
+           
         <Nav />
-        {this.state.listing.length > 0 ? (
+    
           <div>
             {this.state.listing
               // .filter(listing => listing.user._id === this.state.user.user._id)
               .map(listing => {
-                console.log("Map Listing!");
-                console.log(listing.user._id);
-                console.log("State User");
-                console.log(this.state.user.user._id);
-                return (
-                  <ListingCard
-                    key={listing._id}
-                    title={listing.title}
-                    photo={listing.photo}
-                    address={listing.address}
-                    city={listing.city}
-                    state={listing.username}
-                    zipcode={listing.zipcode}
-                  />
-                );
+
+                if (listing.user === this.state.userId) {
+                  return (
+                    <ListingCard
+                      key={listing._id}
+                      title={listing.title}
+                      photo={listing.photo}
+                      address={listing.address}
+                      city={listing.city}
+                      state={listing.username}
+                      zipcode={listing.zipcode}
+                    />
+                  );
+                }
+             
+               
               })}
           </div>
-        ) : (
-          <h3>No Results to Display</h3>
-        )}
+  
       </div>
     );
   }
