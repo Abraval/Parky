@@ -34,7 +34,7 @@ class AddListing extends Component {
 
           <form>
             <div className="form-group">
-              <label for="listingTitle">Title</label>
+              <label htmlFor="listingTitle">Title</label>
               <input
                 type="text"
                 className="form-control"
@@ -44,7 +44,7 @@ class AddListing extends Component {
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label for="parkingType">Parking Type</label>
+                <label htmlFor="parkingType">Parking Type</label>
                 <select className="form-control" id="parkingType">
                   <option></option>
                   <option>Garage</option>
@@ -54,7 +54,7 @@ class AddListing extends Component {
                 </select>
               </div>
               <div className="form-group col-md-6">
-                <label for="uploadPhoto">Photo</label>
+                <label htmlFor="uploadPhoto">Photo</label>
                 <input
                   type="text"
                   className="form-control"
@@ -64,7 +64,7 @@ class AddListing extends Component {
               </div>
             </div>
             <div className="form-group">
-              <label for="inputAddress">Address</label>
+              <label htmlFor="inputAddress">Address</label>
               <input
                 type="text"
                 className="form-control"
@@ -74,11 +74,11 @@ class AddListing extends Component {
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label for="inputCity">City</label>
+                <label htmlFor="inputCity">City</label>
                 <input type="text" className="form-control" id="inputCity" />
               </div>
               <div className="form-group col-md-4">
-                <label for="inputState">State</label>
+                <label htmlFor="inputState">State</label>
                 <input type="text" className="form-control" id="inputState" />
               </div>
               {/* <div className="form-group col-md-4">
@@ -89,7 +89,7 @@ class AddListing extends Component {
             </select>
           </div> */}
               <div className="form-group col-md-2">
-                <label for="inputZip">Zip</label>
+                <label htmlFor="inputZip">Zip</label>
                 <input type="text" className="form-control" id="inputZip" />
               </div>
             </div>
