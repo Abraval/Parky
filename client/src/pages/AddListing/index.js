@@ -14,8 +14,9 @@ class AddListing extends Component {
     zipcode: "",
     user: {},
     fulladdress: "",
-    latitude: 0.0,
-    longtiude: 0.0
+    coordinates: [],
+    longitude: "",
+    latitude: ""
   };
   componentDidMount() {
     this.userInfo();
@@ -70,8 +71,13 @@ class AddListing extends Component {
             console.log("latitude: " + latitude);
 
             var longitude = response.data.results[0].geometry.location.lng;
+            var coordinates = { longitude, latitude };
             console.log("longitude: " + longitude);
-            // this.setState({ latitude: latitude, longitude: longitude });
+            this.setState({
+              coordinates: coordinates,
+              longitude: longitude,
+              latitude: latitude
+            });
           });
       }
     );
@@ -84,13 +90,17 @@ class AddListing extends Component {
       address: this.state.address,
       city: this.state.city,
       state: this.state.state,
-      zipcode: this.state.zipcode
+      zipcode: this.state.zipcode,
+      location: {
+        coordinates: [this.state.longitude, this.state.latitude]
+      }
     })
       .then(res => console.log(res))
       .catch(err => console.log(err));
   };
 
   render() {
+    console.log(this.state.coordinates);
     return (
       <div>
         <Nav />
