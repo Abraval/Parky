@@ -9,6 +9,8 @@ const listingController = require("../../controllers/listingController");
 //   .post(listingController.createListing);
 
 router.route("/")
+.get(listingController.findAllAvailable)
 .post(listingController.createAvailability)
+
 
 module.exports = router;
