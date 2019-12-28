@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import Nav from "../../components/Nav";
 import "./style.css";
 import axios from "axios";
-import DayPicker, { DateUtils } from 'react-day-picker';
-import 'react-day-picker/lib/style.css';
+import DayPicker, { DateUtils } from "react-day-picker";
+import "react-day-picker/lib/style.css";
 import API from "../../utils/API";
 
 class SearchResult extends Component {
@@ -25,10 +25,11 @@ class SearchResult extends Component {
 
   handleDayClick(day, { selected }) {
     const { selectedDays } = this.state;
+
     if (selected) {
-      const selectedIndex = selectedDays.findIndex(selectedDay =>
-        DateUtils.isSameDay(selectedDay, day)
-      );
+      const selectedIndex = selectedDays.findIndex(selectedDay => {
+        DateUtils.isSameDay(selectedDay, day);
+      });
       selectedDays.splice(selectedIndex, 1);
     } else {
       selectedDays.push(day);
@@ -37,37 +38,37 @@ class SearchResult extends Component {
   }
 
   handleInputChange = event => {
-    console.log(event.target);
     const { name, value } = event.target;
     this.setState({
       [name]: value
     });
   };
 
-
-
   handleSubmitSearch = e => {
     e.preventDefault();
-    console.log("submit search works");
+    console.log("handleSubmitSearch");
     const address = this.getAddress();
     address.then(data => {
-      console.log(data);
-      console.log(this.state.selectedDays)
+      const formattedDates = this.state.selectedDays.map(date =>
+        date.toISOString()
+      );
 
-      let firstDay = this.state.selectedDays[0]
-      let lastDay = this.state.selectedDays[this.state.selectedDays.length -1]
-      let dateRangeObj = {firstDay, lastDay}
-      console.log(dateRangeObj)
-      console.log(firstDay)
-      console.log(lastDay)
-     
-        API.getAvailableListings(dateRangeObj)
-        .then(res => console.log(res))
+      let firstDay = formattedDates[0];
+      let lastDay = formattedDates[formattedDates.length - 1];
+
+      API.getAvailableListings(formattedDates).then(res => {
+        res.data.map(listing => {
+          if (formattedDates.includes(listing.date)) {
+            console.log("includes", listing);
+          } else {
+            console.log("does not include", listing);
+          }
+        });
+      });
       // api get route for all available listings
       // api.getAvailableListings()
       // .then(res => console.log(res))
       // map or foreach to create markers for each listing
-      
     });
   };
 
@@ -109,9 +110,8 @@ class SearchResult extends Component {
   };
 
   getAddress = async () => {
-    console.log("a string");
+    console.log("Getting address.");
     let location = this.state.addressQuery;
-    console.log(location);
 
     axios
       .get("https://maps.googleapis.com/maps/api/geocode/json", {
@@ -121,24 +121,17 @@ class SearchResult extends Component {
         }
       })
       .then(response => {
-        console.log("Response data is", response.data);
         var latitude = response.data.results[0].geometry.location.lat;
-        console.log("latitude: " + latitude);
-
         var longitude = response.data.results[0].geometry.location.lng;
-        console.log("longitude: " + longitude);
         this.setState({ latitude: latitude, longitude: longitude });
         this.renderMap();
       });
   };
 
-  
-
   render() {
-    console.log(this.state);
     return (
       <div>
-        <Nav/>
+        <Nav />
         <form onSubmit={this.handleSubmitSearch}>
           <input
             type="text"
@@ -147,14 +140,17 @@ class SearchResult extends Component {
             onChange={this.handleInputChange}
             placeholder="Search for your address here"
           />
-          <button type="submit" className="btn btn-primary" id="queryAddress">Search</button>
+          <button type="submit" className="btn btn-primary" id="queryAddress">
+            Search
+          </button>
         </form>
         <div>
-        <DayPicker
-          selectedDays={this.state.selectedDays}
-          onDayClick={this.handleDayClick}
-        />
-      </div>
+          <DayPicker
+            locale="en"
+            selectedDays={this.state.selectedDays}
+            onDayClick={this.handleDayClick}
+          />
+        </div>
         <main>
           <div id="map"></div>
         </main>
