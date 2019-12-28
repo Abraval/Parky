@@ -16,7 +16,7 @@ export default {
   createAvailability: function(availabilityData) {
     return axios.post("api/availability", availabilityData);
   },
-  getAvailableListings: function(){
-    return axios.get("api/availability");
+  getAvailableListings: function(dateRange){
+    return axios.get("api/availability",  dateRange);
   }
 };
