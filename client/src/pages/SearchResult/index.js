@@ -4,6 +4,7 @@ import "./style.css";
 import axios from "axios";
 import DayPicker, { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
+import API from "../../utils/API";
 
 class SearchResult extends Component {
   state = {
@@ -51,9 +52,16 @@ class SearchResult extends Component {
     const address = this.getAddress();
     address.then(data => {
       console.log(data);
-      // this.setState({
-      //   address: "worked"
-      // });
+     
+        API.getAvailableListings()
+        .then(res => console.log(res))
+      // api get route for all available listings
+      // api.getAvailableListings()
+      // .then(res => console.log(res))
+      // map or foreach to create markers for each listing
+      // sdnflksndfklndsklfnlksdnflkndskfnsldknflknsdflknsdklnflksdnflknsdlkfnsdlknflksdnfkn
+      //lknsdklfnsdklnfklsdnflknsdlkfnsdlknflksdnflksdnflknsdlkfnsdklfnsdlknfklsdnfs
+      //lkdnfklsndflknsdlkfnsdlknfsdlkn
     });
   };
 
