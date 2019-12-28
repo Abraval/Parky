@@ -2,16 +2,37 @@ import React, { Component } from "react";
 import Nav from "../../components/Nav";
 import "./style.css";
 import axios from "axios";
+import DayPicker, { DateUtils } from 'react-day-picker';
+import 'react-day-picker/lib/style.css';
 
 class SearchResult extends Component {
   state = {
     addressQuery: "",
     latitude: 39.952583,
-    longitude: -75.165222
+    longitude: -75.165222,
+    selectedDays: []
   };
 
   componentDidMount() {
     this.renderMap();
+  }
+
+  constructor(props) {
+    super(props);
+    this.handleDayClick = this.handleDayClick.bind(this);
+  }
+
+  handleDayClick(day, { selected }) {
+    const { selectedDays } = this.state;
+    if (selected) {
+      const selectedIndex = selectedDays.findIndex(selectedDay =>
+        DateUtils.isSameDay(selectedDay, day)
+      );
+      selectedDays.splice(selectedIndex, 1);
+    } else {
+      selectedDays.push(day);
+    }
+    this.setState({ selectedDays });
   }
 
   handleInputChange = event => {
@@ -21,6 +42,8 @@ class SearchResult extends Component {
       [name]: value
     });
   };
+
+
 
   handleSubmitSearch = e => {
     e.preventDefault();
@@ -95,6 +118,8 @@ class SearchResult extends Component {
       });
   };
 
+  
+
   render() {
     console.log(this.state);
     return (
@@ -110,6 +135,12 @@ class SearchResult extends Component {
           />
           <button type="submit" className="btn btn-primary" id="queryAddress">Search</button>
         </form>
+        <div>
+        <DayPicker
+          selectedDays={this.state.selectedDays}
+          onDayClick={this.handleDayClick}
+        />
+      </div>
         <main>
           <div id="map"></div>
         </main>
