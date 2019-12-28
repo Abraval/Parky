@@ -73,30 +73,41 @@ class AddListing extends Component {
             var longitude = response.data.results[0].geometry.location.lng;
             var coordinates = { longitude, latitude };
             console.log("longitude: " + longitude);
+
             this.setState({
               coordinates: coordinates,
               longitude: longitude,
               latitude: latitude
+            }, () => {
+
+              API.saveListing({
+                user: this.state.user._id,
+                title: this.state.title,
+                parkingType: this.state.parkingType,
+                photo: this.state.photo,
+                address: this.state.address,
+                city: this.state.city,
+                state: this.state.state,
+                zipcode: this.state.zipcode,
+                location: {
+                  coordinates: [this.state.longitude, this.state.latitude]
+                }
+              })
+                .then(res => console.log(res))
+                .catch(err => console.log(err));
+
             });
+
+
+
+
+  
           });
       }
     );
 
-    API.saveListing({
-      user: this.state.user._id,
-      title: this.state.title,
-      parkingType: this.state.parkingType,
-      photo: this.state.photo,
-      address: this.state.address,
-      city: this.state.city,
-      state: this.state.state,
-      zipcode: this.state.zipcode,
-      location: {
-        coordinates: [this.state.longitude, this.state.latitude]
-      }
-    })
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+
+
   };
 
   render() {
