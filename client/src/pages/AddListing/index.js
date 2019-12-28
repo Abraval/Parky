@@ -126,8 +126,10 @@ class AddListing extends Component {
                       let listingId = res.data._id
                       let concatenatedDate = year + "-" + month + "-" + day
 
+                      let fulldate = item.toString(); 
+
                       API.createAvailability({
-                        date: concatenatedDate,
+                        date: fulldate,
                         listing: listingId
                         // .map over all selected dates in array and create a new row in the avail collection for each date and include the the the id of listing 
                       })
