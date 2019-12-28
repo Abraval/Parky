@@ -63,7 +63,7 @@ if (process.env.NODE_ENV === "production") {
 
 
 // Connect to the Mongo DB
-mongoose.connect(process.env.MONGODB_URI || "mongodb://parky:Parky2020@ds237563.mlab.com:37563/heroku_rfhkxmv5", {
+mongoose.connect(process.env.MONGODB_URI || "mongodb://user:user123@ds151086.mlab.com:51086/heroku_2bfkm5xc", {
   useCreateIndex: true,
   useNewUrlParser: true
 });
