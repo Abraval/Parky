@@ -9,5 +9,11 @@ export default {
   },
   getListings: function(){
     return axios.get("/api/listing");
+  },
+  getListingById: function() {
+    return axios.get("api/listing");
+  },
+  createAvailability: function(availabilityData) {
+    return axios.post("api/availability", availabilityData);
   }
 };
