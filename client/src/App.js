@@ -7,9 +7,8 @@ import SignUp from "./pages/SignUp/index";
 import SignIn from "./pages/Signin/index";
 import Main from "./pages/Main/index";
 import AddListing from "./pages/AddListing";
+import Calendar from "./pages/Calendar";
 import Profile from "./pages/Profile";
-
-
 
 import SearchResult from "./pages/SearchResult";
 
@@ -68,6 +67,7 @@ class App extends Component {
             <Route exact path="/addlisting" component={AddListing} />
             <Route exact path="/profile" component={Profile} />
             <Route exact path="/searchresult" component={SearchResult} />
+            <Route exact path="/calendar" component={Calendar} />
           </Switch>
         </div>
       </Router>

@@ -15,8 +15,8 @@ class AddListing extends Component {
     user: {},
     fulladdress: "",
     coordinates: {},
-    longitude: 0.00,
-    latitude: 0.00
+    longitude: 0.0,
+    latitude: 0.0
   };
   componentDidMount() {
     this.userInfo();
@@ -74,40 +74,33 @@ class AddListing extends Component {
             var coordinates = { longitude, latitude };
             console.log("longitude: " + longitude);
 
-            this.setState({
-              coordinates: coordinates,
-              longitude: longitude,
-              latitude: latitude
-            }, () => {
-
-              API.saveListing({
-                user: this.state.user._id,
-                title: this.state.title,
-                parkingType: this.state.parkingType,
-                photo: this.state.photo,
-                address: this.state.address,
-                city: this.state.city,
-                state: this.state.state,
-                zipcode: this.state.zipcode,
-                location: {
-                  coordinates: [this.state.longitude, this.state.latitude]
-                }
-              })
-                .then(res => console.log(res))
-                .catch(err => console.log(err));
-
-            });
-
-
-
-
-  
+            this.setState(
+              {
+                coordinates: coordinates,
+                longitude: longitude,
+                latitude: latitude
+              },
+              () => {
+                API.saveListing({
+                  user: this.state.user._id,
+                  title: this.state.title,
+                  parkingType: this.state.parkingType,
+                  photo: this.state.photo,
+                  address: this.state.address,
+                  city: this.state.city,
+                  state: this.state.state,
+                  zipcode: this.state.zipcode,
+                  location: {
+                    coordinates: [this.state.longitude, this.state.latitude]
+                  }
+                })
+                  .then(res => console.log(res))
+                  .catch(err => console.log(err));
+              }
+            );
           });
       }
     );
-
-
-
   };
 
   render() {
