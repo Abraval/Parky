@@ -52,16 +52,22 @@ class SearchResult extends Component {
     const address = this.getAddress();
     address.then(data => {
       console.log(data);
+      console.log(this.state.selectedDays)
+
+      let firstDay = this.state.selectedDays[0]
+      let lastDay = this.state.selectedDays[this.state.selectedDays.length -1]
+      let dateRangeObj = {firstDay, lastDay}
+      console.log(dateRangeObj)
+      console.log(firstDay)
+      console.log(lastDay)
      
-        API.getAvailableListings()
+        API.getAvailableListings(dateRangeObj)
         .then(res => console.log(res))
       // api get route for all available listings
       // api.getAvailableListings()
       // .then(res => console.log(res))
       // map or foreach to create markers for each listing
-      // sdnflksndfklndsklfnlksdnflkndskfnsldknflknsdflknsdklnflksdnflknsdlkfnsdlknflksdnfkn
-      //lknsdklfnsdklnfklsdnflknsdlkfnsdlknflksdnflksdnflknsdlkfnsdklfnsdlknfklsdnfs
-      //lkdnfklsndflknsdlkfnsdlknfsdlkn
+      
     });
   };
 

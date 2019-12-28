@@ -7,17 +7,6 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   createListing: function(req, res) {
-    // console.log(req.body)
-    // let newListing = {
-    //     title: req.body.title,
-    //     parkingtype: req.body.parkingType,
-    //     photo: req.body.photo,
-    //     address: req.body.address,
-    //     city: req.body.city,
-    //     state: req.body.state,
-    //     zipcode: req.body.zipcode
-
-    // };
     db.Listing.create(req.body)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
@@ -30,9 +19,14 @@ module.exports = {
   },
 
   findAllAvailable: function(req, res) {
-    console.log(req);
+    console.log("this is line 33: " + req.query);
+    console.log("=======================")
+    console.dir(req.params);
+    console.log("=======================")
     db.Availability.find(req.query)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
-  }
+  },
+
+
 };
