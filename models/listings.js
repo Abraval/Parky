@@ -12,7 +12,7 @@ const listingSchema = new Schema({
   state: { type: String, unique: false, required: false },
   zipcode: { type: Number, unique: false, required: false },
   location: {
-    type: { type: String },
+    type: { type: Number },
     coordinates: []
   }
 });

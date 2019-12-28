@@ -14,9 +14,9 @@ class AddListing extends Component {
     zipcode: "",
     user: {},
     fulladdress: "",
-    coordinates: [],
-    longitude: "",
-    latitude: ""
+    coordinates: {},
+    longitude: 0.00,
+    latitude: 0.00
   };
   componentDidMount() {
     this.userInfo();
@@ -100,7 +100,7 @@ class AddListing extends Component {
   };
 
   render() {
-    console.log(this.state.coordinates);
+    console.log(this.state);
     return (
       <div>
         <Nav />
