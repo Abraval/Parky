@@ -11,11 +11,17 @@ class SearchResult extends Component {
     addressQuery: "",
     latitude: 39.952583,
     longitude: -75.165222,
-    selectedDays: []
+    selectedDays: [],
+    markerData: []
   };
 
-  componentDidMount() {
-    this.renderMap();
+  // componentDidMount() {
+  //   this.renderMap();
+  // }
+  componentDidUpdate(prevProps, props) {
+    if (this.state.markerData !== props.markerData) {
+      this.renderMap();
+    }
   }
 
   constructor(props) {
@@ -53,16 +59,24 @@ class SearchResult extends Component {
         date.toISOString()
       );
 
-      let firstDay = formattedDates[0];
-      let lastDay = formattedDates[formattedDates.length - 1];
-
       API.getAvailableListings(formattedDates).then(res => {
-        res.data.map(listing => {
-          if (formattedDates.includes(listing.date)) {
-            console.log("includes", listing);
-          } else {
-            console.log("does not include", listing);
-          }
+        console.log("here", res);
+        res.data.map(item => {
+          API.getListingById(item.listing).then(listing => {
+            console.log("listing here", listing);
+            // Set this.state.markerData here.
+            const data = listing.data[0];
+            this.setState({
+              markerData: [
+                ...this.state.markerData,
+                [
+                  data.address,
+                  data.location.coordinates[1],
+                  data.location.coordinates[0]
+                ]
+              ]
+            });
+          });
         });
       });
       // api get route for all available listings
@@ -77,6 +91,7 @@ class SearchResult extends Component {
       "https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo&callback=initMap"
     );
     window.initMap = this.initMap;
+    console.log(this.state.markerData);
   };
 
   initMap = () => {
@@ -86,31 +101,66 @@ class SearchResult extends Component {
     });
 
     // Create An InfoWindow
-    var infowindow = new window.google.maps.InfoWindow();
+    var infoWindow = new window.google.maps.InfoWindow(),
+      marker,
+      i;
 
     // We will need to change this
     var contentString = this.state.address;
 
-    var marker = new window.google.maps.Marker({
-      position: {
-        lat: this.state.latitude,
-        lng: this.state.longitude
-      },
-      map: map
-    });
+    // Make this.state.markerData look like this.
+    // var markers = [
+    //   ["London Eye, London", 51.503454, -0.119562],
+    //   ["Palace of Westminster, London", 51.499633, -0.124755]
+    // ];
 
-    // Click on A Marker!
-    marker.addListener("click", function() {
-      // Change the content
-      infowindow.setContent(contentString);
+    for (i = 0; i < this.state.markerData.length; i++) {
+      var position = new window.google.maps.LatLng(
+        this.state.markerData[i][1],
+        this.state.markerData[i][2]
+      );
+      // bounds.extend(position);
+      console.log("position", position);
+      marker = new window.google.maps.Marker({
+        position: position,
+        map: map,
+        title: this.state.markerData[i][0]
+      });
 
-      // Open An InfoWindow
-      infowindow.open(map, marker);
-    });
+      // Allow each marker to have an info window
+      window.google.maps.event.addListener(
+        marker,
+        "click",
+        (function(marker, i) {
+          return function() {
+            // infoWindow.setContent(infoWindow[i][0]);
+            infoWindow.open(map, marker);
+          };
+        })(marker, i)
+      );
+
+      // Automatically center the map fitting all markers on the screen
+      // map.fitBounds(bounds);
+    }
+    // var marker = new window.google.maps.Marker({
+    //   position: {
+    //     lat: this.state.latitude,
+    //     lng: this.state.longitude
+    //   },
+    //   map: map
+    // });
+
+    // // Click on A Marker!
+    // marker.addListener("click", function() {
+    //   // Change the content
+    //   infowindow.setContent(contentString);
+
+    //   // Open An InfoWindow
+    //   infowindow.open(map, marker);
+    // });
   };
 
   getAddress = async () => {
-    console.log("Getting address.");
     let location = this.state.addressQuery;
 
     axios
@@ -123,8 +173,8 @@ class SearchResult extends Component {
       .then(response => {
         var latitude = response.data.results[0].geometry.location.lat;
         var longitude = response.data.results[0].geometry.location.lng;
-        this.setState({ latitude: latitude, longitude: longitude });
-        this.renderMap();
+        this.setState({ latitude, longitude });
+        // this.renderMap();
       });
   };
 

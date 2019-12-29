@@ -2,7 +2,7 @@ const db = require("../models");
 
 module.exports = {
   findAll: function(req, res) {
-    db.Listing.find(req.query)
+    db.Listing.find({ _id: req.query.id })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
@@ -17,16 +17,21 @@ module.exports = {
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
-
   findAllAvailable: function(req, res) {
-    console.log("this is line 33: " + req.query);
-    console.log("=======================")
-    console.dir(req.params);
-    console.log("=======================")
-    db.Availability.find(req.query)
-      .then(dbModel => res.json(dbModel))
+    console.log("this is line 22: " + req.query);
+    console.log("=======================");
+    console.dir(JSON.stringify(req.query));
+    console.log("=======================");
+    const dates = req.query.dates;
+    console.log("Searched dates: ", dates);
+
+    db.Availability.find({ date: new Date(dates) })
+      .then(dbModel => {
+        res.json(dbModel);
+        // dbModel.map(item => {
+        //   db.Listing.find(item.listing).then(response => res.json(response));
+        // });
+      })
       .catch(err => res.status(422).json(err));
-  },
-
-
+  }
 };
