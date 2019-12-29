@@ -59,6 +59,8 @@ class SearchResult extends Component {
         date.toISOString()
       );
 
+      console.log(formattedDates); 
+
       API.getAvailableListings(formattedDates).then(res => {
         console.log("here", res);
         res.data.map(item => {
