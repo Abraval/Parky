@@ -10,6 +10,9 @@ export default {
   getListings: function() {
     return axios.get("/api/listing");
   },
+  getListingsForProf: function() {
+    return axios.get("/api/listing/profile");
+  },
   getListingById: function(id) {
     return axios.get("api/listing", {
       params: {

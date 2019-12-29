@@ -52,5 +52,12 @@ module.exports = {
         // });
       })
       .catch(err => res.status(422).json(err));
-  }
+  },
+
+  findAllProfListing: function(req, res) {
+    db.Listing
+      .find(req.query)
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
+  },
 };
