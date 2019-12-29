@@ -24,14 +24,20 @@ module.exports = {
     console.log("=======================");
     console.dir(JSON.stringify(req.query));
     console.log("=======================");
-    const dates = req.query.dates;
+    let dates = req.query.dates;
     console.log("Searched dates: ", dates);
-    const startDay = dates[0]; 
-    const endDay = dates[1]; 
+    let startDay = dates[0]; 
+    let endDay; 
+    console.log("Dates length", dates.length);  
 
-    console.log("date 1 is", startDay); 
-    console.log("date 2 is", endDay); 
+    if (dates.length === 1) {
+      endDay = startDay; 
+    } else {
+      endDay = dates[req.query.dates.length - 1]; 
+    }
 
+    console.log("startDay is", startDay); 
+    console.log("endDay is", endDay); 
 
     db.Availability.find({ 
       date: {
