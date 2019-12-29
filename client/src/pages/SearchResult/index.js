@@ -5,6 +5,7 @@ import axios from "axios";
 import DayPicker, { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import API from "../../utils/API";
+import { ListingList, ListingListItem } from "../../components/ListingList";
 
 class SearchResult extends Component {
   state = {
@@ -18,11 +19,17 @@ class SearchResult extends Component {
   // componentDidMount() {
   //   this.renderMap();
   // }
+
   componentDidUpdate(prevProps, props) {
     if (this.state.markerData !== props.markerData) {
       this.renderMap();
+      this.renderCards();
     }
   }
+
+  renderCards = () => {
+    // We will write code here that will map through the "markerData" array held in state, and generate a list of cards based on the information that already exists in markerData. No API requests necessary.
+  };
 
   constructor(props) {
     super(props);
@@ -79,10 +86,6 @@ class SearchResult extends Component {
           });
         });
       });
-      // api get route for all available listings
-      // api.getAvailableListings()
-      // .then(res => console.log(res))
-      // map or foreach to create markers for each listing
     });
   };
 
@@ -138,9 +141,6 @@ class SearchResult extends Component {
           };
         })(marker, i)
       );
-
-      // Automatically center the map fitting all markers on the screen
-      // map.fitBounds(bounds);
     }
     // var marker = new window.google.maps.Marker({
     //   position: {
@@ -171,6 +171,7 @@ class SearchResult extends Component {
         }
       })
       .then(response => {
+        console.log(response);
         var latitude = response.data.results[0].geometry.location.lat;
         var longitude = response.data.results[0].geometry.location.lng;
         this.setState({ latitude, longitude });
@@ -200,6 +201,25 @@ class SearchResult extends Component {
             selectedDays={this.state.selectedDays}
             onDayClick={this.handleDayClick}
           />
+        </div>
+        <div>
+          {!this.state.markerData.length ? (
+            <h1 className="text-center">No Spots to Display</h1>
+          ) : (
+            <ListingList>
+              {this.state.markerData.map(spot => {
+                return (
+                  <ListingListItem
+                  // key={spot.title}
+                  // title={spot.title}
+                  // href={spot.href}
+                  // ingredients={spot.ingredients}
+                  // thumbnail={spot.thumbnail}
+                  />
+                );
+              })}
+            </ListingList>
+          )}
         </div>
         <main>
           <div id="map"></div>
