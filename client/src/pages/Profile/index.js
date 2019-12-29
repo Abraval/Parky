@@ -34,7 +34,7 @@ class Profile extends Component {
   }
 
   loadListings = () => {
-    API.getListings()
+    API.getListingsForProf()
       .then(res => {
         console.log("xxxxxxxx");
         this.setState({ listing: res.data });
