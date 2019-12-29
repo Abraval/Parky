@@ -89,13 +89,9 @@ class AddListing extends Component {
             }
           })
           .then(response => {
-            // console.log("Response data is", response.data);
             var latitude = response.data.results[0].geometry.location.lat;
-            // console.log("latitude: " + latitude);
-
             var longitude = response.data.results[0].geometry.location.lng;
             var coordinates = { longitude, latitude };
-            // console.log("longitude: " + longitude);
 
             this.setState(
               {
@@ -118,30 +114,16 @@ class AddListing extends Component {
                   }
                 })
                   .then(res => {
-                    this.state.selectedDays.map(item => {
-                      let month = item.toString().split(" ")[1]
-                      let day = item.toString().split(" ")[2]
-                      let year = item.toString().split(" ")[3]
-
-                      let listingId = res.data._id
-                      let concatenatedDate = year + "-" + month + "-" + day
-
-                      let fulldate = item.toString(); 
+                    this.state.selectedDays.map(date => {
+                      const listingId = res.data._id;
 
                       API.createAvailability({
-                        date: fulldate,
+                        date,
                         listing: listingId
-                        // .map over all selected dates in array and create a new row in the avail collection for each date and include the the the id of listing 
-                      })
-                    }
-                    )
-                      
-
-
-                    
-                  
-                          
-                           })
+                        // .map over all selected dates in array and create a new row in the avail collection for each date and include the the the id of listing
+                      });
+                    });
+                  })
                   .catch(err => console.log(err));
               }
             );

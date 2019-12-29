@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import Nav from "../../components/Nav";
 import "./style.css";
 import axios from "axios";
-import DayPicker, { DateUtils } from 'react-day-picker';
-import 'react-day-picker/lib/style.css';
+import DayPicker, { DateUtils } from "react-day-picker";
+import "react-day-picker/lib/style.css";
 import API from "../../utils/API";
 
 class SearchResult extends Component {
@@ -11,11 +11,17 @@ class SearchResult extends Component {
     addressQuery: "",
     latitude: 39.952583,
     longitude: -75.165222,
-    selectedDays: []
+    selectedDays: [],
+    markerData: []
   };
 
-  componentDidMount() {
-    this.renderMap();
+  // componentDidMount() {
+  //   this.renderMap();
+  // }
+  componentDidUpdate(prevProps, props) {
+    if (this.state.markerData !== props.markerData) {
+      this.renderMap();
+    }
   }
 
   constructor(props) {
@@ -25,10 +31,11 @@ class SearchResult extends Component {
 
   handleDayClick(day, { selected }) {
     const { selectedDays } = this.state;
+
     if (selected) {
-      const selectedIndex = selectedDays.findIndex(selectedDay =>
-        DateUtils.isSameDay(selectedDay, day)
-      );
+      const selectedIndex = selectedDays.findIndex(selectedDay => {
+        DateUtils.isSameDay(selectedDay, day);
+      });
       selectedDays.splice(selectedIndex, 1);
     } else {
       selectedDays.push(day);
@@ -37,37 +44,45 @@ class SearchResult extends Component {
   }
 
   handleInputChange = event => {
-    console.log(event.target);
     const { name, value } = event.target;
     this.setState({
       [name]: value
     });
   };
 
-
-
   handleSubmitSearch = e => {
     e.preventDefault();
-    console.log("submit search works");
+    console.log("handleSubmitSearch");
     const address = this.getAddress();
     address.then(data => {
-      console.log(data);
-      console.log(this.state.selectedDays)
+      const formattedDates = this.state.selectedDays.map(date =>
+        date.toISOString()
+      );
 
-      let firstDay = this.state.selectedDays[0]
-      let lastDay = this.state.selectedDays[this.state.selectedDays.length -1]
-      let dateRangeObj = {firstDay, lastDay}
-      console.log(dateRangeObj)
-      console.log(firstDay)
-      console.log(lastDay)
-     
-        API.getAvailableListings(dateRangeObj)
-        .then(res => console.log(res))
+      API.getAvailableListings(formattedDates).then(res => {
+        console.log("here", res);
+        res.data.map(item => {
+          API.getListingById(item.listing).then(listing => {
+            console.log("listing here", listing);
+            // Set this.state.markerData here.
+            const data = listing.data[0];
+            this.setState({
+              markerData: [
+                ...this.state.markerData,
+                [
+                  data.address,
+                  data.location.coordinates[1],
+                  data.location.coordinates[0]
+                ]
+              ]
+            });
+          });
+        });
+      });
       // api get route for all available listings
       // api.getAvailableListings()
       // .then(res => console.log(res))
       // map or foreach to create markers for each listing
-      
     });
   };
 
@@ -76,6 +91,7 @@ class SearchResult extends Component {
       "https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo&callback=initMap"
     );
     window.initMap = this.initMap;
+    console.log(this.state.markerData);
   };
 
   initMap = () => {
@@ -85,33 +101,67 @@ class SearchResult extends Component {
     });
 
     // Create An InfoWindow
-    var infowindow = new window.google.maps.InfoWindow();
+    var infoWindow = new window.google.maps.InfoWindow(),
+      marker,
+      i;
 
     // We will need to change this
     var contentString = this.state.address;
 
-    var marker = new window.google.maps.Marker({
-      position: {
-        lat: this.state.latitude,
-        lng: this.state.longitude
-      },
-      map: map
-    });
+    // Make this.state.markerData look like this.
+    // var markers = [
+    //   ["London Eye, London", 51.503454, -0.119562],
+    //   ["Palace of Westminster, London", 51.499633, -0.124755]
+    // ];
 
-    // Click on A Marker!
-    marker.addListener("click", function() {
-      // Change the content
-      infowindow.setContent(contentString);
+    for (i = 0; i < this.state.markerData.length; i++) {
+      var position = new window.google.maps.LatLng(
+        this.state.markerData[i][1],
+        this.state.markerData[i][2]
+      );
+      // bounds.extend(position);
+      console.log("position", position);
+      marker = new window.google.maps.Marker({
+        position: position,
+        map: map,
+        title: this.state.markerData[i][0]
+      });
 
-      // Open An InfoWindow
-      infowindow.open(map, marker);
-    });
+      // Allow each marker to have an info window
+      window.google.maps.event.addListener(
+        marker,
+        "click",
+        (function(marker, i) {
+          return function() {
+            // infoWindow.setContent(infoWindow[i][0]);
+            infoWindow.open(map, marker);
+          };
+        })(marker, i)
+      );
+
+      // Automatically center the map fitting all markers on the screen
+      // map.fitBounds(bounds);
+    }
+    // var marker = new window.google.maps.Marker({
+    //   position: {
+    //     lat: this.state.latitude,
+    //     lng: this.state.longitude
+    //   },
+    //   map: map
+    // });
+
+    // // Click on A Marker!
+    // marker.addListener("click", function() {
+    //   // Change the content
+    //   infowindow.setContent(contentString);
+
+    //   // Open An InfoWindow
+    //   infowindow.open(map, marker);
+    // });
   };
 
   getAddress = async () => {
-    console.log("a string");
     let location = this.state.addressQuery;
-    console.log(location);
 
     axios
       .get("https://maps.googleapis.com/maps/api/geocode/json", {
@@ -121,24 +171,17 @@ class SearchResult extends Component {
         }
       })
       .then(response => {
-        console.log("Response data is", response.data);
         var latitude = response.data.results[0].geometry.location.lat;
-        console.log("latitude: " + latitude);
-
         var longitude = response.data.results[0].geometry.location.lng;
-        console.log("longitude: " + longitude);
-        this.setState({ latitude: latitude, longitude: longitude });
-        this.renderMap();
+        this.setState({ latitude, longitude });
+        // this.renderMap();
       });
   };
 
-  
-
   render() {
-    console.log(this.state);
     return (
       <div>
-        <Nav/>
+        <Nav />
         <form onSubmit={this.handleSubmitSearch}>
           <input
             type="text"
@@ -147,14 +190,17 @@ class SearchResult extends Component {
             onChange={this.handleInputChange}
             placeholder="Search for your address here"
           />
-          <button type="submit" className="btn btn-primary" id="queryAddress">Search</button>
+          <button type="submit" className="btn btn-primary" id="queryAddress">
+            Search
+          </button>
         </form>
         <div>
-        <DayPicker
-          selectedDays={this.state.selectedDays}
-          onDayClick={this.handleDayClick}
-        />
-      </div>
+          <DayPicker
+            locale="en"
+            selectedDays={this.state.selectedDays}
+            onDayClick={this.handleDayClick}
+          />
+        </div>
         <main>
           <div id="map"></div>
         </main>

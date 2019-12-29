@@ -4,19 +4,27 @@ export default {
   saveListing: function(listingData) {
     return axios.post("/api/listing", listingData);
   },
-  getUser: function () {
+  getUser: function() {
     return axios.get("/user/");
   },
-  getListings: function(){
+  getListings: function() {
     return axios.get("/api/listing");
   },
-  getListingById: function() {
-    return axios.get("api/listing");
+  getListingById: function(id) {
+    return axios.get("api/listing", {
+      params: {
+        id
+      }
+    });
   },
   createAvailability: function(availabilityData) {
     return axios.post("api/availability", availabilityData);
   },
-  getAvailableListings: function(dateRange){
-    return axios.get("api/availability",  dateRange);
+  getAvailableListings: function(dates) {
+    return axios.get("api/availability", {
+      params: {
+        dates
+      }
+    });
   }
 };
