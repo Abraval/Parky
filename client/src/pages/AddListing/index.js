@@ -92,16 +92,31 @@ class AddListing extends Component {
             var latitude = response.data.results[0].geometry.location.lat;
             var longitude = response.data.results[0].geometry.location.lng;
             var coordinates = { longitude, latitude };
-            var streetName = response.data.results[0].address_components[1].long_name;
-            var neighborhood = response.data.results[0].address_components[2].long_name;
+            var streetName =
+              response.data.results[0].address_components[1].long_name;
+            var neighborhood =
+              response.data.results[0].address_components[2].long_name;
 
-            console.log(response.data.results[0].address_components[2].long_name); 
+            console.log(
+              response.data.results[0].address_components[2].long_name
+            );
+
+            let apiKey = "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo";
+
+            var queryUrl =
+              "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=" +
+              latitude +
+              "," +
+              longitude +
+              "&fov=80&heading=70&pitch=0&key=" +
+              apiKey;
 
             this.setState(
               {
                 coordinates: coordinates,
                 longitude: longitude,
-                latitude: latitude
+                latitude: latitude,
+                photo: queryUrl
               },
               () => {
                 API.saveListing({
