@@ -30,7 +30,7 @@ module.exports = {
     let endDay; 
     console.log("Dates length", dates.length);  
 
-    if (dates.length === 1) {
+    if (dates.length == 1) {
       endDay = startDay; 
     } else {
       endDay = dates[req.query.dates.length - 1]; 
@@ -42,7 +42,7 @@ module.exports = {
     db.Availability.find({ 
       date: {
         $gte: startDay, 
-        $lt: endDay
+        $lte: endDay
       }
       })
       .then(dbModel => {
