@@ -92,6 +92,10 @@ class AddListing extends Component {
             var latitude = response.data.results[0].geometry.location.lat;
             var longitude = response.data.results[0].geometry.location.lng;
             var coordinates = { longitude, latitude };
+            var streetName = response.data.results[0].address_components[1].long_name;
+            var neighborhood = response.data.results[0].address_components[2].long_name;
+
+            console.log(response.data.results[0].address_components[2].long_name); 
 
             this.setState(
               {
@@ -109,6 +113,8 @@ class AddListing extends Component {
                   city: this.state.city,
                   state: this.state.state,
                   zipcode: this.state.zipcode,
+                  streetName,
+                  neighborhood,
                   location: {
                     coordinates: [this.state.longitude, this.state.latitude]
                   }

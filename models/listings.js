@@ -11,6 +11,8 @@ const listingSchema = new Schema({
   city: { type: String, unique: false, required: false },
   state: { type: String, unique: false, required: false },
   zipcode: { type: Number, unique: false, required: false },
+  streetName: { type: String, unique: false, required: false },
+  neighborhood: { type: String, unique: false, required: false },
   location: {
     type: { type: Number },
     coordinates: []
