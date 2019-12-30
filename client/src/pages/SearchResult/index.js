@@ -14,7 +14,7 @@ class SearchResult extends Component {
     longitude: -75.165222,
     selectedDays: [],
     markerData: [],
-    idToBook: ""
+    idToBook: []
   };
 
   // componentDidMount() {
@@ -28,10 +28,12 @@ class SearchResult extends Component {
     }
   }
 
-  handleBookClick = id => {
+  handleBookClick = event => {
+    const Id = event.target.attributes.getNamedItem("data-id").value;
     this.setState({
-      idToBook: id
+      idToBook: {Id}
     });
+
   };
 
   constructor(props) {
@@ -116,7 +118,7 @@ class SearchResult extends Component {
             console.log("listing here", listing);
             // Set this.state.markerData here.
             const data = listing.data[0];
-            // console.log(data.title);
+            console.log(data._id);
             this.setState({
               markerData: [
                 ...this.state.markerData,
@@ -127,7 +129,8 @@ class SearchResult extends Component {
                   data.title,
                   data.streetName,
                   data.neighborhood,
-                  data.photo
+                  data.photo,
+                  data._id
                 ]
               ]
             });
@@ -235,7 +238,7 @@ class SearchResult extends Component {
           ) : (
             <ListingList>
               {this.state.markerData.map(spot => {
-                console.log(spot);
+                // console.log(spot, this.handleBookClick);
                 return (
                   <ListingListItem
                     key={spot[3]}
@@ -243,6 +246,8 @@ class SearchResult extends Component {
                     href={spot[6]}
                     street={spot[4]}
                     neighborhood={spot[5]}
+                    id={spot[7]}
+                    handleBookClick={this.handleBookClick}
                   />
                 );
               })}

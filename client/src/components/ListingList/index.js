@@ -2,6 +2,7 @@ import React from "react";
 import { Container, Row, Col } from "../Grid";
 import "./style.css";
 import { PromiseProvider } from "mongoose";
+import SearchResult from "../../pages/SearchResult"
 
 // Exporting both ListingList and ListingListItem from this file
 
@@ -20,7 +21,9 @@ export function ListingListItem({
   price,
   handleBookClick
 }) {
+  console.log(id, title, street, "NEW CONSOLE")
   return (
+    
     <li className="list-group-item">
       <Container>
         <Row>
@@ -34,8 +37,9 @@ export function ListingListItem({
             <p>$ {price}</p>
             <button
               type="button"
+              data-id={id}
               className="btn btn-primary bookbtn"
-              onClick={event => handleBookClick(id)}
+              onClick={handleBookClick}
             >
               Book Now
             </button>
