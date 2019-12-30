@@ -8,7 +8,8 @@ router
 
   router
   .route("/profile")
-  .get(listingController.findAllProfListing);
+  .get(listingController.findAllProfListing)
+  // .put(listingController.editListing);
 
 
 module.exports = router;
