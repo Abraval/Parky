@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "../Grid";
 import "./style.css";
+import { PromiseProvider } from "mongoose";
 
 // Exporting both ListingList and ListingListItem from this file
 
@@ -10,7 +11,15 @@ export function ListingList({ children }) {
 }
 
 // ListingListItem renders a bootstrap list item containing data from the recipe api call
-export function ListingListItem({ href, title, street, neighborhood, price }) {
+export function ListingListItem({
+  id,
+  href,
+  title,
+  street,
+  neighborhood,
+  price,
+  handleBookClick
+}) {
   return (
     <li className="list-group-item">
       <Container>
@@ -23,7 +32,11 @@ export function ListingListItem({ href, title, street, neighborhood, price }) {
             <p>Street: {street}</p>
             <p>Neighborhood: {neighborhood}</p>
             <p>$ {price}</p>
-            <button type="button" className="btn btn-primary bookbtn">
+            <button
+              type="button"
+              className="btn btn-primary bookbtn"
+              onClick={event => handleBookClick(id)}
+            >
               Book Now
             </button>
           </Col>

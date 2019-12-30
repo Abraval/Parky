@@ -32,6 +32,7 @@ class AddListing extends Component {
     longitude: 0.0,
     latitude: 0.0
   };
+
   componentDidMount() {
     this.userInfo();
   }
@@ -167,6 +168,8 @@ class AddListing extends Component {
 
   render() {
     // console.log(this.state);
+    const classes = useStyles();
+
     return (
       <div>
         <Nav />
