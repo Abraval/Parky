@@ -18,6 +18,8 @@ function ListingCard(props) {
           </div>
 
         <div className="card-footer">
+        <a type="button" className="editListing btn btn-primary" onClick={event => props.handleEditListing(event)} >Edit Listing</a>
+        <a type="button" className="editAvailability btn btn-primary" >Edit Availability</a>
         </div>
       </div>
   );

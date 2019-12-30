@@ -4,6 +4,7 @@ import API from "../../utils/API";
 import "./style.css";
 import Nav from "../../components/Nav";
 
+
 class Profile extends Component {
   state = {
     listing: [],
@@ -31,6 +32,13 @@ class Profile extends Component {
   tester() {
     console.log("testing user");
     console.log(this.state);
+  }
+
+  handleEditListing = (event) => {
+    event.preventDefault();
+
+    console.log("This is edit message!")
+
   }
 
   loadListings = () => {
@@ -67,12 +75,15 @@ class Profile extends Component {
                   return (
                     <ListingCard
                       key={listing._id}
+                      id={listing._id}
                       title={listing.title}
                       photo={listing.photo}
                       address={listing.address}
                       city={listing.city}
                       state={listing.username}
                       zipcode={listing.zipcode}
+                      handleEditListing={this.handleEditListing}
+                    
                     />
                   );
                 }
