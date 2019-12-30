@@ -13,7 +13,8 @@ class SearchResult extends Component {
     latitude: 39.952583,
     longitude: -75.165222,
     selectedDays: [],
-    markerData: []
+    markerData: [],
+    idToBook: ""
   };
 
   // componentDidMount() {
@@ -27,13 +28,11 @@ class SearchResult extends Component {
     }
   }
 
-  // renderCards = () => {
-  //   // We will write code here that will map through the "markerData" array held in state, and generate a list of cards based on the information that already exists in markerData. No API requests necessary.
-
-  //   const Markers = this.state.markerData;
-  //   console.log("Markers is: ", Markers);
-
-  // };
+  handleBookClick = id => {
+    this.setState({
+      idToBook: id
+    });
+  };
 
   constructor(props) {
     super(props);
@@ -185,22 +184,6 @@ class SearchResult extends Component {
         })(marker, i)
       );
     }
-    // var marker = new window.google.maps.Marker({
-    //   position: {
-    //     lat: this.state.latitude,
-    //     lng: this.state.longitude
-    //   },
-    //   map: map
-    // });
-
-    // // Click on A Marker!
-    // marker.addListener("click", function() {
-    //   // Change the content
-    //   infowindow.setContent(contentString);
-
-    //   // Open An InfoWindow
-    //   infowindow.open(map, marker);
-    // });
   };
 
   getAddress = async () => {
