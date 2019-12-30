@@ -261,13 +261,14 @@ class SearchResult extends Component {
           ) : (
             <ListingList>
               {this.state.markerData.map(spot => {
+                console.log(spot);
                 return (
                   <ListingListItem
-                  // key={spot.title}
-                  // title={spot.title}
-                  // href={spot.href}
-                  // ingredients={spot.ingredients}
-                  // thumbnail={spot.thumbnail}
+                  key={spot[3]}
+                  title={spot[3]}
+                  href={spot[6]}
+                  street={spot[4]}
+                  neighborhood={spot[5]}
                   />
                 );
               })}
