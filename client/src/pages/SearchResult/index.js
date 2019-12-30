@@ -29,6 +29,12 @@ class SearchResult extends Component {
 
   renderCards = () => {
     // We will write code here that will map through the "markerData" array held in state, and generate a list of cards based on the information that already exists in markerData. No API requests necessary.
+
+    const Markers = this.state.markerData; 
+    console.log("Markers is: ", Markers);  
+
+    
+
   };
 
   constructor(props) {
@@ -61,6 +67,14 @@ class SearchResult extends Component {
     e.preventDefault();
     console.log("handleSubmitSearch");
     const address = this.getAddress();
+
+    let a = this.state.selectedDays.map(i => {
+      console.log(i);
+      // console.log(b); 
+    });
+
+    console.log(a);
+
     address.then(data => {
       const formattedDates = this.state.selectedDays.map(date =>
         date.toISOString()
@@ -68,6 +82,7 @@ class SearchResult extends Component {
 
       console.log(formattedDates); 
       this.setState({markerData: []}); 
+      this.setState({listings: []});
 
       API.getAvailableListings(formattedDates).then(res => {
         console.log("here", res);
@@ -80,16 +95,15 @@ class SearchResult extends Component {
         for (let i = 0; i < res.data.length; i++) {
           let count = 0; 
           for (let j = 0; j < res.data.length; j++) {
-            console.log(res.data[i].listing === res.data[j].listing);
+            // console.log(res.data[i].listing === res.data[j].listing);
             if (res.data[i].listing === res.data[j].listing) {
             count++; 
-            console.log(count);
-
-            console.log(emptyArr.findIndex(x => x.listing === res.data[i].listing) === -1);
+            // console.log(count);
+            // console.log(emptyArr.findIndex(x => x.listing === res.data[i].listing) === -1);
 
               if (count == datesLength && emptyArr.findIndex(x => x.listing === res.data[i].listing) === -1) {
-                // emptyArr.indexOf(res.data[i] === -1 ? true : false)
                 emptyArr.push(res.data[i]);
+             
               }
               
             }
@@ -106,13 +120,18 @@ class SearchResult extends Component {
             console.log("listing here", listing);
             // Set this.state.markerData here.
             const data = listing.data[0];
+            console.log(data.title); 
             this.setState({
               markerData: [
                 ...this.state.markerData,
                 [
                   data.address,
                   data.location.coordinates[1],
-                  data.location.coordinates[0]
+                  data.location.coordinates[0],
+                  data.title,
+                  data.streetName,
+                  data.neighborhood, 
+                  data.photo
                 ]
               ]
             });
@@ -213,6 +232,7 @@ class SearchResult extends Component {
   };
 
   render() {
+    console.log(this.state); 
     return (
       <div>
         <Nav />
