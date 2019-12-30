@@ -10,6 +10,7 @@ class AddListing extends Component {
     title: "",
     parkingType: "",
     photo: "",
+    price: 0.0,
     address: "",
     city: "",
     state: "",
@@ -191,10 +192,20 @@ class AddListing extends Component {
                   <option>Driveway</option>
                 </select>
               </div>
-              <div className="form-group col-md-6">
-                <label for="photo">Photo</label>
 
+              <div className="form-group col-md-6">
+                <label for="photo">Price</label>
                 <input
+                  value={this.state.price}
+                  onChange={this.handleInputChange}
+                  type="text"
+                  className="form-control"
+                  id="price"
+                  name="price"
+                  placeholder="Enter daily price"
+                />
+
+                {/* <input
                   value={this.state.photo}
                   onChange={this.handleInputChange}
                   type="text"
@@ -202,7 +213,7 @@ class AddListing extends Component {
                   id="photo"
                   name="photo"
                   placeholder="Link to the photo here"
-                />
+                /> */}
               </div>
             </div>
             <div className="form-group">
