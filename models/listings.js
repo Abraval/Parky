@@ -7,6 +7,7 @@ const listingSchema = new Schema({
   title: { type: String, unique: false, required: false },
   parkingtype: { type: String, unique: false, required: false },
   photo: { type: String, unique: false, required: false },
+  price: { type: Number, unique: false, required: false },
   address: { type: String, unique: false, required: false },
   city: { type: String, unique: false, required: false },
   state: { type: String, unique: false, required: false },

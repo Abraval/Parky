@@ -4,12 +4,24 @@ import API from "../../utils/API";
 import axios from "axios";
 import DayPicker, { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
+// import Button from "../../components/Button";
+import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    "& > *": {
+      margin: theme.spacing(1)
+    }
+  }
+}));
 
 class AddListing extends Component {
   state = {
     title: "",
     parkingType: "",
     photo: "",
+    price: 0.0,
     address: "",
     city: "",
     state: "",
@@ -92,16 +104,31 @@ class AddListing extends Component {
             var latitude = response.data.results[0].geometry.location.lat;
             var longitude = response.data.results[0].geometry.location.lng;
             var coordinates = { longitude, latitude };
-            var streetName = response.data.results[0].address_components[1].long_name;
-            var neighborhood = response.data.results[0].address_components[2].long_name;
+            var streetName =
+              response.data.results[0].address_components[1].long_name;
+            var neighborhood =
+              response.data.results[0].address_components[2].long_name;
 
-            console.log(response.data.results[0].address_components[2].long_name); 
+            console.log(
+              response.data.results[0].address_components[2].long_name
+            );
+
+            let apiKey = "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo";
+
+            var queryUrl =
+              "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=" +
+              latitude +
+              "," +
+              longitude +
+              "&fov=80&heading=70&pitch=0&key=" +
+              apiKey;
 
             this.setState(
               {
                 coordinates: coordinates,
                 longitude: longitude,
-                latitude: latitude
+                latitude: latitude,
+                photo: queryUrl
               },
               () => {
                 API.saveListing({
@@ -176,10 +203,20 @@ class AddListing extends Component {
                   <option>Driveway</option>
                 </select>
               </div>
-              <div className="form-group col-md-6">
-                <label for="photo">Photo</label>
 
+              <div className="form-group col-md-6">
+                <label for="photo">Price</label>
                 <input
+                  value={this.state.price}
+                  onChange={this.handleInputChange}
+                  type="text"
+                  className="form-control"
+                  id="price"
+                  name="price"
+                  placeholder="Enter daily price"
+                />
+
+                {/* <input
                   value={this.state.photo}
                   onChange={this.handleInputChange}
                   type="text"
@@ -187,7 +224,7 @@ class AddListing extends Component {
                   id="photo"
                   name="photo"
                   placeholder="Link to the photo here"
-                />
+                /> */}
               </div>
             </div>
             <div className="form-group">
@@ -246,14 +283,23 @@ class AddListing extends Component {
               </div>
             </div>
             <div className="form-group"></div>
-            <button
+            {/* <button
               type="submit"
               onClick={this.handleFormSubmit}
               className="btn btn-primary"
               id="addListing"
             >
               Add Listing
-            </button>
+            </button> */}
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              onClick={this.handleFormSubmit}
+              id="addListing"
+            >
+              Add Listing
+            </Button>
           </form>
           <div>
             <DayPicker
