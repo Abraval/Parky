@@ -4,6 +4,17 @@ import API from "../../utils/API";
 import axios from "axios";
 import DayPicker, { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
+// import Button from "../../components/Button";
+import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    "& > *": {
+      margin: theme.spacing(1)
+    }
+  }
+}));
 
 class AddListing extends Component {
   state = {
@@ -272,14 +283,23 @@ class AddListing extends Component {
               </div>
             </div>
             <div className="form-group"></div>
-            <button
+            {/* <button
               type="submit"
               onClick={this.handleFormSubmit}
               className="btn btn-primary"
               id="addListing"
             >
               Add Listing
-            </button>
+            </button> */}
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              onClick={this.handleFormSubmit}
+              id="addListing"
+            >
+              Add Listing
+            </Button>
           </form>
           <div>
             <DayPicker
