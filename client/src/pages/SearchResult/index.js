@@ -67,10 +67,41 @@ class SearchResult extends Component {
       );
 
       console.log(formattedDates); 
+      this.setState({markerData: []}); 
 
       API.getAvailableListings(formattedDates).then(res => {
         console.log("here", res);
-        res.data.map(item => {
+
+        let emptyArr = [] // these are the items that we are displaying
+
+        const datesLength = formattedDates.length; 
+        console.log(datesLength); 
+
+        for (let i = 0; i < res.data.length; i++) {
+          let count = 0; 
+          for (let j = 0; j < res.data.length; j++) {
+            console.log(res.data[i].listing === res.data[j].listing);
+            if (res.data[i].listing === res.data[j].listing) {
+            count++; 
+            console.log(count);
+
+            console.log(emptyArr.findIndex(x => x.listing === res.data[i].listing) === -1);
+
+              if (count == datesLength && emptyArr.findIndex(x => x.listing === res.data[i].listing) === -1) {
+                // emptyArr.indexOf(res.data[i] === -1 ? true : false)
+                emptyArr.push(res.data[i]);
+              }
+              
+            }
+
+          }
+
+        }
+
+        console.log(emptyArr); 
+
+
+        emptyArr.map(item => {
           API.getListingById(item.listing).then(listing => {
             console.log("listing here", listing);
             // Set this.state.markerData here.
