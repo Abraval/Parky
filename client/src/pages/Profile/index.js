@@ -3,6 +3,10 @@ import ListingCard from "../../components/ListingCard";
 import API from "../../utils/API";
 import "./style.css";
 import Nav from "../../components/Nav";
+import ListingModal from "../../components/ListingModal";
+
+
+
 
 class Profile extends Component {
   state = {
@@ -13,6 +17,9 @@ class Profile extends Component {
   componentDidMount() {
     this.userInfo();
   }
+  
+  
+  
 
   userInfo = () => {
     API.getUser()
@@ -32,6 +39,31 @@ class Profile extends Component {
     console.log("testing user");
     console.log(this.state);
   }
+
+  handleEditListing = (event) => {
+    event.preventDefault();
+    
+    console.log("This is edit message!")
+
+  }
+
+  handleAvailListing = (event) => {
+    event.preventDefault();
+    
+    console.log("this is availability message!")
+  }
+
+  //  handleOpen = () => {
+  //   setOpen(true);
+  // };
+
+  //  handleClose = () => {
+  //   setOpen(false);
+  // };
+
+  //  handleOpen2 = () => {
+  //   setOpen(true);
+  // };
 
   loadListings = () => {
     API.getListingsForProf()
@@ -67,13 +99,18 @@ class Profile extends Component {
                   return (
                     <ListingCard
                       key={listing._id}
+                      id={listing._id}
                       title={listing.title}
                       photo={listing.photo}
                       address={listing.address}
                       city={listing.city}
                       state={listing.username}
                       zipcode={listing.zipcode}
-                    />
+                      handleEditListing={this.handleEditListing}
+                      handleAvailListing={this.handleAvailListing}
+                    
+                      />
+                      
                   );
                 }
              
