@@ -23,19 +23,17 @@ class SearchResult extends Component {
   componentDidUpdate(prevProps, props) {
     if (this.state.markerData !== props.markerData) {
       this.renderMap();
-      this.renderCards();
+      // this.renderCards();
     }
   }
 
-  renderCards = () => {
-    // We will write code here that will map through the "markerData" array held in state, and generate a list of cards based on the information that already exists in markerData. No API requests necessary.
+  // renderCards = () => {
+  //   // We will write code here that will map through the "markerData" array held in state, and generate a list of cards based on the information that already exists in markerData. No API requests necessary.
 
-    const Markers = this.state.markerData; 
-    console.log("Markers is: ", Markers);  
+  //   const Markers = this.state.markerData;
+  //   console.log("Markers is: ", Markers);
 
-    
-
-  };
+  // };
 
   constructor(props) {
     super(props);
@@ -69,58 +67,57 @@ class SearchResult extends Component {
     const address = this.getAddress();
 
     let a = this.state.selectedDays.map(i => {
-      console.log(i);
-      // console.log(b); 
+      // console.log(i);
+      // console.log(b);
     });
 
-    console.log(a);
+    // console.log(a);
 
     address.then(data => {
       const formattedDates = this.state.selectedDays.map(date =>
         date.toISOString()
       );
 
-      console.log(formattedDates); 
-      this.setState({markerData: []}); 
-      this.setState({listings: []});
+      // console.log(formattedDates);
+      this.setState({ markerData: [] });
+      this.setState({ listings: [] });
 
       API.getAvailableListings(formattedDates).then(res => {
         console.log("here", res);
 
-        let emptyArr = [] // these are the items that we are displaying
+        let emptyArr = []; // these are the items that we are displaying
 
-        const datesLength = formattedDates.length; 
-        console.log(datesLength); 
+        const datesLength = formattedDates.length;
+        console.log(datesLength);
 
         for (let i = 0; i < res.data.length; i++) {
-          let count = 0; 
+          let count = 0;
           for (let j = 0; j < res.data.length; j++) {
             // console.log(res.data[i].listing === res.data[j].listing);
             if (res.data[i].listing === res.data[j].listing) {
-            count++; 
-            // console.log(count);
-            // console.log(emptyArr.findIndex(x => x.listing === res.data[i].listing) === -1);
+              count++;
+              // console.log(count);
+              // console.log(emptyArr.findIndex(x => x.listing === res.data[i].listing) === -1);
 
-              if (count == datesLength && emptyArr.findIndex(x => x.listing === res.data[i].listing) === -1) {
+              if (
+                count == datesLength &&
+                emptyArr.findIndex(x => x.listing === res.data[i].listing) ===
+                  -1
+              ) {
                 emptyArr.push(res.data[i]);
-             
               }
-              
             }
-
           }
-
         }
 
-        console.log(emptyArr); 
-
+        // console.log(emptyArr);
 
         emptyArr.map(item => {
           API.getListingById(item.listing).then(listing => {
             console.log("listing here", listing);
             // Set this.state.markerData here.
             const data = listing.data[0];
-            console.log(data.title); 
+            // console.log(data.title);
             this.setState({
               markerData: [
                 ...this.state.markerData,
@@ -130,7 +127,7 @@ class SearchResult extends Component {
                   data.location.coordinates[0],
                   data.title,
                   data.streetName,
-                  data.neighborhood, 
+                  data.neighborhood,
                   data.photo
                 ]
               ]
@@ -146,7 +143,7 @@ class SearchResult extends Component {
       "https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo&callback=initMap"
     );
     window.initMap = this.initMap;
-    console.log(this.state.markerData);
+    // console.log(this.state.markerData);
   };
 
   initMap = () => {
@@ -163,19 +160,13 @@ class SearchResult extends Component {
     // We will need to change this
     var contentString = this.state.address;
 
-    // Make this.state.markerData look like this.
-    // var markers = [
-    //   ["London Eye, London", 51.503454, -0.119562],
-    //   ["Palace of Westminster, London", 51.499633, -0.124755]
-    // ];
-
     for (i = 0; i < this.state.markerData.length; i++) {
       var position = new window.google.maps.LatLng(
         this.state.markerData[i][1],
         this.state.markerData[i][2]
       );
       // bounds.extend(position);
-      console.log("position", position);
+      // console.log("position", position);
       marker = new window.google.maps.Marker({
         position: position,
         map: map,
@@ -223,7 +214,7 @@ class SearchResult extends Component {
         }
       })
       .then(response => {
-        console.log(response);
+        // console.log(response);
         var latitude = response.data.results[0].geometry.location.lat;
         var longitude = response.data.results[0].geometry.location.lng;
         this.setState({ latitude, longitude });
@@ -232,7 +223,7 @@ class SearchResult extends Component {
   };
 
   render() {
-    console.log(this.state); 
+    console.log(this.state);
     return (
       <div>
         <Nav />
@@ -264,11 +255,11 @@ class SearchResult extends Component {
                 console.log(spot);
                 return (
                   <ListingListItem
-                  key={spot[3]}
-                  title={spot[3]}
-                  href={spot[6]}
-                  street={spot[4]}
-                  neighborhood={spot[5]}
+                    key={spot[3]}
+                    title={spot[3]}
+                    href={spot[6]}
+                    street={spot[4]}
+                    neighborhood={spot[5]}
                   />
                 );
               })}
