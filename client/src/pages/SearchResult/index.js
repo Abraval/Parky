@@ -13,7 +13,8 @@ class SearchResult extends Component {
     latitude: 39.952583,
     longitude: -75.165222,
     selectedDays: [],
-    markerData: []
+    markerData: [],
+    idToBook: []
   };
 
   // componentDidMount() {
@@ -27,13 +28,13 @@ class SearchResult extends Component {
     }
   }
 
-  // renderCards = () => {
-  //   // We will write code here that will map through the "markerData" array held in state, and generate a list of cards based on the information that already exists in markerData. No API requests necessary.
+  handleBookClick = event => {
+    const Id = event.target.attributes.getNamedItem("data-id").value;
+    this.setState({
+      idToBook: {Id}
+    });
 
-  //   const Markers = this.state.markerData;
-  //   console.log("Markers is: ", Markers);
-
-  // };
+  };
 
   constructor(props) {
     super(props);
@@ -117,7 +118,7 @@ class SearchResult extends Component {
             console.log("listing here", listing);
             // Set this.state.markerData here.
             const data = listing.data[0];
-            // console.log(data.title);
+            console.log(data._id);
             this.setState({
               markerData: [
                 ...this.state.markerData,
@@ -128,7 +129,8 @@ class SearchResult extends Component {
                   data.title,
                   data.streetName,
                   data.neighborhood,
-                  data.photo
+                  data.photo,
+                  data._id
                 ]
               ]
             });
@@ -185,22 +187,6 @@ class SearchResult extends Component {
         })(marker, i)
       );
     }
-    // var marker = new window.google.maps.Marker({
-    //   position: {
-    //     lat: this.state.latitude,
-    //     lng: this.state.longitude
-    //   },
-    //   map: map
-    // });
-
-    // // Click on A Marker!
-    // marker.addListener("click", function() {
-    //   // Change the content
-    //   infowindow.setContent(contentString);
-
-    //   // Open An InfoWindow
-    //   infowindow.open(map, marker);
-    // });
   };
 
   getAddress = async () => {
@@ -252,7 +238,7 @@ class SearchResult extends Component {
           ) : (
             <ListingList>
               {this.state.markerData.map(spot => {
-                console.log(spot);
+                // console.log(spot, this.handleBookClick);
                 return (
                   <ListingListItem
                     key={spot[3]}
@@ -260,6 +246,8 @@ class SearchResult extends Component {
                     href={spot[6]}
                     street={spot[4]}
                     neighborhood={spot[5]}
+                    id={spot[7]}
+                    handleBookClick={this.handleBookClick}
                   />
                 );
               })}
