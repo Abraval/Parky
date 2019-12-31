@@ -3,10 +3,6 @@ import ListingCard from "../../components/ListingCard";
 import API from "../../utils/API";
 import "./style.css";
 import Nav from "../../components/Nav";
-import ListingModal from "../../components/ListingModal";
-
-
-
 
 class Profile extends Component {
   state = {
@@ -17,9 +13,6 @@ class Profile extends Component {
   componentDidMount() {
     this.userInfo();
   }
-  
-  
-  
 
   userInfo = () => {
     API.getUser()
@@ -40,18 +33,17 @@ class Profile extends Component {
     console.log(this.state);
   }
 
-  handleEditListing = (event) => {
+  handleEditListing = event => {
     event.preventDefault();
-    
-    console.log("This is edit message!")
 
-  }
+    console.log("This is edit message!");
+  };
 
-  handleAvailListing = (event) => {
+  handleAvailListing = event => {
     event.preventDefault();
-    
-    console.log("this is availability message!")
-  }
+
+    console.log("this is availability message!");
+  };
 
   //  handleOpen = () => {
   //   setOpen(true);
@@ -82,42 +74,38 @@ class Profile extends Component {
   render() {
     console.log("##################");
     console.log(this.state.listing.length);
-    console.log(this.state.listing.filter(item => console.log(item.user === this.state.userId)));
+    console.log(
+      this.state.listing.filter(item =>
+        console.log(item.user === this.state.userId)
+      )
+    );
     console.log(this.state.userId);
     return (
- 
       <div>
-           
         <Nav />
-    
-          <div>
-            {this.state.listing
-              // .filter(listing => listing.user._id === this.state.user.user._id)
-              .map(listing => {
 
-                if (listing.user === this.state.userId) {
-                  return (
-                    <ListingCard
-                      key={listing._id}
-                      id={listing._id}
-                      title={listing.title}
-                      photo={listing.photo}
-                      address={listing.address}
-                      city={listing.city}
-                      state={listing.username}
-                      zipcode={listing.zipcode}
-                      handleEditListing={this.handleEditListing}
-                      handleAvailListing={this.handleAvailListing}
-                    
-                      />
-                      
-                  );
-                }
-             
-               
-              })}
-          </div>
-  
+        <div>
+          {this.state.listing
+            // .filter(listing => listing.user._id === this.state.user.user._id)
+            .map(listing => {
+              if (listing.user === this.state.userId) {
+                return (
+                  <ListingCard
+                    key={listing._id}
+                    id={listing._id}
+                    title={listing.title}
+                    photo={listing.photo}
+                    address={listing.address}
+                    city={listing.city}
+                    state={listing.username}
+                    zipcode={listing.zipcode}
+                    handleEditListing={this.handleEditListing}
+                    handleAvailListing={this.handleAvailListing}
+                  />
+                );
+              }
+            })}
+        </div>
       </div>
     );
   }
