@@ -14,13 +14,31 @@ class SearchResult extends Component {
     longitude: -75.165222,
     selectedDays: [],
     markerData: [],
-    idToBook: ""
+    idToBook: "",
+    user: {}
   };
 
   // componentDidMount() {
   //   this.renderMap();
   // }
+  componentDidMount() {
+    this.userInfo().then(response =>
+      this.setState(
+        {
+          user: response.data.user
+        },
+        () => this.tester()
+      )
+    );
+  }
 
+  tester() {
+    console.log(this.state.user);
+  }
+
+  userInfo() {
+    return axios.get("/user/");
+  }
   componentDidUpdate(prevProps, props) {
     if (this.state.markerData !== props.markerData) {
       this.renderMap();
@@ -30,12 +48,15 @@ class SearchResult extends Component {
 
   handleBookClick = event => {
     const Id = event.target.attributes.getNamedItem("data-id").value;
- 
-    this.setState({
-      idToBook: Id
-    
+
+    API.updateAvailability({
+      listing: Id,
+      userId: this.state.user._id
     });
 
+    this.setState({
+      idToBook: Id
+    });
   };
 
   constructor(props) {
