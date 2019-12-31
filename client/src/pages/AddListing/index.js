@@ -5,16 +5,16 @@ import axios from "axios";
 import DayPicker, { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
 // import Button from "../../components/Button";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+// import { makeStyles } from "@material-ui/core/styles";
+// import Button from "@material-ui/core/Button";
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    "& > *": {
-      margin: theme.spacing(1)
-    }
-  }
-}));
+// const useStyles = makeStyles(theme => ({
+//   root: {
+//     "& > *": {
+//       margin: theme.spacing(1)
+//     }
+//   }
+// }));
 
 class AddListing extends Component {
   state = {
@@ -168,7 +168,7 @@ class AddListing extends Component {
 
   render() {
     // console.log(this.state);
-    const classes = useStyles();
+    // const classes = useStyles();
 
     return (
       <div>
@@ -286,15 +286,15 @@ class AddListing extends Component {
               </div>
             </div>
             <div className="form-group"></div>
-            {/* <button
+            <button
               type="submit"
               onClick={this.handleFormSubmit}
               className="btn btn-primary"
               id="addListing"
             >
               Add Listing
-            </button> */}
-            <Button
+            </button>
+            {/* <Button
               variant="contained"
               color="primary"
               type="submit"
@@ -302,7 +302,7 @@ class AddListing extends Component {
               id="addListing"
             >
               Add Listing
-            </Button>
+            </Button> */}
           </form>
           <div>
             <DayPicker
