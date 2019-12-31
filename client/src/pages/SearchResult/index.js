@@ -14,7 +14,7 @@ class SearchResult extends Component {
     longitude: -75.165222,
     selectedDays: [],
     markerData: [],
-    idToBook: []
+    idToBook: ""
   };
 
   // componentDidMount() {
@@ -30,8 +30,10 @@ class SearchResult extends Component {
 
   handleBookClick = event => {
     const Id = event.target.attributes.getNamedItem("data-id").value;
+ 
     this.setState({
-      idToBook: {Id}
+      idToBook: Id
+    
     });
 
   };
