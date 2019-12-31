@@ -1,4 +1,5 @@
 const db = require("../models");
+const mongoose = require("mongoose");
 
 module.exports = {
   findAll: function(req, res) {
@@ -61,5 +62,20 @@ module.exports = {
     db.Listing.findOneAndUpdate({ _id: req.query.id }, req.body)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.json(err));
+  },
+  updateAvailabilityUser: function(req, res) {
+    console.log("UPDATE USER", req.body.userId);
+    db.Availability.findOneAndUpdate(
+      {
+        listing: req.body.listing
+      },
+      {
+        $set: {
+          renter: mongoose.Types.ObjectId(req.body.userId)
+        }
+      }
+    ).then(function(dbAvailability) {
+      res.json(dbAvailability);
+    });
   }
 };

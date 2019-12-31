@@ -20,6 +20,10 @@ export default {
       }
     });
   },
+  updateAvailability: function(availabilityData) {
+    return axios.put("api/availability", availabilityData) 
+
+  },
   createAvailability: function(availabilityData) {
     return axios.post("api/availability", availabilityData);
   },

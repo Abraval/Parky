@@ -43,7 +43,8 @@ router.post(
     (req, res) => {
         console.log('logged in', req.user);
         var userInfo = {
-            username: req.user.username
+            username: req.user.username 
+
         };
         res.send(userInfo);
     }
@@ -52,7 +53,10 @@ router.post(
 router.get('/', (req, res, next) => {
     console.log(req.user)
     if (req.user) {
-        res.json({ user: req.user })
+        res.json({ 
+            user: req.user,
+        userId: req.user._id    
+        })
     } else {
         res.json({ user: null })
     }

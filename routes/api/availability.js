@@ -6,4 +6,6 @@ router
   .get(listingController.findAllAvailable)
   .post(listingController.createAvailability);
 
+router.route("/").put(listingController.updateAvailabilityUser);
+
 module.exports = router;
