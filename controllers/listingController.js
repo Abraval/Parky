@@ -3,7 +3,12 @@ const mongoose = require("mongoose");
 
 module.exports = {
   findAll: function(req, res) {
-    db.Listing.find({ _id: req.query.id })
+    db.Listing.find({ reserved: false })
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
+  },
+  findReserved: function(req, res) {
+    db.Listing.find({ reserved: true })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
@@ -43,7 +48,8 @@ module.exports = {
       date: {
         $gte: startDay,
         $lte: endDay
-      }
+      },
+      renter: null
     })
       .then(dbModel => {
         res.json(dbModel);
@@ -75,7 +81,19 @@ module.exports = {
         }
       }
     ).then(function(dbAvailability) {
-      res.json(dbAvailability);
+      db.Listing.findOneAndUpdate(
+        {
+          _id: req.body.listing
+        },
+
+        {
+          $set: {
+            reserved: true
+          }
+        }
+      ).then(function(dbListing) {
+        res.json(dbAvailability);
+      });
     });
   }
 };

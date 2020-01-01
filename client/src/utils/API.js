@@ -13,6 +13,9 @@ export default {
   getListingsForProf: function() {
     return axios.get("/api/listing/profile");
   },
+  getReservForProf: function() {
+    return axios.get("/api/listing/reserved")
+  },
   getListingById: function(id) {
     return axios.get("api/listing", {
       params: {

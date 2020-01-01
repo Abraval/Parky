@@ -17,7 +17,11 @@ const listingSchema = new Schema({
   location: {
     type: { type: Number },
     coordinates: []
-  }
+  },
+  reserved: {
+    type: Boolean,
+    default: false
+  },
 });
 
 const Listing = mongoose.model("Listing", listingSchema);

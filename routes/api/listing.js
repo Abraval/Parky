@@ -9,6 +9,11 @@ router
   router
   .route("/profile")
   .get(listingController.findAllProfListing)
+
+  router
+  .route("/reserved")
+  .get(listingController.findReserved)
+
   // .put(listingController.editListing);
 
 
