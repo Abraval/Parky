@@ -12,8 +12,12 @@ router
   .put(listingController.editListing)
 
   router
-  .route("/reserved")
+  .route("/reserved/")
   .get(listingController.findReserved)
+
+  router
+  .route("/reserved/:id")
+  .get(listingController.findReservedById)
 
 
   // .put(listingController.editListing);

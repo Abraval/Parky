@@ -73,8 +73,9 @@ class Profile extends Component {
       .catch(err => console.log(err));
   };
   loadReserved = () => {
-    API.getReservForProf()
+    API.getReservForProf(this.state.userId)
       .then(res => {
+        console.log(res);
         this.setState({ reserved: res.data });
       })
       .catch(err => console.log(err));
@@ -118,7 +119,7 @@ class Profile extends Component {
           })}
 
         {this.state.reserved.map(reserved => {
-          if (reserved.user === this.state.userId)
+          // if (reserved.user === this.state.userId)
           return (
             <div>
               <h1>RESERVATIONS</h1>

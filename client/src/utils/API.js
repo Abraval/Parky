@@ -13,8 +13,16 @@ export default {
   getListingsForProf: function() {
     return axios.get("/api/listing/profile");
   },
-  getReservForProf: function() {
-    return axios.get("/api/listing/reserved");
+  getReservForProf: function(id) {
+    console.log(id);
+    return axios.get("/api/listing/reserved/" + id)
+  },
+  getReservById: function(id) {
+    return axios.get("api/reserved", {
+      params: {
+        id
+      }
+    });
   },
   getListingById: function(id) {
     return axios.get("api/listing", {
@@ -36,5 +44,5 @@ export default {
       }
     });
   },
-  
+
 };
