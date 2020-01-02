@@ -9,6 +9,7 @@ router
   router
   .route("/profile")
   .get(listingController.findAllProfListing)
+  .put(listingController.editListing)
 
   router
   .route("/reserved")
