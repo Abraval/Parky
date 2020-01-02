@@ -30,7 +30,7 @@ function ListingCard(props) {
           <img className="photo img-fluid" src={props.photo}/>
           <p className="adress">{props.address}</p>
           <p className="city">{props.city}</p>
-          <p className="city">{props.state}</p>
+          <p className="state">{props.state}</p>
           <p className="zipcode">{props.zipcode}</p>
           </div>
 
