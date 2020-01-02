@@ -3,12 +3,12 @@ const mongoose = require("mongoose");
 
 module.exports = {
   findAll: function(req, res) {
-    db.Listing.find({ reserved: false })
+    db.Listing.find({ _id: req.query.id })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
   findReserved: function(req, res) {
-    db.Listing.find({ reserved: true })
+    db.Availability.find({renter:{$ne:null}})
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
@@ -80,20 +80,22 @@ module.exports = {
           renter: mongoose.Types.ObjectId(req.body.userId)
         }
       }
-    ).then(function(dbAvailability) {
-      db.Listing.findOneAndUpdate(
-        {
-          _id: req.body.listing
-        },
-
-        {
-          $set: {
-            reserved: true
-          }
-        }
-      ).then(function(dbListing) {
+    )
+    // .then(function(dbAvailability) {
+    //   db.Listing.findOneAndUpdate(
+    //     {
+    //       _id: req.body.listing
+    //     },
+    //     {
+          // $set: {
+            // reserved: true,
+            // renter: mongoose.Types.ObjectId(req.body.userId)
+          // }
+      //   }
+      // )
+      .then(function(dbListing) {
         res.json(dbAvailability);
       });
-    });
+    // });
   }
 };
