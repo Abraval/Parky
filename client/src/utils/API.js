@@ -32,8 +32,7 @@ export default {
     });
   },
   updateAvailability: function(availabilityData) {
-    return axios.put("api/availability", availabilityData) 
-
+    return axios.put("api/availability", availabilityData);
   },
   createAvailability: function(availabilityData) {
     return axios.post("api/availability", availabilityData);
@@ -44,5 +43,10 @@ export default {
         dates
       }
     });
+  },
+  editListing: function(listing) {
+    console.log(listing)
+    return axios.put("api/listing/profile", {listing})
   }
+
 };

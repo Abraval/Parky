@@ -35,17 +35,17 @@ class Profile extends Component {
     console.log(this.state);
   }
 
-  handleEditListing = event => {
-    event.preventDefault();
+  // handleEditListing = event => {
+  //   event.preventDefault();
 
-    console.log("This is edit message!");
-  };
+  //   console.log("This is edit message!");
+  // };
 
-  handleAvailListing = event => {
-    event.preventDefault();
+  // handleAvailListing = event => {
+  //   event.preventDefault();
 
-    console.log("this is availability message!");
-  };
+  //   console.log("this is availability message!");
+  // };
 
   //  handleOpen = () => {
   //   setOpen(true);
@@ -63,6 +63,7 @@ class Profile extends Component {
     API.getListingsForProf()
       .then(res => {
         console.log("xxxxxxxx");
+        console.log(res.data);
         this.setState({ listing: res.data });
         console.log(this.state.listing);
         console.log(this.state.user);
@@ -91,7 +92,9 @@ class Profile extends Component {
     );
     console.log(this.state.userId);
     return (
+      
       <div>
+        {console.log(this.state.listing)}
         <Nav />
 
         {this.state.listing
@@ -108,7 +111,7 @@ class Profile extends Component {
                     photo={listing.photo}
                     address={listing.address}
                     city={listing.city}
-                    state={listing.username}
+                    state={listing.state}
                     zipcode={listing.zipcode}
                     handleEditListing={this.handleEditListing}
                     handleAvailListing={this.handleAvailListing}
