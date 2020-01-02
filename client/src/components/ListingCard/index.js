@@ -61,7 +61,7 @@ class ListingCard extends React.Component {
             color="primary"
             onClick={event => this.props.handleAvailListing(event)}
           >
-            Edit Availability
+            Edit Avail
           </Button>
           <Dialog open={this.state.open} handleClickOpen={this.handleClickOpen}>
             <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
