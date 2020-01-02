@@ -22,7 +22,7 @@ const listingSchema = new Schema({
   //   type: Boolean,
   //   default: false
   // },
-  renter: { type: Schema.Types.ObjectId, default: null},
+  // renter: { type: Schema.Types.ObjectId, default: null},
 });
 
 const Listing = mongoose.model("Listing", listingSchema);

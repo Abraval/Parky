@@ -73,8 +73,9 @@ class Profile extends Component {
       .catch(err => console.log(err));
   };
   loadReserved = () => {
-    API.getReservForProf()
+    API.getReservForProf(this.state.userId)
       .then(res => {
+        console.log(res);
         this.setState({ reserved: res.data });
       })
       .catch(err => console.log(err));
@@ -118,22 +119,22 @@ class Profile extends Component {
           })}
 
         {this.state.reserved.map(reserved => {
-          if (reserved.user === this.state.userId)
-            return (
-              <div>
-                <h1>RESERVATIONS</h1>
-                <ListingCard
-                  key={reserved._id}
-                  id={reserved._id}
-                  title={reserved.title}
-                  photo={reserved.photo}
-                  address={reserved.address}
-                  city={reserved.city}
-                  state={reserved.username}
-                  zipcode={reserved.zipcode}
-                />
-              </div>
-            );
+          // if (reserved.user === this.state.userId)
+          return (
+            <div>
+              <h1>RESERVATIONS</h1>
+              <ListingCard
+                key={reserved._id}
+                id={reserved._id}
+                title={reserved.title}
+                photo={reserved.photo}
+                address={reserved.address}
+                city={reserved.city}
+                state={reserved.username}
+                zipcode={reserved.zipcode}
+              />
+            </div>
+          );
         })}
       </div>
     );

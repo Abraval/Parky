@@ -12,6 +12,11 @@ module.exports = {
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
+  findReservedById: function(req, res) {
+    db.Availability.find({renter: req.query.id})
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
+  },
   createListing: function(req, res) {
     db.Listing.create(req.body)
       .then(dbModel => res.json(dbModel))
@@ -73,7 +78,8 @@ module.exports = {
     console.log("UPDATE USER", req.body.userId);
     db.Availability.findOneAndUpdate(
       {
-        listing: req.body.listing
+        listing: req.body.listing,
+        date: req.body.date
       },
       {
         $set: {
@@ -94,7 +100,7 @@ module.exports = {
       //   }
       // )
       .then(function(dbListing) {
-        res.json(dbAvailability);
+        res.json(dbListing);
       });
     // });
   }
