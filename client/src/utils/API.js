@@ -44,5 +44,9 @@ export default {
       }
     });
   },
+  editListing: function(listing) {
+    console.log(listing)
+    return axios.put("api/listing/profile", {listing})
+  }
 
 };

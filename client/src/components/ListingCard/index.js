@@ -9,6 +9,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import API from "../../utils/API";
 
 const styles = theme => ({
   button: {
@@ -26,7 +27,8 @@ class ListingCard extends React.Component {
     address: this.props.address,
     city: this.props.city,
     state: this.props.state,
-    zipcode: this.props.zipcode
+    zipcode: this.props.zipcode,
+    currentModalId: this.props.id
 
   };
 
@@ -49,8 +51,18 @@ class ListingCard extends React.Component {
     });
   };
 
+  handleListingUpdate = event => {
+    // event.preventDefault();
+    API.editListing(this.state)
+    .then(res => console.log(res))
+    .catch(err => console.log(err))
+
+    
+
+  }
+
   render() {
-    console.log(this)
+    console.log(this.state)
     console.log(this.props)
     return (
       <div className="card" {...this.props} tabIndex="0">
@@ -151,7 +163,7 @@ class ListingCard extends React.Component {
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => this.handleClose()} color="primary">
+              <Button onClick={() => this.handleListingUpdate()} color="primary">
                 Submit
               </Button>
               <Button onClick={() => this.handleClose()} color="secondary">

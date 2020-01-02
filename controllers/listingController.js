@@ -70,7 +70,17 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   editListing: function(req, res) {
-    db.Listing.findOneAndUpdate({ _id: req.query.id }, req.body)
+    console.dir(req.body);
+    console.dir(req.body.listing.currentModalId);
+    db.Listing.findOneAndUpdate({ _id: req.body.listing.currentModalId },
+      {
+        $set: {
+         title: req.body.listing.title,
+         address: req.body.listing.address,
+         city: req.body.listing.city,
+         state: req.body.listing.state,
+         zipcode: req.body.listing.zipcode
+        } })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.json(err));
   },
