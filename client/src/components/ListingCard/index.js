@@ -1,20 +1,23 @@
 import React from "react";
 import "./style.css";
-import { makeStyles } from '@material-ui/core/styles';
-import {Dialog, DialogTitle, DialogContentText, DialogContent, TextField, DialogActions, Button} from "@material-ui/core";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
-
-const useStyles = makeStyles(theme => ({
-  root: {
-
-    '& > *': {
-      margin: theme.spacing(1),
-    },
+const styles = theme => ({
+  button: {
+    margin: theme.spacing.unit
   },
-  dialog: {
-    backgroundColor: "red"
+  input: {
+    display: "none"
   }
-}));
+});
 
 function ListingCard(props) {
   const classes = useStyles();
@@ -33,36 +36,56 @@ function ListingCard(props) {
           <p className="state">{props.state}</p>
           <p className="zipcode">{props.zipcode}</p>
           </div>
+        </div>
+        <div className="card-body">
+          <img className="photo img-fluid" src={this.props.photo} />
+          <p className="adress">{this.props.address}</p>
+          <p className="city">{this.props.city}</p>
+          <p className="city">{this.props.state}</p>
+          <p className="zipcode">{this.props.zipcode}</p>
+        </div>
 
         <div className="card-footer">
-        <Button variant="contained" color="primary" onClick={() => setOpen(true)} >Edit Listing</Button>
-        <Button variant="contained" color="primary" onClick={event => props.handleAvailListing(event)} >Edit Availability</Button>
-        </div>
-        <Dialog open={open}>
-        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
-        <DialogContent className={classes.dialog}>
-          <DialogContentText>
-            To subscribe to this website, please enter your email address here. We will send updates
-            occasionally.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Email Address"
-            type="email"
-            fullWidth
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)} color="primary">
-            Cancel
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => this.handleClickOpen()}
+          >
+            Edit Listing
           </Button>
-          
-        </DialogActions>
-        </Dialog>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={event => this.props.handleAvailListing(event)}
+          >
+            Edit Availability
+          </Button>
+          <Dialog open={this.state.open} handleClickOpen={this.handleClickOpen}>
+            <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                To subscribe to this website, please enter your email address
+                here. We will send updates occasionally.
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="name"
+                label="Email Address"
+                type="email"
+                fullWidth
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => this.handleClose()} color="primary">
+                Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
       </div>
-  );
+    );
+  }
 }
 
 export default ListingCard;
