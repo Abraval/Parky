@@ -19,22 +19,25 @@ const styles = theme => ({
   }
 });
 
-function ListingCard(props) {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  return (
-      <div className="card" {...props} tabIndex="0">
-          <div className="card-header">
-            <div className="row">
-              <div className="card-title">{props.title}</div>
-            </div>
-          </div>
-          <div className="card-body">
-          <img className="photo img-fluid" src={props.photo}/>
-          <p className="adress">{props.address}</p>
-          <p className="city">{props.city}</p>
-          <p className="state">{props.state}</p>
-          <p className="zipcode">{props.zipcode}</p>
+class ListingCard extends React.Component {
+  state = {
+    open: false
+  };
+
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
+  render() {
+    return (
+      <div className="card" {...this.props} tabIndex="0">
+        <div className="card-header">
+          <div className="row">
+            <div className="card-title">{this.props.title}</div>
           </div>
         </div>
         <div className="card-body">
