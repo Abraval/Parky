@@ -5,8 +5,12 @@ mongoose.promise = Promise;
 const availabilitySchema = new Schema({
   date: { type: Date, unique: false, required: false },
   listing: { type: Schema.Types.ObjectId, ref: "Listing" },
-  renter: { type: Schema.Types.ObjectId },
-  revenue: { type: Number, unqiue: false, required: false }
+  renter: { type: Schema.Types.ObjectId, default: null},
+  revenue: { type: Number, unqiue: false, required: false },
+  // reserved: {
+  //   type: String,
+  //   default: false
+  // },
 });
 
 const Availability = mongoose.model("Availability", availabilitySchema);

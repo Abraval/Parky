@@ -7,6 +7,7 @@ import Nav from "../../components/Nav";
 class Profile extends Component {
   state = {
     listing: [],
+    reserved: [],
     user: {},
     userId: ""
   };
@@ -24,6 +25,7 @@ class Profile extends Component {
         console.log(this.state.user);
         console.log("=======");
         this.loadListings();
+        this.loadReserved();
       })
       .catch(err => console.log(err));
   };
@@ -70,6 +72,13 @@ class Profile extends Component {
       })
       .catch(err => console.log(err));
   };
+  loadReserved = () => {
+    API.getReservForProf()
+      .then(res => {
+        this.setState({ reserved: res.data });
+      })
+      .catch(err => console.log(err));
+  };
 
   render() {
     console.log("##################");
@@ -84,12 +93,13 @@ class Profile extends Component {
       <div>
         <Nav />
 
-        <div>
-          {this.state.listing
-            // .filter(listing => listing.user._id === this.state.user.user._id)
-            .map(listing => {
-              if (listing.user === this.state.userId) {
-                return (
+        {this.state.listing
+          // .filter(listing => listing.user._id === this.state.user.user._id)
+          .map(listing => {
+            if (listing.user === this.state.userId) {
+              return (
+                <div>
+                  <h1>LISTINGS</h1>
                   <ListingCard
                     key={listing._id}
                     id={listing._id}
@@ -102,10 +112,29 @@ class Profile extends Component {
                     handleEditListing={this.handleEditListing}
                     handleAvailListing={this.handleAvailListing}
                   />
-                );
-              }
-            })}
-        </div>
+                </div>
+              );
+            }
+          })}
+
+        {this.state.reserved.map(reserved => {
+          if (reserved.user === this.state.userId)
+          return (
+            <div>
+              <h1>RESERVATIONS</h1>
+              <ListingCard
+                key={reserved._id}
+                id={reserved._id}
+                title={reserved.title}
+                photo={reserved.photo}
+                address={reserved.address}
+                city={reserved.city}
+                state={reserved.username}
+                zipcode={reserved.zipcode}
+              />
+            </div>
+          );
+        })}
       </div>
     );
   }

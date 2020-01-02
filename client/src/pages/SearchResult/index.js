@@ -52,6 +52,7 @@ class SearchResult extends Component {
     API.updateAvailability({
       listing: Id,
       userId: this.state.user._id
+      
     });
 
     this.setState({
@@ -141,7 +142,7 @@ class SearchResult extends Component {
             console.log("listing here", listing);
             // Set this.state.markerData here.
             const data = listing.data[0];
-            console.log(data._id);
+            // console.log(data._id);
             this.setState({
               markerData: [
                 ...this.state.markerData,

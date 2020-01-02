@@ -7,6 +7,11 @@ module.exports = {
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
+  findReserved: function(req, res) {
+    db.Availability.find({renter:{$ne:null}})
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
+  },
   createListing: function(req, res) {
     db.Listing.create(req.body)
       .then(dbModel => res.json(dbModel))
@@ -43,7 +48,8 @@ module.exports = {
       date: {
         $gte: startDay,
         $lte: endDay
-      }
+      },
+      renter: null
     })
       .then(dbModel => {
         res.json(dbModel);
@@ -74,8 +80,22 @@ module.exports = {
           renter: mongoose.Types.ObjectId(req.body.userId)
         }
       }
-    ).then(function(dbAvailability) {
-      res.json(dbAvailability);
-    });
+    )
+    // .then(function(dbAvailability) {
+    //   db.Listing.findOneAndUpdate(
+    //     {
+    //       _id: req.body.listing
+    //     },
+    //     {
+          // $set: {
+            // reserved: true,
+            // renter: mongoose.Types.ObjectId(req.body.userId)
+          // }
+      //   }
+      // )
+      .then(function(dbListing) {
+        res.json(dbAvailability);
+      });
+    // });
   }
 };
