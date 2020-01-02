@@ -119,21 +119,21 @@ class Profile extends Component {
 
         {this.state.reserved.map(reserved => {
           if (reserved.user === this.state.userId)
-          return (
-            <div>
-              <h1>RESERVATIONS</h1>
-              <ListingCard
-                key={reserved._id}
-                id={reserved._id}
-                title={reserved.title}
-                photo={reserved.photo}
-                address={reserved.address}
-                city={reserved.city}
-                state={reserved.username}
-                zipcode={reserved.zipcode}
-              />
-            </div>
-          );
+            return (
+              <div>
+                <h1>RESERVATIONS</h1>
+                <ListingCard
+                  key={reserved._id}
+                  id={reserved._id}
+                  title={reserved.title}
+                  photo={reserved.photo}
+                  address={reserved.address}
+                  city={reserved.city}
+                  state={reserved.username}
+                  zipcode={reserved.zipcode}
+                />
+              </div>
+            );
         })}
       </div>
     );
