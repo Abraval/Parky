@@ -51,7 +51,10 @@ class SearchResult extends Component {
     selectedDays: [],
     markerData: [],
     idToBook: "",
-    user: {}
+    user: {},
+    address: "",
+    photo: "",
+    title: ""
     // availId: ""
   };
 
@@ -94,11 +97,29 @@ class SearchResult extends Component {
     this.setState({
       idToBook: Id
     });
+    const NewAddress = event.target.attributes.getNamedItem("data-address")
+      .value;
+    this.setState({
+      address: NewAddress
+    });
+    const NewTitle = event.target.attributes.getNamedItem("data-title")
+    .value;
+  this.setState({
+    title: NewTitle
+  });
+  const NewPhoto = event.target.attributes.getNamedItem("data-photo")
+    .value;
+  this.setState({
+    title: NewPhoto
+  });
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
         date: this.state.selectedDays[i],
         listing: Id,
-        userId: this.state.user._id
+        userId: this.state.user._id,
+        address: NewAddress,
+        title: NewTitle,
+        photo: NewPhoto
       });
     }
   };
@@ -197,7 +218,10 @@ class SearchResult extends Component {
                   data.streetName,
                   data.neighborhood,
                   data.photo,
-                  data._id
+                  data._id,
+                  data.city,
+                  data.state,
+                  data.zipcode
                 ]
               ]
             });
@@ -322,15 +346,20 @@ class SearchResult extends Component {
                       {this.state.markerData.map(spot => {
                         // console.log(spot, this.handleBookClick);
                         return (
-                          // <ListingListItem
-                          //   key={spot[3]}
-                          //   title={spot[3]}
-                          //   href={spot[6]}
-                          //   street={spot[4]}
-                          //   neighborhood={spot[5]}
-                          //   id={spot[7]}
-                          //   handleBookClick={this.handleBookClick}
-                          // />
+                          <div>
+                    <ListingListItem
+                    key={spot[3]}
+                    title={spot[3]}
+                    href={spot[6]}
+                    street={spot[4]}
+                    neighborhood={spot[5]}
+                    id={spot[7]}
+                    city={spot[8]}
+                    state={spot[9]}
+                    zipcode={spot[10]}
+                    address={spot[0]}
+                    handleBookClick={this.handleBookClick}
+                  />
                           <Card className={classes.card}>
                             <CardActionArea>
                               <CardMedia
@@ -362,6 +391,7 @@ class SearchResult extends Component {
                               </Button>
                             </CardActions>
                           </Card>
+                          </div>
                         );
                       })}
                     </div>

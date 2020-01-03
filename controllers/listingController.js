@@ -93,7 +93,10 @@ module.exports = {
       },
       {
         $set: {
-          renter: mongoose.Types.ObjectId(req.body.userId)
+          renter: mongoose.Types.ObjectId(req.body.userId),
+          address: req.body.address,
+          title: req.body.title,
+          photo: req.body.photo
         }
       }
     )
