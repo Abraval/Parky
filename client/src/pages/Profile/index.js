@@ -1,16 +1,19 @@
 import React, { Component } from "react";
+import moment from "moment";
 import ListingCard from "../../components/ListingCard";
 import ReservCard from "../../components/ReservCard";
 import API from "../../utils/API";
 import "./style.css";
 import Nav from "../../components/Nav";
 
+
 class Profile extends Component {
   state = {
     listing: [],
     reserved: [],
     user: {},
-    userId: ""
+    userId: "",
+    userName: ""
   };
   componentDidMount() {
     this.userInfo();
@@ -20,9 +23,14 @@ class Profile extends Component {
     API.getUser()
       .then(res => {
         console.log("=======");
+        console.log (res)
+        console.log("=======");
         this.setState({ user: res.data });
         this.setState({ userId: res.data.user._id });
+        // this.setState({userName: res.data.user.firstname})
         console.log(res.data.user._id);
+        console.log("++++++++++++++++++++++++++++++++++++++");
+        console.log(res.data.user.firstname);
         console.log(this.state.user);
         console.log("=======");
         this.loadListings();
@@ -77,13 +85,12 @@ class Profile extends Component {
   loadReserved = () => {
     API.getReservForProf(this.state.userId)
       .then(res => {
-        
         this.setState({ reserved: res.data });
         console.log("RESERVATIONS");
         console.log(res.data);
-        // let reservListId = 
+        // let reservListId =
       })
-      
+
       .catch(err => console.log(err));
   };
 
@@ -97,10 +104,10 @@ class Profile extends Component {
     );
     console.log(this.state.userId);
     return (
-      
       <div>
         {console.log(this.state.listing)}
         <Nav />
+        {/* <h2>Welcome back, {this.state.userName}!</h2> */}
 
         {this.state.listing
           // .filter(listing => listing.user._id === this.state.user.user._id)
@@ -128,23 +135,25 @@ class Profile extends Component {
 
         {this.state.reserved.map(reserved => {
           if (reserved.renter === this.state.userId)
-          // {this.state.listings.map(listing) => {
-          //   if(listing._id === reserved.listing)
-         
-          return (
-            <div>
-              <h1>RESERVATIONS</h1>
-              <ReservCard
-               date={reserved.date}
-               address={reserved.address}
-               title={reserved.title}
-               photo={reserved.photo}
+            // {this.state.listings.map(listing) => {
+            //   if(listing._id === reserved.listing)
+
+            return (
+              <div>
+                <h1>RESERVATIONS</h1>
+
+                <ReservCard
+
               
-              />
-            </div>
-          );
+                  date = {moment(reserved.date).format('LL')}
+                  address={reserved.address}
+                  title={reserved.title}
+                  photo={reserved.photo}
+                />
+              </div>
+            );
         })}
-      {/* })} */}
+        {/* })} */}
       </div>
     );
   }
