@@ -47,6 +47,9 @@ export default {
   editListing: function(listing) {
     console.log(listing)
     return axios.put("api/listing/profile", {listing})
+  },
+  deleteListing: function (id) {
+    return axios.delete("/api/listing/profile/" + id);
   }
 
 };

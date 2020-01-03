@@ -8,12 +8,12 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   findReserved: function(req, res) {
-    db.Availability.find({renter:{$ne:null}})
+    db.Availability.find({ renter: { $ne: null } })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
   findReservedById: function(req, res) {
-    db.Availability.find({renter: req.query.id})
+    db.Availability.find({ renter: req.query.id })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
@@ -72,15 +72,18 @@ module.exports = {
   editListing: function(req, res) {
     console.dir(req.body);
     console.dir(req.body.listing.currentModalId);
-    db.Listing.findOneAndUpdate({ _id: req.body.listing.currentModalId },
+    db.Listing.findOneAndUpdate(
+      { _id: req.body.listing.currentModalId },
       {
         $set: {
-         title: req.body.listing.title,
-         address: req.body.listing.address,
-         city: req.body.listing.city,
-         state: req.body.listing.state,
-         zipcode: req.body.listing.zipcode
-        } })
+          title: req.body.listing.title,
+          address: req.body.listing.address,
+          city: req.body.listing.city,
+          state: req.body.listing.state,
+          zipcode: req.body.listing.zipcode
+        }
+      }
+    )
       .then(dbModel => res.json(dbModel))
       .catch(err => res.json(err));
   },
@@ -97,21 +100,27 @@ module.exports = {
         }
       }
     )
-    // .then(function(dbAvailability) {
-    //   db.Listing.findOneAndUpdate(
-    //     {
-    //       _id: req.body.listing
-    //     },
-    //     {
-          // $set: {
-            // reserved: true,
-            // renter: mongoose.Types.ObjectId(req.body.userId)
-          // }
+      // .then(function(dbAvailability) {
+      //   db.Listing.findOneAndUpdate(
+      //     {
+      //       _id: req.body.listing
+      //     },
+      //     {
+      // $set: {
+      // reserved: true,
+      // renter: mongoose.Types.ObjectId(req.body.userId)
+      // }
       //   }
       // )
       .then(function(dbListing) {
         res.json(dbListing);
       });
     // });
+  },
+  deleteListing: function(req, res) {
+    db.Listing.findById({ _id: req.params.id })
+      .then(dbModel => dbModel.deleteOne())
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
   }
 };

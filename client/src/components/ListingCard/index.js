@@ -23,6 +23,7 @@ const styles = theme => ({
 class ListingCard extends React.Component {
   state = {
     open: false,
+    open2: false,
     title: this.props.title,
     address: this.props.address,
     city: this.props.city,
@@ -36,8 +37,17 @@ class ListingCard extends React.Component {
     this.setState({ open: true });
   };
 
+  handleClickOpen2 = () => {
+    this.setState({ open2: true });
+  };
+
+
   handleClose = () => {
     this.setState({ open: false });
+  };
+
+  handleClose2 = () => {
+    this.setState({ open2: false });
   };
 
   handleInputChange = event => {
@@ -56,10 +66,13 @@ class ListingCard extends React.Component {
     API.editListing(this.state)
     .then(res => console.log(res))
     .catch(err => console.log(err))
+}
 
-    
-
-  }
+handleDelete = id => {
+  API.deleteListing(id)
+    .then(res => console.log(res))
+    .catch(err => console.log(err));
+};
 
   render() {
     console.log(this.state)
@@ -90,10 +103,12 @@ class ListingCard extends React.Component {
           <Button
             variant="contained"
             color="primary"
-            onClick={event => this.props.handleAvailListing(event)}
+            onClick={() => this.handleClickOpen2()}
           >
             Edit Avail
           </Button>
+          
+
           <Dialog open={this.state.open} handleClickOpen={this.handleClickOpen}>
             <DialogTitle id="form-dialog-title">Edit Listing</DialogTitle>
             <DialogContent>
@@ -169,6 +184,21 @@ class ListingCard extends React.Component {
               <Button onClick={() => this.handleClose()} color="secondary">
                 Cancel
               </Button>
+              <Button onClick={() => this.handleDelete(this.state.currentModalId)} color="danger">
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog open={this.state.open2} handleClickOpen={this.handleClickOpen2}>
+            <DialogActions>
+            {/* <Button onClick={() => this.handleListingUpdate()} color="primary">
+                Submit
+              </Button> */}
+              <Button onClick={() => this.handleClose2()} color="secondary">
+                Cancel
+              </Button>
+              
+
             </DialogActions>
           </Dialog>
         </div>
