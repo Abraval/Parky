@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Row, Col } from "../Grid";
 import "./style.css";
 import { PromiseProvider } from "mongoose";
-import SearchResult from "../../pages/SearchResult"
+import SearchResult from "../../pages/SearchResult";
 
 // Exporting both ListingList and ListingListItem from this file
 
@@ -25,9 +25,8 @@ export function ListingListItem({
   zipcode,
   handleBookClick
 }) {
-  console.log(id, title, street, "NEW CONSOLE")
+  console.log(id, title, street, "NEW CONSOLE");
   return (
-    
     <li className="list-group-item">
       <Container>
         <Row>

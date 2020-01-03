@@ -6,6 +6,42 @@ import DayPicker, { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import API from "../../utils/API";
 import { ListingList, ListingListItem } from "../../components/ListingList";
+// Material UI Grid Layout imports
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import Radio from "@material-ui/core/Radio";
+import Paper from "@material-ui/core/Paper";
+// Material UI Card Imports
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1
+  },
+  paper: {
+    padding: theme.spacing.unit * 1,
+    margin: "auto",
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+    height: "100%"
+  },
+  card: {
+    maxWidth: 345
+  },
+  media: {
+    height: 140
+  }
+});
 
 class SearchResult extends Component {
   state = {
@@ -15,9 +51,14 @@ class SearchResult extends Component {
     selectedDays: [],
     markerData: [],
     idToBook: "",
-    user: {},
-    address: ""
+    user: {}
     // availId: ""
+  };
+
+  handleChange = key => (event, value) => {
+    this.setState({
+      [key]: value
+    });
   };
 
   // componentDidMount() {
@@ -53,19 +94,11 @@ class SearchResult extends Component {
     this.setState({
       idToBook: Id
     });
-    const NewAddress = event.target.attributes.getNamedItem("data-address")
-      .value;
-    this.setState({
-      address: NewAddress
-    });
-    console.log("+++++++++++++NEW ADDRESS");
-    console.log(NewAddress);
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
         date: this.state.selectedDays[i],
         listing: Id,
-        userId: this.state.user._id,
-        address: NewAddress
+        userId: this.state.user._id
       });
     }
   };
@@ -246,62 +279,117 @@ class SearchResult extends Component {
   };
 
   render() {
-    console.log(this.state);
+    const { classes } = this.props;
+    const { spacing } = this.state;
     return (
       <div>
         <Nav />
-        <form onSubmit={this.handleSubmitSearch}>
-          <input
-            type="text"
-            name="addressQuery"
-            value={this.state.address}
-            onChange={this.handleInputChange}
-            placeholder="Search for your address here"
-          />
-          <button type="submit" className="btn btn-primary" id="queryAddress">
-            Search
-          </button>
-        </form>
-        <div>
-          <DayPicker
-            locale="en"
-            selectedDays={this.state.selectedDays}
-            onDayClick={this.handleDayClick}
-          />
-        </div>
-        <div>
-          {!this.state.markerData.length ? (
-            <h1 className="text-center">No Spots to Display</h1>
-          ) : (
-            <ListingList>
-              {this.state.markerData.map(spot => {
-                // console.log(spot, this.handleBookClick);
-                return (
-                  <ListingListItem
-                    key={spot[3]}
-                    title={spot[3]}
-                    href={spot[6]}
-                    street={spot[4]}
-                    neighborhood={spot[5]}
-                    id={spot[7]}
-                    city={spot[8]}
-                    state={spot[9]}
-                    zipcode={spot[10]}
-                    address={spot[0]}
-                    handleBookClick={this.handleBookClick}
+        <div className={classes.root}>
+          <Grid container spacing={8}>
+            <Grid item xs={3}>
+              <Paper className={classes.paper}>
+                Calendar & Search
+                <form onSubmit={this.handleSubmitSearch}>
+                  <input
+                    type="text"
+                    name="addressQuery"
+                    value={this.state.address}
+                    onChange={this.handleInputChange}
+                    placeholder="Search for your address here"
                   />
-                );
-              })}
-            </ListingList>
-          )}
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    id="queryAddress"
+                  >
+                    Search
+                  </button>
+                </form>
+                <div>
+                  <DayPicker
+                    locale="en"
+                    selectedDays={this.state.selectedDays}
+                    onDayClick={this.handleDayClick}
+                  />
+                </div>
+              </Paper>
+            </Grid>
+            <Grid item xs={4}>
+              <Paper className={classes.paper}>
+                Listing Cards
+                <div>
+                  {!this.state.markerData.length ? (
+                    <h1 className="text-center">No Spots to Display</h1>
+                  ) : (
+                    <div>
+                      {this.state.markerData.map(spot => {
+                        // console.log(spot, this.handleBookClick);
+                        return (
+                          // <ListingListItem
+                          //   key={spot[3]}
+                          //   title={spot[3]}
+                          //   href={spot[6]}
+                          //   street={spot[4]}
+                          //   neighborhood={spot[5]}
+                          //   id={spot[7]}
+                          //   handleBookClick={this.handleBookClick}
+                          // />
+                          <Card className={classes.card}>
+                            <CardActionArea>
+                              <CardMedia
+                                className={classes.media}
+                                image={this.href}
+                                title={this.title}
+                              />
+                              <CardContent>
+                                <Typography
+                                  gutterBottom
+                                  variant="h5"
+                                  component="h2"
+                                >
+                                  Lizard
+                                </Typography>
+                                <Typography component="p">
+                                  Lizards are a widespread group of squamate
+                                  reptiles, with over 6,000 species, ranging
+                                  across all continents except Antarctica
+                                </Typography>
+                              </CardContent>
+                            </CardActionArea>
+                            <CardActions>
+                              <Button size="small" color="primary">
+                                Share
+                              </Button>
+                              <Button size="small" color="primary">
+                                Learn More
+                              </Button>
+                            </CardActions>
+                          </Card>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </Paper>
+            </Grid>
+            <Grid item xs={5}>
+              <Paper className={classes.paper}>
+                Map
+                <main>
+                  <div id="map"></div>
+                </main>
+              </Paper>
+            </Grid>
+          </Grid>
         </div>
-        <main>
-          <div id="map"></div>
-        </main>
       </div>
     );
   }
 }
+
+SearchResult.propTypes = {
+  classes: PropTypes.object.isRequired
+};
 
 function loadScript(url) {
   let index = window.document.getElementsByTagName("script")[0];
@@ -312,4 +400,4 @@ function loadScript(url) {
   index.parentNode.insertBefore(script, index);
 }
 
-export default SearchResult;
+export default withStyles(styles)(SearchResult);
