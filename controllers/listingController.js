@@ -70,8 +70,8 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   editListing: function(req, res) {
-    console.dir(req.body);
-    console.dir(req.body.listing.currentModalId);
+    // console.dir(req.body);
+    // console.dir(req.body.listing.currentModalId);
     db.Listing.findOneAndUpdate({ _id: req.body.listing.currentModalId },
       {
         $set: {
@@ -83,6 +83,16 @@ module.exports = {
         } })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.json(err));
+  },
+  findAllNear: function(req, res) {
+    console.log("beginning: ---------------");
+    console.dir(req.body); 
+    console.dir(req.query); 
+    console.dir(req.params); 
+    console.log("end: ---------------");
+    db.Listing.find({})
+      .then(data => res.json(data))
+      .catch(err => res.status(422).json(err)); 
   },
   updateAvailabilityUser: function(req, res) {
     console.log("UPDATE USER", req.body.userId);

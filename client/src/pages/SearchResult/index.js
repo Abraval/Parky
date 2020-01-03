@@ -59,7 +59,6 @@ for (var i=0; i<this.state.selectedDays.length; i++){
       date: this.state.selectedDays[i],
       listing: Id,
       userId: this.state.user._id
-      
     });
   }
    
@@ -144,8 +143,17 @@ for (var i=0; i<this.state.selectedDays.length; i++){
         // console.log(emptyArr);
 
         emptyArr.map(item => {
+
+          console.log("item is", item); 
           API.getListingById(item.listing).then(listing => {
-            console.log("listing here", listing);
+
+
+            console.log("listing here", listing.data[0]);
+            API.getListingByIdAndProximity(listing.data[0]).then(data => {
+              console.log("data is: ", data); 
+            })
+
+
             // Set this.state.markerData here.
             const data = listing.data[0];
             // console.log(data._id);
@@ -165,7 +173,23 @@ for (var i=0; i<this.state.selectedDays.length; i++){
               ]
             });
           });
+
+
         });
+
+        // emptyArr.map(item => {
+          
+        //   // console.log("item is", item); 
+
+        //   console.log(this.state.latitude);
+        //   console.log(this.state.longitude);
+
+        //   API.getListingByIdAndProximity(item.listing).then(listing => {
+        //     console.log(listing); 
+        //   })
+        
+        // });
+
       });
     });
   };
