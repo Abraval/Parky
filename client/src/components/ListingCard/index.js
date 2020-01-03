@@ -30,7 +30,6 @@ class ListingCard extends React.Component {
     state: this.props.state,
     zipcode: this.props.zipcode,
     currentModalId: this.props.id
-
   };
 
   handleClickOpen = () => {
@@ -55,9 +54,9 @@ class ListingCard extends React.Component {
 
     let value = event.target.value;
     let name = event.target.name;
-    console.log(event.target.value)
+    console.log(event.target.value);
     this.setState({
-      [name]: value 
+      [name]: value
     });
   };
 
@@ -73,10 +72,11 @@ handleDelete = id => {
     .then(res => console.log(res))
     .catch(err => console.log(err));
 };
+    
 
   render() {
-    console.log(this.state)
-    console.log(this.props)
+    console.log(this.state);
+    console.log(this.props);
     return (
       <div className="card" {...this.props} tabIndex="0">
         <div className="card-header">
@@ -178,7 +178,10 @@ handleDelete = id => {
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => this.handleListingUpdate()} color="primary">
+              <Button
+                onClick={() => this.handleListingUpdate()}
+                color="primary"
+              >
                 Submit
               </Button>
               <Button onClick={() => this.handleClose()} color="secondary">

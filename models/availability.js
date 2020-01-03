@@ -7,6 +7,10 @@ const availabilitySchema = new Schema({
   listing: { type: Schema.Types.ObjectId, ref: "Listing" },
   renter: { type: Schema.Types.ObjectId, default: null},
   revenue: { type: Number, unqiue: false, required: false },
+  address: { type: String, unique: false, required: false },
+  title: { type: String, unique: false, required: false },
+  photo: {type: String, unique: false, required: false }
+
   // reserved: {
   //   type: String,
   //   default: false

@@ -15,10 +15,10 @@ export default {
   },
   getReservForProf: function(id) {
     console.log(id);
-    return axios.get("/api/listing/reserved/" + id)
+    return axios.get("/api/listing/reserved/")
   },
   getReservById: function(id) {
-    return axios.get("api/reserved", {
+    return axios.get("api/listings/reserved", {
       params: {
         id
       }

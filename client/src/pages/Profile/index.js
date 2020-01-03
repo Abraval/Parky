@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ListingCard from "../../components/ListingCard";
+import ReservCard from "../../components/ReservCard";
 import API from "../../utils/API";
 import "./style.css";
 import Nav from "../../components/Nav";
@@ -76,9 +77,13 @@ class Profile extends Component {
   loadReserved = () => {
     API.getReservForProf(this.state.userId)
       .then(res => {
-        console.log(res);
+        
         this.setState({ reserved: res.data });
+        console.log("RESERVATIONS");
+        console.log(res.data);
+        // let reservListId = 
       })
+      
       .catch(err => console.log(err));
   };
 
@@ -122,23 +127,24 @@ class Profile extends Component {
           })}
 
         {this.state.reserved.map(reserved => {
-          // if (reserved.user === this.state.userId)
+          if (reserved.renter === this.state.userId)
+          // {this.state.listings.map(listing) => {
+          //   if(listing._id === reserved.listing)
+         
           return (
             <div>
               <h1>RESERVATIONS</h1>
-              <ListingCard
-                key={reserved._id}
-                id={reserved._id}
-                title={reserved.title}
-                photo={reserved.photo}
-                address={reserved.address}
-                city={reserved.city}
-                state={reserved.username}
-                zipcode={reserved.zipcode}
+              <ReservCard
+               date={reserved.date}
+               address={reserved.address}
+               title={reserved.title}
+               photo={reserved.photo}
+              
               />
             </div>
           );
         })}
+      {/* })} */}
       </div>
     );
   }
