@@ -10,6 +10,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import API from "../../utils/API";
+import DayPicker, { DateUtils } from "react-day-picker";
+import "react-day-picker/lib/style.css";
 
 const styles = theme => ({
   button: {
@@ -29,8 +31,11 @@ class ListingCard extends React.Component {
     city: this.props.city,
     state: this.props.state,
     zipcode: this.props.zipcode,
-    currentModalId: this.props.id
+    currentModalId: this.props.id,
+    listing: []
   };
+
+ 
 
   handleClickOpen = () => {
     this.setState({ open: true });
@@ -39,7 +44,6 @@ class ListingCard extends React.Component {
   handleClickOpen2 = () => {
     this.setState({ open2: true });
   };
-
 
   handleClose = () => {
     this.setState({ open: false });
@@ -60,19 +64,45 @@ class ListingCard extends React.Component {
     });
   };
 
-  handleListingUpdate = event => {
-    // event.preventDefault();
-    API.editListing(this.state)
-    .then(res => console.log(res))
-    .catch(err => console.log(err))
-}
 
-handleDelete = id => {
-  API.deleteListing(id)
-    .then(res => console.log(res))
-    .catch(err => console.log(err));
-};
+  handleListingUpdate = event => {
+  this.setState({open: false})
+    // window.location.reload(true)
+    API.editListing(this.state)
+    .then(res => console.log(res)
+
     
+     )
+  
+      .catch(err => console.log(err));
+  };
+
+  handleDelete = id => {
+    API.deleteListing(id)
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+  };
+
+  constructor(props) {
+    super(props);
+    this.handleDayClick = this.handleDayClick.bind(this);
+    this.state = {
+      selectedDays: []
+    };
+  }
+
+  handleDayClick(day, { selected }) {
+    const { selectedDays } = this.state;
+    if (selected) {
+      const selectedIndex = selectedDays.findIndex(selectedDay =>
+        DateUtils.isSameDay(selectedDay, day)
+      );
+      selectedDays.splice(selectedIndex, 1);
+    } else {
+      selectedDays.push(day);
+    }
+    this.setState({ selectedDays });
+  }
 
   render() {
     console.log(this.state);
@@ -107,7 +137,6 @@ handleDelete = id => {
           >
             Edit Avail
           </Button>
-          
 
           <Dialog open={this.state.open} handleClickOpen={this.handleClickOpen}>
             <DialogTitle id="form-dialog-title">Edit Listing</DialogTitle>
@@ -187,21 +216,34 @@ handleDelete = id => {
               <Button onClick={() => this.handleClose()} color="secondary">
                 Cancel
               </Button>
-              <Button onClick={() => this.handleDelete(this.state.currentModalId)} color="danger">
+              <Button
+                onClick={() => this.handleDelete(this.state.currentModalId)}
+                color="danger"
+              >
                 Delete
               </Button>
             </DialogActions>
           </Dialog>
-          <Dialog open={this.state.open2} handleClickOpen={this.handleClickOpen2}>
+          <Dialog
+            open={this.state.open2}
+            handleClickOpen={this.handleClickOpen2}
+          >
             <DialogActions>
-            {/* <Button onClick={() => this.handleListingUpdate()} color="primary">
+              {/* <Button onClick={() => this.handleListingUpdate()} color="primary">
                 Submit
               </Button> */}
+              <div>
+                <DayPicker
+                  selectedDays={this.state.selectedDays}
+                  onDayClick={this.handleDayClick}
+                />
+              </div>
+              <Button onClick={() => this.handleClose2()} color="primary">
+                Submit
+              </Button>
               <Button onClick={() => this.handleClose2()} color="secondary">
                 Cancel
               </Button>
-              
-
             </DialogActions>
           </Dialog>
         </div>
@@ -211,3 +253,17 @@ handleDelete = id => {
 }
 
 export default ListingCard;
+
+
+
+// then(res => {
+//   this.state.selectedDays.map(date => {
+//     const listingId = res.data._id;
+
+//     API.createAvailability({
+//       date,
+//       listing: listingId
+//       // .map over all selected dates in array and create a new row in the avail collection for each date and include the the the id of listing
+//     });
+//   });
+// })

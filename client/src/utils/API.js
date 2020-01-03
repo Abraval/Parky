@@ -50,6 +50,7 @@ export default {
   },
   deleteListing: function (id) {
     return axios.delete("/api/listing/profile/" + id);
-  }
+  },
+  
 
 };

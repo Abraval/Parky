@@ -125,5 +125,19 @@ module.exports = {
       .then(dbModel => dbModel.deleteOne())
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
+  },
+  updateAvailability: function (req,res) {
+    db.Availability.findOneAndUpdate(
+      {
+        listing: req.body.listing,
+        date: req.body.date
+      },
+      {
+        $set: {
+          date: req.body.date
+        }
+      }
+
+    )
   }
 };

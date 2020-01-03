@@ -4,7 +4,8 @@ const listingController = require("../../controllers/listingController");
 router
   .route("/")
   .get(listingController.findAllAvailable)
-  .post(listingController.createAvailability);
+  .post(listingController.createAvailability)
+  .put(listingController.updateAvailability);
 
 router.route("/").put(listingController.updateAvailabilityUser);
 

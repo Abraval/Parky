@@ -14,6 +14,7 @@ class Profile extends Component {
   };
   componentDidMount() {
     this.userInfo();
+    this.loadListings();
   }
 
   userInfo = () => {
