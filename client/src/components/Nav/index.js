@@ -70,7 +70,7 @@ class Nav extends Component {
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to="/" />;
+      return <Redirect to="/signin" />;
     }
   };
 
@@ -92,7 +92,8 @@ class Nav extends Component {
             <Button color="inherit" href="/signup">
               Sign Up
             </Button>
-            <Button color="inherit" onClick={this.logout} href="/">
+            {this.renderRedirect()}
+            <Button color="inherit" onClick={this.logout} href="/signin">
               Logout
             </Button>
             <Button color="inherit" href="/profile">
