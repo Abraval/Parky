@@ -10,6 +10,22 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
+// Material UI Tabs imports
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Typography from "@material-ui/core/Typography";
+
+function TabContainer(props) {
+  return (
+    <Typography component="div" style={{ padding: 8 * 3 }}>
+      {props.children}
+    </Typography>
+  );
+}
+
+TabContainer.propTypes = {
+  children: PropTypes.node.isRequired
+};
 
 const styles = theme => ({
   root: {
@@ -30,8 +46,11 @@ class Profile extends Component {
     reserved: [],
     user: {},
     userId: "",
-    userName: ""
+    userName: "",
+    // For tabs
+    value: 0
   };
+
   componentDidMount() {
     this.userInfo();
   }
@@ -75,6 +94,7 @@ class Profile extends Component {
       })
       .catch(err => console.log(err));
   };
+
   loadReserved = () => {
     API.getReservForProf(this.state.userId)
       .then(res => {
@@ -87,12 +107,17 @@ class Profile extends Component {
       .catch(err => console.log(err));
   };
 
+  handleChange = (event, value) => {
+    this.setState({ value });
+  };
+
   render() {
     const { classes } = this.props;
-    const { spacing } = this.state;
+    const { value } = this.state;
     return (
       <div>
         <Nav />
+
         <div className={classes.root}>
           <Grid container spacing={8}>
             <Grid item xs={2}>
@@ -101,55 +126,83 @@ class Profile extends Component {
                 <h2>Welcome back, {this.state.userName}!</h2>
               </Paper>
             </Grid>
+
             {/* ////////////////////////////// */}
+
             <Grid item xs={10}>
-              <Paper className={classes.paper}>
-                Main Content
-                <div>
-                  <h1>LISTINGS</h1>
-                  {this.state.listing
-                    // .filter(listing => listing.user._id === this.state.user.user._id)
-                    .map(listing => {
-                      if (listing.user === this.state.userId) {
-                        return (
-                          <div>
-                            <ListingCard
-                              key={listing._id}
-                              id={listing._id}
-                              title={listing.title}
-                              photo={listing.photo}
-                              address={listing.address}
-                              city={listing.city}
-                              state={listing.state}
-                              zipcode={listing.zipcode}
-                              handleEditListing={this.handleEditListing}
-                              handleAvailListing={this.handleAvailListing}
-                            />
-                          </div>
-                        );
-                      }
-                    })}
-
-                  <h1>RESERVATIONS</h1>
-                  {this.state.reserved.map(reserved => {
-                    if (reserved.renter === this.state.userId)
-                      // {this.state.listings.map(listing) => {
-                      //   if(listing._id === reserved.listing)
-
-                      return (
-                        <div>
-                          <ReservCard
-                            date={moment(reserved.date).format("LL")}
-                            address={reserved.address}
-                            title={reserved.title}
-                            photo={reserved.photo}
-                          />
-                        </div>
-                      );
-                  })}
-                  {/* })} */}
-                </div>
+              {/* //Begin Tabs Menu// */}
+              <Paper className={classes.root}>
+                <Tabs
+                  value={this.state.value}
+                  onChange={this.handleChange}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  centered
+                >
+                  <Tab label="Listings" />
+                  <Tab label="Reservations" />
+                </Tabs>
               </Paper>
+              {/* End Tabs Menu// */}
+              {console.log(this.value)}
+              {value === 0 && (
+                <TabContainer>
+                  <Paper className={classes.paper}>
+                    <div>
+                      <h1>LISTINGS</h1>
+                      {this.state.listing
+                        // .filter(listing => listing.user._id === this.state.user.user._id)
+                        .map(listing => {
+                          if (listing.user === this.state.userId) {
+                            return (
+                              <div>
+                                <ListingCard
+                                  key={listing._id}
+                                  id={listing._id}
+                                  title={listing.title}
+                                  photo={listing.photo}
+                                  address={listing.address}
+                                  city={listing.city}
+                                  state={listing.state}
+                                  zipcode={listing.zipcode}
+                                  handleEditListing={this.handleEditListing}
+                                  handleAvailListing={this.handleAvailListing}
+                                />
+                              </div>
+                            );
+                          }
+                        })}
+
+                      {/* })} */}
+                    </div>
+                  </Paper>
+                </TabContainer>
+              )}
+              {value === 1 && (
+                <TabContainer>
+                  <Paper className={classes.paper}>
+                    <div>
+                      <h1>RESERVATIONS</h1>
+                      {this.state.reserved.map(reserved => {
+                        if (reserved.renter === this.state.userId)
+                          // {this.state.listings.map(listing) => {
+                          //   if(listing._id === reserved.listing)
+
+                          return (
+                            <div>
+                              <ReservCard
+                                date={moment(reserved.date).format("LL")}
+                                address={reserved.address}
+                                title={reserved.title}
+                                photo={reserved.photo}
+                              />
+                            </div>
+                          );
+                      })}
+                    </div>
+                  </Paper>
+                </TabContainer>
+              )}
             </Grid>
           </Grid>
         </div>
