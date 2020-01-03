@@ -432,13 +432,12 @@ class SearchResult extends Component {
                                             event.preventDefault();
                                             this.handleBookClick(
                                               spot[7],
+                                              spot[0],
                                               spot[3],
                                               spot[6],
-                                              spot[5],
                                               spot[8],
                                               spot[9],
-                                              spot[10],
-                                              spot[0]
+                                              spot[10]
                                             );
                                           }}
                                           // onClick={this.handleBookClick}
