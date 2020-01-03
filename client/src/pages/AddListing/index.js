@@ -19,7 +19,7 @@ import "react-day-picker/lib/style.css";
 class AddListing extends Component {
   state = {
     title: "",
-    parkingType: "",
+    parkingtype: "",
     photo: "",
     price: 0.0,
     address: "",
@@ -135,8 +135,9 @@ class AddListing extends Component {
                 API.saveListing({
                   user: this.state.user._id,
                   title: this.state.title,
-                  parkingType: this.state.parkingType,
+                  parkingtype: this.state.parkingtype,
                   photo: this.state.photo,
+                  price: this.state.price,
                   address: this.state.address,
                   city: this.state.city,
                   state: this.state.state,
@@ -191,24 +192,24 @@ class AddListing extends Component {
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label for="parkingType">Parking Type</label>
+                <label for="parkingtype">Parking Type</label>
                 <select
                   className="form-control"
-                  id="parkingType"
-                  name="parkingType"
-                  value={this.state.parkingType}
+                  id="parkingtype"
+                  name="parkingtype"
+                  value={this.state.parkingtype}
                   onChange={this.handleInputChange}
                 >
                   <option></option>
                   <option>Garage</option>
                   <option>Street</option>
-                  <option>Private Outdoor Lot Space</option>
+                  <option>Private Lot</option>
                   <option>Driveway</option>
                 </select>
               </div>
 
               <div className="form-group col-md-6">
-                <label for="photo">Price</label>
+                <label for="price">Price</label>
                 <input
                   value={this.state.price}
                   onChange={this.handleInputChange}
