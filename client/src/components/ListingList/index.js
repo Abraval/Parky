@@ -42,6 +42,8 @@ export function ListingListItem({
               type="button"
               data-id={id}
               data-address={address + " " + city + " " + state + " " + zipcode}
+              data-title={title}
+              data-photo={href}
               className="btn btn-primary bookbtn"
               onClick={handleBookClick}
             >

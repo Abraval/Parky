@@ -137,6 +137,9 @@ class Profile extends Component {
               <ReservCard
                date={reserved.date}
                address={reserved.address}
+               title={reserved.title}
+               photo={reserved.photo}
+              
               />
             </div>
           );

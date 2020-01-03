@@ -15,7 +15,9 @@ const styles = theme => ({
   class ReservCard extends React.Component {
     state = {
       date: this.props.date,
-      address: this.props.address
+      address: this.props.address,
+      title: this.props.title,
+      photo: this.props.photo
   
     };
 
@@ -27,9 +29,11 @@ const styles = theme => ({
 <div className="card" {...this.props} tabIndex="0">
 <div className="card-header">
   <div className="row">
-    <div className="card-title">{this.props.date}
+    <div className="card-title"><h2>{this.props.title}</h2>
     </div>
-        <p>{this.props.address}</p>
+        <img alt={this.props.title} className="img-fluid" src={this.props.photo} />
+        <h3>{this.props.address}</h3>
+        <p>Date: {this.props.date}</p>
   </div>
 </div>
 
