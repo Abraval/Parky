@@ -16,6 +16,7 @@ class SearchResult extends Component {
     markerData: [],
     idToBook: "",
     user: {},
+    address: ""
     // availId: ""
   };
 
@@ -47,23 +48,26 @@ class SearchResult extends Component {
     }
   }
 
-
-
   handleBookClick = event => {
     const Id = event.target.attributes.getNamedItem("data-id").value;
     this.setState({
       idToBook: Id
     });
-for (var i=0; i<this.state.selectedDays.length; i++){
-    API.updateAvailability({
-      date: this.state.selectedDays[i],
-      listing: Id,
-      userId: this.state.user._id
-      
+    const NewAddress = event.target.attributes.getNamedItem("data-address")
+      .value;
+    this.setState({
+      address: NewAddress
     });
-  }
-   
-   
+    console.log("+++++++++++++NEW ADDRESS");
+    console.log(NewAddress);
+    for (var i = 0; i < this.state.selectedDays.length; i++) {
+      API.updateAvailability({
+        date: this.state.selectedDays[i],
+        listing: Id,
+        userId: this.state.user._id,
+        address: NewAddress
+      });
+    }
   };
 
   constructor(props) {
@@ -160,7 +164,10 @@ for (var i=0; i<this.state.selectedDays.length; i++){
                   data.streetName,
                   data.neighborhood,
                   data.photo,
-                  data._id
+                  data._id,
+                  data.city,
+                  data.state,
+                  data.zipcode
                 ]
               ]
             });
@@ -277,6 +284,10 @@ for (var i=0; i<this.state.selectedDays.length; i++){
                     street={spot[4]}
                     neighborhood={spot[5]}
                     id={spot[7]}
+                    city={spot[8]}
+                    state={spot[9]}
+                    zipcode={spot[10]}
+                    address={spot[0]}
                     handleBookClick={this.handleBookClick}
                   />
                 );

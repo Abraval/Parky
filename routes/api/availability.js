@@ -8,4 +8,5 @@ router
 
 router.route("/").put(listingController.updateAvailabilityUser);
 
+
 module.exports = router;
