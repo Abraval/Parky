@@ -236,7 +236,9 @@ class SearchResult extends Component {
                   data._id,
                   data.city,
                   data.state,
-                  data.zipcode
+                  data.zipcode,
+                  data.price,
+                  data.parkingtype
                 ]
               ]
             });
@@ -392,6 +394,8 @@ class SearchResult extends Component {
                                       state={spot[9]}
                                       zipcode={spot[10]}
                                       address={spot[0]}
+                                      price={spot[11]}
+                                      parkingtype={spot[12]}
                                       handleBookClick={this.handleBookClick}
                                     >
                                       <img
@@ -421,6 +425,9 @@ class SearchResult extends Component {
                                         </Typography>
                                         <Typography color="textSecondary">
                                           {spot[5]}
+                                        </Typography>
+                                        <Typography color="textSecondary">
+                                          {spot[12]}
                                         </Typography>
                                       </Grid>
                                       <Grid item>
@@ -458,7 +465,7 @@ class SearchResult extends Component {
                                     </Grid>
                                     <Grid item>
                                       <Typography variant="subtitle1">
-                                        $19.00
+                                        ${spot[11]}
                                       </Typography>
                                     </Grid>
                                   </Grid>
