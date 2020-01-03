@@ -150,30 +150,26 @@ class Profile extends Component {
                   <Paper className={classes.paper}>
                     <div>
                       <h1>LISTINGS</h1>
-                      {this.state.listing
-                        // .filter(listing => listing.user._id === this.state.user.user._id)
-                        .map(listing => {
-                          if (listing.user === this.state.userId) {
-                            return (
-                              <div>
-                                <ListingCard
-                                  key={listing._id}
-                                  id={listing._id}
-                                  title={listing.title}
-                                  photo={listing.photo}
-                                  address={listing.address}
-                                  city={listing.city}
-                                  state={listing.state}
-                                  zipcode={listing.zipcode}
-                                  handleEditListing={this.handleEditListing}
-                                  handleAvailListing={this.handleAvailListing}
-                                />
-                              </div>
-                            );
-                          }
-                        })}
-
-                      {/* })} */}
+                      {this.state.listing.map(listing => {
+                        if (listing.user === this.state.userId) {
+                          return (
+                            <div>
+                              <ListingCard
+                                key={listing._id}
+                                id={listing._id}
+                                title={listing.title}
+                                photo={listing.photo}
+                                address={listing.address}
+                                city={listing.city}
+                                state={listing.state}
+                                zipcode={listing.zipcode}
+                                handleEditListing={this.handleEditListing}
+                                handleAvailListing={this.handleAvailListing}
+                              />
+                            </div>
+                          );
+                        }
+                      })}
                     </div>
                   </Paper>
                 </TabContainer>
