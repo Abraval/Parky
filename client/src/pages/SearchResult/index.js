@@ -6,6 +6,27 @@ import DayPicker, { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import API from "../../utils/API";
 import { ListingList, ListingListItem } from "../../components/ListingList";
+// Material UI Grid Layout imports
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import Radio from "@material-ui/core/Radio";
+import Paper from "@material-ui/core/Paper";
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1
+  },
+  paper: {
+    padding: theme.spacing.unit * 1,
+    margin: "auto",
+    textAlign: "center",
+    color: theme.palette.text.secondary
+  }
+});
 
 class SearchResult extends Component {
   state = {
@@ -15,8 +36,14 @@ class SearchResult extends Component {
     selectedDays: [],
     markerData: [],
     idToBook: "",
-    user: {},
+    user: {}
     // availId: ""
+  };
+
+  handleChange = key => (event, value) => {
+    this.setState({
+      [key]: value
+    });
   };
 
   // componentDidMount() {
@@ -47,23 +74,18 @@ class SearchResult extends Component {
     }
   }
 
-
-
   handleBookClick = event => {
     const Id = event.target.attributes.getNamedItem("data-id").value;
     this.setState({
       idToBook: Id
     });
-for (var i=0; i<this.state.selectedDays.length; i++){
-    API.updateAvailability({
-      date: this.state.selectedDays[i],
-      listing: Id,
-      userId: this.state.user._id
-      
-    });
-  }
-   
-   
+    for (var i = 0; i < this.state.selectedDays.length; i++) {
+      API.updateAvailability({
+        date: this.state.selectedDays[i],
+        listing: Id,
+        userId: this.state.user._id
+      });
+    }
   };
 
   constructor(props) {
@@ -239,58 +261,83 @@ for (var i=0; i<this.state.selectedDays.length; i++){
   };
 
   render() {
-    console.log(this.state);
+    const { classes } = this.props;
+    const { spacing } = this.state;
     return (
-      <div>
-        <Nav />
-        <form onSubmit={this.handleSubmitSearch}>
-          <input
-            type="text"
-            name="addressQuery"
-            value={this.state.address}
-            onChange={this.handleInputChange}
-            placeholder="Search for your address here"
-          />
-          <button type="submit" className="btn btn-primary" id="queryAddress">
-            Search
-          </button>
-        </form>
-        <div>
-          <DayPicker
-            locale="en"
-            selectedDays={this.state.selectedDays}
-            onDayClick={this.handleDayClick}
-          />
-        </div>
-        <div>
-          {!this.state.markerData.length ? (
-            <h1 className="text-center">No Spots to Display</h1>
-          ) : (
-            <ListingList>
-              {this.state.markerData.map(spot => {
-                // console.log(spot, this.handleBookClick);
-                return (
-                  <ListingListItem
-                    key={spot[3]}
-                    title={spot[3]}
-                    href={spot[6]}
-                    street={spot[4]}
-                    neighborhood={spot[5]}
-                    id={spot[7]}
-                    handleBookClick={this.handleBookClick}
-                  />
-                );
-              })}
-            </ListingList>
-          )}
-        </div>
-        <main>
-          <div id="map"></div>
-        </main>
+      <div className={classes.root}>
+        <Grid container wrap="nowrap" spacing={8}>
+          <Grid item xs={3}>
+            <Paper className={classes.paper}>
+              Calendar & Search
+              <form onSubmit={this.handleSubmitSearch}>
+                <input
+                  type="text"
+                  name="addressQuery"
+                  value={this.state.address}
+                  onChange={this.handleInputChange}
+                  placeholder="Search for your address here"
+                />
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  id="queryAddress"
+                >
+                  Search
+                </button>
+              </form>
+              <div>
+                <DayPicker
+                  locale="en"
+                  selectedDays={this.state.selectedDays}
+                  onDayClick={this.handleDayClick}
+                />
+              </div>
+            </Paper>
+          </Grid>
+          <Grid item xs={4}>
+            <Paper className={classes.paper}>
+              Listing Cards
+              <div>
+                {!this.state.markerData.length ? (
+                  <h1 className="text-center">No Spots to Display</h1>
+                ) : (
+                  <ListingList>
+                    {this.state.markerData.map(spot => {
+                      // console.log(spot, this.handleBookClick);
+                      return (
+                        <ListingListItem
+                          key={spot[3]}
+                          title={spot[3]}
+                          href={spot[6]}
+                          street={spot[4]}
+                          neighborhood={spot[5]}
+                          id={spot[7]}
+                          handleBookClick={this.handleBookClick}
+                        />
+                      );
+                    })}
+                  </ListingList>
+                )}
+              </div>
+            </Paper>
+          </Grid>
+          <Grid item xs={5}>
+            <Paper className={classes.paper}>
+              Map
+              <main>
+                <div id="map"></div>
+              </main>
+            </Paper>
+          </Grid>
+        </Grid>
       </div>
     );
   }
 }
+
+SearchResult.propTypes = {
+  classes: PropTypes.object.isRequired
+};
 
 function loadScript(url) {
   let index = window.document.getElementsByTagName("script")[0];
@@ -301,4 +348,4 @@ function loadScript(url) {
   index.parentNode.insertBefore(script, index);
 }
 
-export default SearchResult;
+export default withStyles(styles)(SearchResult);
