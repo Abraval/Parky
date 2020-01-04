@@ -8,7 +8,7 @@ const theme = createMuiTheme({
       main: "#556cd6"
     },
     secondary: {
-      main: "#e15f41"
+      main: "#84817a"
     },
     error: {
       main: red.A400
@@ -16,6 +16,10 @@ const theme = createMuiTheme({
     background: {
       default: "#f1f1f1"
     }
+  },
+  typography: {
+    // Use the system font instead of the default Roboto font.
+    navFont: ["'Lobster', cursive"].join(",")
   }
 });
 
