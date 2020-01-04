@@ -14,7 +14,7 @@ class SignUp extends Component {
       dob: "",
       license: ""
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSubmitForm = this.handleSubmitForm.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
   handleChange(event) {
@@ -22,7 +22,7 @@ class SignUp extends Component {
       [event.target.name]: event.target.value
     });
   }
-  handleSubmit(event) {
+  handleSubmitForm(event) {
     console.log("sign-up handleSubmit, username: ");
     console.log(this.state.username);
     event.preventDefault();
@@ -196,7 +196,7 @@ class SignUp extends Component {
             <div className="col-7"></div>
             <button
               className="btn btn-primary col-1 col-mr-auto"
-              onClick={this.handleSubmit}
+              onClick={this.handleSubmitForm}
               type="submit"
             >
               Sign up

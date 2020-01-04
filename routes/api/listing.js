@@ -6,6 +6,10 @@ router
   .get(listingController.findAll)
   .post(listingController.createListing);
 
+router
+  .route("/near")
+  .get(listingController.findAllNear)
+
   router
   .route("/profile")
   .get(listingController.findAllProfListing)
