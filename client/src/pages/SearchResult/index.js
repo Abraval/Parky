@@ -128,12 +128,36 @@ class SearchResult extends Component {
 
   handleBookClick = (id, address, title, href, city, state, zipcode) => {
     console.log(address);
+<<<<<<< HEAD
+    // const Id = event.target.attributes.getNamedItem("data-id").value;
+    // this.setState({
+    //   idToBook: Id
+    // });
+    // const NewAddress = event.target.attributes.getNamedItem("data-address")
+    //   .value;
+    // this.setState({
+    //   address: NewAddress
+    // });
+    // const NewTitle = event.target.attributes.getNamedItem("data-title").value;
+    // this.setState({
+    //   title: NewTitle
+    // });
+    // const NewPhoto = event.target.attributes.getNamedItem("data-photo").value;
+    // this.setState({
+    //   title: NewPhoto
+    // });
+=======
+>>>>>>> 113b779efaa1a4509cbe2efc1f19e7b2b8919023
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
         date: this.state.selectedDays[i],
         listing: id,
         userId: this.state.user._id,
+<<<<<<< HEAD
+        address: address + " " + city + " " + state + " " + zipcode,
+=======
         address: address + ", " + city + ", " + state + " " + zipcode,
+>>>>>>> 113b779efaa1a4509cbe2efc1f19e7b2b8919023
         title: title,
         photo: href
       });
@@ -394,6 +418,23 @@ class SearchResult extends Component {
                         // console.log(spot, this.handleBookClick);
                         return (
                           <div>
+<<<<<<< HEAD
+                            {/* <ListingListItem
+                              key={spot[3]}
+                              title={spot[3]}
+                              href={spot[6]}
+                              street={spot[4]}
+                              neighborhood={spot[5]}
+                              id={spot[7]}
+                              city={spot[8]}
+                              state={spot[9]}
+                              zipcode={spot[10]}
+                              address={spot[0]}
+                              handleBookClick={this.handleBookClick}
+                            /> */}
+
+=======
+>>>>>>> 113b779efaa1a4509cbe2efc1f19e7b2b8919023
                             <div className={classes.root}>
                               <Paper className={classes.paper}>
                                 <Grid container spacing={16}>
@@ -451,8 +492,34 @@ class SearchResult extends Component {
                                           variant="outlined"
                                           color="primary"
                                           className={classes.button}
+<<<<<<< HEAD
+                                          onClick={event => {
+                                            event.preventDefault();
+                                            this.handleBookClick(
+                                              spot[7],
+                                              spot[0],
+                                              spot[3],
+                                              spot[6],
+                                              spot[8],
+                                              spot[9],
+                                              spot[10]
+                                            );
+                                          }}
+                                          // onClick={this.handleBookClick}
+                                          // id={spot[7]}
+                                          // key={spot[3]}
+                                          // title={spot[3]}
+                                          // href={spot[6]}
+                                          // street={spot[4]}
+                                          // neighborhood={spot[5]}
+                                          // city={spot[8]}
+                                          // state={spot[9]}
+                                          // zipcode={spot[10]}
+                                          // address={spot[0]}
+=======
                                           aria-label="Booking Summary"
                                           onClick={() => this.handleClickOpen()}
+>>>>>>> 113b779efaa1a4509cbe2efc1f19e7b2b8919023
                                         >
                                           Book Now
                                         </Button>
@@ -465,6 +532,8 @@ class SearchResult extends Component {
                                     </Grid>
                                   </Grid>
                                 </Grid>
+<<<<<<< HEAD
+=======
                                 <Dialog
                                   open={this.state.open}
                                   handleClickOpen={this.handleClickOpen}
@@ -511,6 +580,7 @@ class SearchResult extends Component {
                                     </Button>
                                   </DialogActions>
                                 </Dialog>
+>>>>>>> 113b779efaa1a4509cbe2efc1f19e7b2b8919023
                               </Paper>
                             </div>
                           </div>

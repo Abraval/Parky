@@ -16,6 +16,11 @@ router
   .put(listingController.editListing)
 
   router
+  .route("/profile/:id")
+  .delete(listingController.deleteListing)
+  
+
+  router
   .route("/reserved/")
   .get(listingController.findReserved)
 
@@ -23,8 +28,6 @@ router
   .route("/reserved/:id")
   .get(listingController.findReservedById)
 
-
-  // .put(listingController.editListing);
 
 
 module.exports = router;
