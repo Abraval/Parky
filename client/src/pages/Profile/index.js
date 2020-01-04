@@ -14,10 +14,11 @@ import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
+import GridList from "@material-ui/core/GridList";
 
 function TabContainer(props) {
   return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
+    <Typography component="div" style={{ padding: "8px" }}>
       {props.children}
     </Typography>
   );
@@ -29,7 +30,8 @@ TabContainer.propTypes = {
 
 const styles = theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    paddingTop: "6px"
   },
   paper: {
     padding: theme.spacing.unit * 1,
@@ -37,6 +39,11 @@ const styles = theme => ({
     textAlign: "center",
     color: theme.palette.text.secondary,
     height: "100%"
+  },
+  cardContainer: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center"
   }
 });
 
@@ -93,7 +100,6 @@ class Profile extends Component {
         // let reservListId =
         // console.log("RESERVATIONS");
         // console.log(res.data);
-   
       })
 
       .catch(err => console.log(err));
@@ -111,9 +117,9 @@ class Profile extends Component {
         <Nav />
 
         <div className={classes.root}>
-          <Grid container spacing={8}>
+          <Grid container spacing={0}>
             <Grid item xs={2}>
-              <Paper className={classes.paper}>
+              <Paper className={classes.paper} square={true} elevation={0}>
                 Sidebar & Profile Image
                 <h2>Welcome back, {this.state.userName}!</h2>
               </Paper>
@@ -123,13 +129,14 @@ class Profile extends Component {
 
             <Grid item xs={10}>
               {/* //Begin Tabs Menu// */}
-              <Paper className={classes.root}>
+              <Paper className={classes.root} square={true} elevation={0}>
                 <Tabs
                   value={this.state.value}
                   onChange={this.handleChange}
                   indicatorColor="primary"
                   textColor="primary"
                   centered
+                  variant="fullWidth"
                 >
                   <Tab label="Listings" />
                   <Tab label="Reservations" />
@@ -139,31 +146,32 @@ class Profile extends Component {
               {console.log(this.value)}
               {value === 0 && (
                 <TabContainer>
-                  <Paper className={classes.paper}>
+                  <Paper className={classes.paper} elevation={0}>
                     <div>
                       <h1>LISTINGS</h1>
-                      {this.state.listing.map(listing => {
-                        if (listing.user === this.state.userId) {
-                          console.log("Profile.render listings.map listing", listing)
-                          return (
-                            <div>
-                              <ListingCard
-                                loadListings={this.loadListings}
-                                key={listing._id}
-                                id={listing._id}
-                                title={listing.title}
-                                photo={listing.photo}
-                                address={listing.address}
-                                city={listing.city}
-                                state={listing.state}
-                                zipcode={listing.zipcode}
-                                handleEditListing={this.handleEditListing}
-                                handleAvailListing={this.handleAvailListing}
-                              />
-                            </div>
-                          );
-                        }
-                      })}
+                      <div className={classes.cardContainer}>
+                        {this.state.listing.map(listing => {
+                          if (listing.user === this.state.userId) {
+                            return (
+                              <div>
+                                <ListingCard
+                                  loadListings={this.loadListings}
+                                  key={listing._id}
+                                  id={listing._id}
+                                  title={listing.title}
+                                  photo={listing.photo}
+                                  address={listing.address}
+                                  city={listing.city}
+                                  state={listing.state}
+                                  zipcode={listing.zipcode}
+                                  handleEditListing={this.handleEditListing}
+                                  handleAvailListing={this.handleAvailListing}
+                                />
+                              </div>
+                            );
+                          }
+                        })}
+                      </div>
                     </div>
                   </Paper>
                 </TabContainer>
@@ -175,9 +183,6 @@ class Profile extends Component {
                       <h1>RESERVATIONS</h1>
                       {this.state.reserved.map(reserved => {
                         if (reserved.renter === this.state.userId)
-                          // {this.state.listings.map(listing) => {
-                          //   if(listing._id === reserved.listing)
-
                           return (
                             <div>
                               <ReservCard
