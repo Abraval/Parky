@@ -33,14 +33,16 @@ const styles = theme => ({
     display: "none"
   },
   card: {
-    maxWidth: 400
+    maxWidth: 250,
+    margin: "8px"
   },
   media: {
     height: 0,
     paddingTop: "56.25%" // 16:9
   },
   actions: {
-    display: "flex"
+    display: "flex",
+    justifyContent: "center"
   },
   expand: {
     transform: "rotate(0deg)",
@@ -68,6 +70,25 @@ class ReservCard extends React.Component {
   render() {
     const { classes } = this.props;
     return (
+      // <Card className={classes.card}>
+      //   <CardMedia
+      //     className={classes.media}
+      //     image={this.props.photo}
+      //     title={this.props.title}
+      //   />
+      //   <CardHeader title={this.props.title} subheader={this.props.address} />
+      //   <CardContent>
+      //     <Typography component="p">Date: {this.props.date}</Typography>
+      //   </CardContent>
+      //   <CardActions className={classes.actions} disableActionSpacing>
+      //     <IconButton
+      //       aria-label="Cancel Reservation"
+      //       onClick={() => this.handleClickOpen()}
+      //     >
+      //       <CancelIcon /> Cancel
+      //     </IconButton>
+      //   </CardActions>
+
       <Card className={classes.card}>
         <CardMedia
           className={classes.media}
@@ -76,7 +97,7 @@ class ReservCard extends React.Component {
         />
         <CardHeader title={this.props.title} subheader={this.props.address} />
         <CardContent>
-          <Typography component="p">Date: {this.props.date}</Typography>
+          <Typography component="p">{this.props.date}</Typography>
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
           <IconButton

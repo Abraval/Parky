@@ -198,9 +198,9 @@ class SearchResult extends Component {
         date.toISOString()
       );
 
-      // console.log(formattedDates);
-      this.setState({ markerData: [] });
-      this.setState({ listings: [] });
+      // // console.log(formattedDates);
+      // this.setState({ markerData: [] });
+      // this.setState({ listings: [] });
 
       API.getAvailableListings(formattedDates).then(res => {
         console.log("here", res);
@@ -358,6 +358,7 @@ class SearchResult extends Component {
   render() {
     const { classes } = this.props;
     const { spacing } = this.state;
+    console.log(this.state.markerData);
     return (
       <div>
         <Nav />
