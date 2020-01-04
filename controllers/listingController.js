@@ -130,7 +130,7 @@ module.exports = {
       
   },
   updateAvailabilityUser: function(req, res) {
-    console.log("UPDATE USER", req.body.userId);
+    console.log("UPDATE USER", req.body);
     db.Availability.findOneAndUpdate(
       {
         listing: req.body.listing,
@@ -141,7 +141,8 @@ module.exports = {
           renter: mongoose.Types.ObjectId(req.body.userId),
           address: req.body.address,
           title: req.body.title,
-          photo: req.body.photo
+          photo: req.body.photo,
+          price: req.body.price
         }
       }
     )
