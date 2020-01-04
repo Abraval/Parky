@@ -11,6 +11,8 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 // import MenuIcon from "@material-ui/icons/Menu";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 const styles = {
   root: {
@@ -93,11 +95,11 @@ class Nav extends Component {
               Sign Up
             </Button>
             {this.renderRedirect()}
-            <Button color="inherit" onClick={this.logout} href="/signin">
-              Logout
-            </Button>
             <Button color="inherit" href="/profile">
-              Account
+              <AccountCircleIcon />
+            </Button>
+            <Button color="inherit" onClick={this.logout} href="/signin">
+              <ExitToAppIcon />
             </Button>
           </Toolbar>
         </AppBar>

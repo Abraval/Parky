@@ -126,18 +126,21 @@ module.exports = {
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
-  updateAvailability: function (req,res) {
-    db.Availability.findOneAndUpdate(
-      {
-        listing: req.body.listing,
-        date: req.body.date
-      },
-      {
-        $set: {
-          date: req.body.date
-        }
-      }
-
-    )
-  }
+  // createAvailabilityInDialog: function(req, res) {
+  //   db.Availability.create(req.body)
+  //     .then(dbModel => res.json(dbModel))
+  //     .catch(err => res.status(422).json(err));
+  // },
+  getAvailabilityByListingId: function(req, res) {
+    const {id} = req.params
+    db.Availability.find({listing: id})
+    .then(dbModel => res.json(dbModel))
+    .catch(err => res.status(422).json(err));
+  },
+  deleteAvailability: function(req, res) {
+    const {id} = req.params
+    db.Availability.deleteOne({_id: id})
+    .then(dbModel => res.json(dbModel))
+    .catch(err => res.status(422).json(err));
+  },
 };
