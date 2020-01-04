@@ -80,9 +80,13 @@ class Nav extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <AppBar position="static" style={{ background: "#ffa000" }}>
+        <AppBar
+          position="static"
+          style={{ background: "#fff5b5" }}
+          elevation={2}
+        >
           <Toolbar>
-            <Typography variant="h6" color="inherit" className={classes.grow}>
+            <Typography variant="h6" color="#596275" className={classes.grow}>
               Parky
             </Typography>
             <Button color="inherit" href="/searchresult">
