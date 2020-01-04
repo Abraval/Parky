@@ -41,6 +41,7 @@ export default {
     });
   },
   updateAvailability: function(availabilityData) {
+    console.log("updateAvailability.API availDATA", availabilityData)
     return axios.put("api/availability", availabilityData) 
 
   },

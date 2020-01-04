@@ -399,7 +399,7 @@ class SearchResult extends Component {
                   ) : (
                     <div>
                       {this.state.markerData.map(spot => {
-                        // console.log(spot, this.handleBookClick);
+                        console.log(spot, this.handleBookClick);
                         return (
                           <div>
                             <div className={classes.root}>
@@ -461,6 +461,7 @@ class SearchResult extends Component {
                                           className={classes.button}
                                           onClick={event => {
                                             event.preventDefault();
+                                            console.log("SearchResult.buttonhandelick spot", spot)
                                             this.handleBookClick(
                                               spot[7],
                                               spot[0],
@@ -529,7 +530,8 @@ class SearchResult extends Component {
                                           spot[6],
                                           spot[8],
                                           spot[9],
-                                          spot[10]
+                                          spot[10],
+                                          spot[11]
                                         );
                                       }}
                                     >
