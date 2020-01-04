@@ -219,7 +219,17 @@ class SearchResult extends Component {
         // console.log(emptyArr);
 
         emptyArr.map(item => {
+
+          console.log("item is", item); 
           API.getListingById(item.listing).then(listing => {
+
+
+            console.log("listing here", listing.data[0]);
+            API.getListingByIdAndProximity(listing.data[0]).then(data => {
+              console.log("data is: ", data); 
+            })
+
+
             // console.log("listing here", listing);
             // Set this.state.markerData here.
             const data = listing.data[0];
@@ -245,7 +255,23 @@ class SearchResult extends Component {
               ]
             });
           });
+
+
         });
+
+        // emptyArr.map(item => {
+          
+        //   // console.log("item is", item); 
+
+        //   console.log(this.state.latitude);
+        //   console.log(this.state.longitude);
+
+        //   API.getListingByIdAndProximity(item.listing).then(listing => {
+        //     console.log(listing); 
+        //   })
+        
+        // });
+
       });
     });
   };
