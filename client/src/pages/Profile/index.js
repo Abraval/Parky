@@ -101,7 +101,6 @@ class Profile extends Component {
         this.setState({ reserved: res.data });
         // console.log("RESERVATIONS");
         // console.log(res.data);
-   
       })
 
       .catch(err => console.log(err));
@@ -138,6 +137,7 @@ class Profile extends Component {
                   indicatorColor="primary"
                   textColor="primary"
                   centered
+                  variant="fullWidth"
                 >
                   <Tab label="Listings" />
                   <Tab label="Reservations" />
@@ -181,7 +181,6 @@ class Profile extends Component {
                       <h1>RESERVATIONS</h1>
                       {this.state.reserved.map(reserved => {
                         if (reserved.renter === this.state.userId)
-
                           return (
                             <div>
                               <ReservCard
