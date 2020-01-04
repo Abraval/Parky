@@ -47,6 +47,20 @@ const styles = theme => ({
   card: {
     width: "100%"
   },
+  container: {
+    paddingTop: "8px",
+    paddingLeft: "8px",
+    paddingRight: "8px"
+  },
+  calendarContainer: {
+    minWidth: "250px"
+  },
+  bookingContainer: {
+    minWidth: "400px"
+  },
+  mapContainer: {
+    minWidth: "400px"
+  },
   // media: {
   //   height: 140
   // },
@@ -128,41 +142,17 @@ class SearchResult extends Component {
 
   handleBookClick = (id, address, title, href, city, state, zipcode) => {
     console.log(address);
-<<<<<<< HEAD
-    // const Id = event.target.attributes.getNamedItem("data-id").value;
-    // this.setState({
-    //   idToBook: Id
-    // });
-    // const NewAddress = event.target.attributes.getNamedItem("data-address")
-    //   .value;
-    // this.setState({
-    //   address: NewAddress
-    // });
-    // const NewTitle = event.target.attributes.getNamedItem("data-title").value;
-    // this.setState({
-    //   title: NewTitle
-    // });
-    // const NewPhoto = event.target.attributes.getNamedItem("data-photo").value;
-    // this.setState({
-    //   title: NewPhoto
-    // });
-=======
->>>>>>> 113b779efaa1a4509cbe2efc1f19e7b2b8919023
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
         date: this.state.selectedDays[i],
         listing: id,
         userId: this.state.user._id,
-<<<<<<< HEAD
-        address: address + " " + city + " " + state + " " + zipcode,
-=======
         address: address + ", " + city + ", " + state + " " + zipcode,
->>>>>>> 113b779efaa1a4509cbe2efc1f19e7b2b8919023
         title: title,
         photo: href
       });
     }
-    this.handleClose()
+    this.handleClose();
   };
 
   constructor(props) {
@@ -219,7 +209,6 @@ class SearchResult extends Component {
 
         const datesLength = formattedDates.length;
 
-
         for (let i = 0; i < res.data.length; i++) {
           let count = 0;
           for (let j = 0; j < res.data.length; j++) {
@@ -243,20 +232,17 @@ class SearchResult extends Component {
         // console.log(emptyArr);
 
         emptyArr.map(item => {
-
-          console.log("item is", item); 
+          console.log("item is", item);
           API.getListingById(item.listing).then(listing => {
-
             console.log("search lat is ", this.state.latitude);
-            console.log("search lat is ", this.state.longitude); 
+            console.log("search lat is ", this.state.longitude);
 
-            var longLatArray = [this.state.longitude, this.state.latitude]
+            var longLatArray = [this.state.longitude, this.state.latitude];
 
             console.log("listing here", listing.data[0]);
             API.getListingByIdAndProximity(longLatArray).then(data => {
-              console.log("line 229 is: ", data); 
-            })
-
+              console.log("line 229 is: ", data);
+            });
 
             // console.log("listing here", listing);
             // Set this.state.markerData here.
@@ -283,23 +269,20 @@ class SearchResult extends Component {
               ]
             });
           });
-
-
         });
 
         // emptyArr.map(item => {
-          
-        //   // console.log("item is", item); 
+
+        //   // console.log("item is", item);
 
         //   console.log(this.state.latitude);
         //   console.log(this.state.longitude);
 
         //   API.getListingByIdAndProximity(item.listing).then(listing => {
-        //     console.log(listing); 
+        //     console.log(listing);
         //   })
-        
-        // });
 
+        // });
       });
     });
   };
@@ -379,9 +362,9 @@ class SearchResult extends Component {
       <div>
         <Nav />
         <div className={classes.root}>
-          <Grid container spacing={8}>
-            <Grid item xs={3}>
-              <Paper className={classes.paper} elevation={1}>
+          <Grid className={classes.container} container spacing={8}>
+            <Grid className={classes.calendarContainer} item xs sm={2}>
+              <Paper className={classes.paper} elevation={0}>
                 <form onSubmit={this.handleSubmitSearch}>
                   <input
                     type="text"
@@ -407,8 +390,8 @@ class SearchResult extends Component {
                 </div>
               </Paper>
             </Grid>
-            <Grid item xs={4}>
-              <Paper className={classes.paper} elevation={1}>
+            <Grid className={classes.bookingContainer} item xs>
+              <Paper className={classes.paper} elevation={0}>
                 <div>
                   {!this.state.markerData.length ? (
                     <h1 className="text-center">No Spots to Display</h1>
@@ -418,23 +401,6 @@ class SearchResult extends Component {
                         // console.log(spot, this.handleBookClick);
                         return (
                           <div>
-<<<<<<< HEAD
-                            {/* <ListingListItem
-                              key={spot[3]}
-                              title={spot[3]}
-                              href={spot[6]}
-                              street={spot[4]}
-                              neighborhood={spot[5]}
-                              id={spot[7]}
-                              city={spot[8]}
-                              state={spot[9]}
-                              zipcode={spot[10]}
-                              address={spot[0]}
-                              handleBookClick={this.handleBookClick}
-                            /> */}
-
-=======
->>>>>>> 113b779efaa1a4509cbe2efc1f19e7b2b8919023
                             <div className={classes.root}>
                               <Paper className={classes.paper}>
                                 <Grid container spacing={16}>
@@ -492,34 +458,8 @@ class SearchResult extends Component {
                                           variant="outlined"
                                           color="primary"
                                           className={classes.button}
-<<<<<<< HEAD
-                                          onClick={event => {
-                                            event.preventDefault();
-                                            this.handleBookClick(
-                                              spot[7],
-                                              spot[0],
-                                              spot[3],
-                                              spot[6],
-                                              spot[8],
-                                              spot[9],
-                                              spot[10]
-                                            );
-                                          }}
-                                          // onClick={this.handleBookClick}
-                                          // id={spot[7]}
-                                          // key={spot[3]}
-                                          // title={spot[3]}
-                                          // href={spot[6]}
-                                          // street={spot[4]}
-                                          // neighborhood={spot[5]}
-                                          // city={spot[8]}
-                                          // state={spot[9]}
-                                          // zipcode={spot[10]}
-                                          // address={spot[0]}
-=======
                                           aria-label="Booking Summary"
                                           onClick={() => this.handleClickOpen()}
->>>>>>> 113b779efaa1a4509cbe2efc1f19e7b2b8919023
                                         >
                                           Book Now
                                         </Button>
@@ -532,8 +472,6 @@ class SearchResult extends Component {
                                     </Grid>
                                   </Grid>
                                 </Grid>
-<<<<<<< HEAD
-=======
                                 <Dialog
                                   open={this.state.open}
                                   handleClickOpen={this.handleClickOpen}
@@ -580,7 +518,6 @@ class SearchResult extends Component {
                                     </Button>
                                   </DialogActions>
                                 </Dialog>
->>>>>>> 113b779efaa1a4509cbe2efc1f19e7b2b8919023
                               </Paper>
                             </div>
                           </div>
@@ -591,8 +528,8 @@ class SearchResult extends Component {
                 </div>
               </Paper>
             </Grid>
-            <Grid item xs={5}>
-              <Paper className={classes.paper} elevation={1}>
+            <Grid className={classes.mapContainer} item xs>
+              <Paper className={classes.paper} elevation={0}>
                 <main>
                   <div id="map"></div>
                 </main>

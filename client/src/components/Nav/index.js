@@ -13,6 +13,7 @@ import IconButton from "@material-ui/core/IconButton";
 // import MenuIcon from "@material-ui/icons/Menu";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import { withTheme } from "@material-ui/core/styles";
 
 const styles = {
   root: {
@@ -78,27 +79,38 @@ class Nav extends Component {
 
   render() {
     const { classes } = this.props;
+    console.log(this.props.theme);
     return (
       <div className={classes.root}>
-        <AppBar position="static" style={{ background: "#ffa000" }}>
-          <Toolbar>
-            <Typography variant="h6" color="inherit" className={classes.grow}>
+        <AppBar
+          position="static"
+          style={{
+            background: "#fff5b5"
+          }}
+          elevation={2}
+        >
+          <Toolbar
+            style={{
+              fontFamily: this.props.theme.typography.navFont
+            }}
+          >
+            <Typography variant="h6" color="secondary" className={classes.grow}>
               Parky
             </Typography>
-            <Button color="inherit" href="/searchresult">
+            <Button color="secondary" href="/searchresult">
               Search
             </Button>
-            <Button color="inherit" href="/addlisting">
+            <Button color="secondary" href="/addlisting">
               Create
             </Button>
-            <Button color="inherit" href="/signup">
+            <Button color="secondary" href="/signup">
               Sign Up
             </Button>
             {this.renderRedirect()}
-            <Button color="inherit" href="/profile">
+            <Button color="secondary" href="/profile">
               <AccountCircleIcon />
             </Button>
-            <Button color="inherit" onClick={this.logout} href="/signin">
+            <Button color="secondary" onClick={this.logout} href="/signin">
               <ExitToAppIcon />
             </Button>
           </Toolbar>
@@ -155,6 +167,6 @@ Nav.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Nav);
+export default withStyles(styles)(withTheme()(Nav));
 
-// export default Nav;
+// export default withTheme()(MyComponent);

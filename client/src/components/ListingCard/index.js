@@ -34,14 +34,16 @@ const styles = theme => ({
     display: "none"
   },
   card: {
-    maxWidth: 400
+    maxWidth: 250,
+    margin: "8px"
   },
   media: {
     height: 0,
     paddingTop: "56.25%" // 16:9
   },
   actions: {
-    display: "flex"
+    display: "flex",
+    justifyContent: "center"
   },
   expand: {
     transform: "rotate(0deg)",
