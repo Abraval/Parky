@@ -16,7 +16,7 @@ export default {
   },
   getReservForProf: function(id) {
     console.log(id);
-    return axios.get("/api/listing/reserved/")
+    return axios.get("/api/listing/reserved/");
   },
   getReservById: function(id) {
     return axios.get("api/listings/reserved", {
@@ -47,11 +47,29 @@ export default {
   createAvailability: function(availabilityData) {
     return axios.post("api/availability", availabilityData);
   },
+  deleteAvailability: function(id) {
+    return axios.delete(`/api/availability/${id}`);
+  },
   getAvailableListings: function(dates) {
     return axios.get("api/availability", {
       params: {
         dates
       }
     });
+
+  },
+  editListing: function(listing) {
+    console.log("API.editListing listing", listing);
+    return axios.put("api/listing/profile", { listing });
+  },
+  deleteListing: function(id) {
+    return axios.delete("/api/listing/profile/" + id);
+  },
+  updateAvailabilityInProfile: function(newData) {
+    return axios.post("/api/availability/update", newData);
+  },
+  getAvailabilitiesByListingId: function(id) {
+    return axios.get(`/api/availability/${id}`);
+
   }
 };

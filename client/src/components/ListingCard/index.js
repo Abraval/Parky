@@ -10,6 +10,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import API from "../../utils/API";
+import DayPicker, { DateUtils } from "react-day-picker";
+import "react-day-picker/lib/style.css";
 // Material UI Cards imports
 import classnames from "classnames";
 import Card from "@material-ui/core/Card";
@@ -61,6 +63,7 @@ const styles = theme => ({
 class ListingCard extends React.Component {
   state = {
     open: false,
+    open2: false,
     title: this.props.title,
     address: this.props.address,
     city: this.props.city,
@@ -68,15 +71,40 @@ class ListingCard extends React.Component {
     zipcode: this.props.zipcode,
     currentModalId: this.props.id,
     //Material UI card
-    expanded: false
+    expanded: false,
+    selectedDays: [],
+    initialAvailabilities: []  //used to figure out which availablities to create and to delete
+    
   };
+
+//You should only fetch availabilities when the modal opens
+//availabilites modal should be a class componenent.
+  componentDidMount = ()  => {
+    API.getAvailabilitiesByListingId(this.props.id)
+    .then(res => { 
+      console.log("ListingCard.ComponentDIdMount res", res)
+      console.log("ListingCard.ComponentDIdMount this.props.id", this.props.id)
+      const selectedDays = res.data.map(day => new Date(day.date))
+      this.setState({selectedDays: [...selectedDays], initialAvailabilities: [...res.data]})
+    })
+    .catch(err => console.log("ListingCard.componentDidMount err", err))
+  }
+ 
 
   handleClickOpen = () => {
     this.setState({ open: true });
   };
 
+  handleClickOpen2 = () => {
+    this.setState({ open2: true });
+  };
+
   handleClose = () => {
     this.setState({ open: false });
+  };
+
+  handleClose2 = () => {
+    this.setState({ open2: false });
   };
 
   handleInputChange = event => {
@@ -88,13 +116,109 @@ class ListingCard extends React.Component {
     });
   };
 
+  handleDateSubmit = event => {
+    console.log("this has been submitted!!")
+    const currentSet = (this.state.selectedDays)
+
+    const initialSelectedDays = this.state.initialAvailabilities.map(day => new Date(day.date))
+    console.log("listingCard.handleDateSubmit initialSelectedDays", initialSelectedDays)
+    const initialSet = (initialSelectedDays)
+
+    const removedElements = ([...initialSet].filter(initialElement => {
+      let found = true
+      currentSet.forEach(currentElement => {
+        if (DateUtils.isSameDay(initialElement, currentElement)) {
+          found = false
+        }
+      })
+      return found
+    }))
+    const addedElements = ([...currentSet].filter(currentElement => {
+      let found = true
+      initialSet.forEach(initialElement => {
+        if (DateUtils.isSameDay(initialElement, currentElement)) {
+          found = false
+        }
+      })
+      return found
+    }))
+
+
+    console.log("ListingCard.handleDateSubmit ",  "removedElements", removedElements, "addedElements", addedElements )
+  
+    addedElements.forEach(day => {
+      API.createAvailability({
+        date: day,
+        listing: this.props.id
+        // .map over all selected dates in array and create a new row in the avail collection for each date and include the the the id of listing
+      });
+    })
+    removedElements.forEach(day => {
+      const availability = this.state.initialAvailabilities.find(avail => {
+        return DateUtils.isSameDay(new Date(avail.date), new Date(day))
+      })
+      API.deleteAvailability(availability._id)
+
+    })
+
+
+  }
+
+
   handleListingUpdate = event => {
-    // event.preventDefault();
+  this.setState({open: false})
+    // window.location.reload(true)
+    console.log("ListingCard.handleListingUpdate this.state", this.state)
     API.editListing(this.state)
-      .then(res => console.log(res))
+    .then(res => {
+      console.log("ListingCard.handleListingUpdate res", res)
+      this.props.loadListings()
+    
+    })
+  
       .catch(err => console.log(err));
   };
 
+  handleDelete = id => {
+    API.deleteListing(id)
+    .then(res => {
+      this.props.loadListings()
+    })
+      .catch(err => console.log(err));
+  };
+
+  constructor(props) {
+    super(props);
+    this.handleDayClick = this.handleDayClick.bind(this);
+    this.state = {
+      open: false,
+    open2: false,
+    title: this.props.title,
+    address: this.props.address,
+    city: this.props.city,
+    state: this.props.state,
+    zipcode: this.props.zipcode,
+    currentModalId: this.props.id,
+    //Material UI card
+    expanded: false,
+    selectedDays: []
+    };
+  }
+
+  handleDayClick(day, { selected }) {
+    console.log("ListingCard.handleDayClick day", day)
+    console.log("ListingCard.handleDayClick selected", selected)
+    const { selectedDays } = this.state;
+    if (selected) {
+      const selectedIndex = selectedDays.findIndex(selectedDay =>
+        DateUtils.isSameDay(selectedDay, day)
+      );
+      selectedDays.splice(selectedIndex, 1);
+    } else {
+      selectedDays.push(day);
+    }
+    this.setState({ selectedDays });
+  }
   handleExpandClick = () => {
     this.setState(state => ({ expanded: !state.expanded }));
   };
@@ -128,11 +252,11 @@ class ListingCard extends React.Component {
           </IconButton>
           <IconButton
             aria-label="Edit Availability"
-            onClick={event => this.props.handleAvailListing(event)}
+            onClick={() => this.handleClickOpen2()}
           >
             <DateRangeIcon />
           </IconButton>
-          <IconButton aria-label="Delete Listing">
+          <IconButton aria-label="Delete Listing" onClick={() => this.handleDelete(this.state.currentModalId)}>
             <DeleteIcon />
           </IconButton>
         </CardActions>
@@ -213,6 +337,28 @@ class ListingCard extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
+        <Dialog
+  open={this.state.open2}
+  handleClickOpen={this.handleClickOpen2}
+>
+  <DialogActions>
+    {/* <Button onClick={() => this.handleListingUpdate()} color="primary">
+      Submit
+    </Button> */}
+    <div>
+      <DayPicker
+        selectedDays={this.state.selectedDays}
+        onDayClick={this.handleDayClick}
+      />
+    </div>
+    <Button onClick={() => this.handleDateSubmit()} color="primary">
+      Submit
+    </Button>
+    <Button onClick={() => this.handleClose2()} color="secondary">
+      Cancel
+    </Button>
+  </DialogActions>
+</Dialog>
       </Card>
     );
   }
@@ -223,3 +369,5 @@ ListingCard.propTypes = {
 };
 
 export default withStyles(styles)(ListingCard);
+
+

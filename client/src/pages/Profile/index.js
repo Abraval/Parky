@@ -63,12 +63,6 @@ class Profile extends Component {
   }
 
   userInfo = () => {
-    API.getUser()
-      .then(res => {
-        // console.log("=======");
-        // console.log(res);
-        // console.log("=======");
-        this.setState({ user: res.data });
         this.setState({ userId: res.data.user._id });
         // this.setState({userName: res.data.user.firstname})
         // console.log(res.data.user._id);
