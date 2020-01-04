@@ -150,8 +150,8 @@ class AddListing extends Component {
             var neighborhood =
               response.data.results[0].address_components[2].long_name;
 
-           var typeLat = typeof latitude; 
-           console.log(typeLat); 
+            var typeLat = typeof latitude;
+            console.log(typeLat);
 
             let apiKey = "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo";
 
@@ -329,6 +329,7 @@ class AddListing extends Component {
                 <TextField
                   id="title"
                   label="Title"
+                  fullWidth={true}
                   placeholder="Open driveway on quiet street"
                   className={classes.textField}
                   margin="normal"
@@ -343,6 +344,7 @@ class AddListing extends Component {
                   id="parkingtype"
                   select
                   label="Select"
+                  fullWidth={true}
                   className={classes.textField}
                   value={this.state.parkingtype}
                   onChange={this.handleInputChange}
@@ -353,6 +355,7 @@ class AddListing extends Component {
                   }}
                   helperText="Select spot type"
                   margin="normal"
+                  name="parkingtype"
                 >
                   {ranges.map(option => (
                     <MenuItem key={option.value} value={option.value}>
@@ -368,6 +371,7 @@ class AddListing extends Component {
                   value={this.state.price}
                   onChange={this.handleInputChange}
                   type="number"
+                  fullWidth={true}
                   className={classes.textField}
                   InputLabelProps={{
                     shrink: true
@@ -380,6 +384,7 @@ class AddListing extends Component {
                 {/* //ADDRESS */}
                 <TextField
                   id="address"
+                  fullWidth={true}
                   label="Street Address"
                   placeholder="1200 Market Street"
                   className={classes.textField}
@@ -394,6 +399,7 @@ class AddListing extends Component {
                 <TextField
                   id="city"
                   label="City"
+                  fullWidth={true}
                   placeholder="Philadelphia"
                   className={classes.textField}
                   margin="normal"
@@ -405,6 +411,7 @@ class AddListing extends Component {
 
                 {/* //State */}
                 <TextField
+                  fullWidth={true}
                   id="state"
                   label="State"
                   placeholder="PA"
@@ -427,6 +434,7 @@ class AddListing extends Component {
                   value={this.state.zipcode}
                   onChange={this.handleInputChange}
                   name="zipcode"
+                  fullWidth={true}
                 />
                 <Button
                   variant="contained"
@@ -434,6 +442,7 @@ class AddListing extends Component {
                   className={classes.button}
                   onClick={this.handleFormSubmit}
                   id="addListing"
+                  fullWidth={true}
                 >
                   Add Listing
                 </Button>

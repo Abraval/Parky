@@ -37,6 +37,9 @@ const styles = theme => ({
     ...theme.mixins.gutters(),
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2
+  },
+  avatar: {
+    margin: "0 auto"
   }
 });
 
@@ -146,13 +149,14 @@ class LoginForm extends Component {
           justify="center"
           style={{ minHeight: "100vh" }}
         >
-          <Grid item xs={3}>
-            <Paper
-              className={classes.root}
-              elevation={1}
-              mx="auto"
-              align="center"
-            >
+          <Grid
+            item
+            xs={3}
+            style={{
+              minWidth: "250px"
+            }}
+          >
+            <Paper className={classes.root} elevation={1} mx="auto">
               <Avatar className={classes.avatar}>
                 <LockOutlinedIcon />
               </Avatar>
@@ -197,9 +201,10 @@ class LoginForm extends Component {
                 >
                   Sign In
                 </Button>
-                <Grid container>
+                <Grid container style={{ margin: "12px 0 0 0" }}>
                   <Grid item>
                     <Link
+                      style={{ cursor: "pointer" }}
                       onClick={() => this.handleClickOpen()}
                       variant="body2"
                     >

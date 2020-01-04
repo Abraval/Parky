@@ -86,7 +86,7 @@ class Nav extends Component {
           elevation={2}
         >
           <Toolbar>
-            <Typography variant="h6" color="#596275" className={classes.grow}>
+            <Typography variant="h6" color="secondary" className={classes.grow}>
               Parky
             </Typography>
             <Button color="inherit" href="/searchresult">
