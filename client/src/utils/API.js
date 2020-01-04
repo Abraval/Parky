@@ -56,7 +56,6 @@ export default {
         dates
       }
     });
-<<<<<<< HEAD
   },
   editListing: function(listing) {
     console.log("API.editListing listing", listing);
@@ -70,7 +69,5 @@ export default {
   },
   getAvailabilitiesByListingId: function(id) {
     return axios.get(`/api/availability/${id}`);
-=======
->>>>>>> d57529b9abac312f5df7f24928e8b2d0d48d407d
   }
 };

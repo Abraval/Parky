@@ -72,7 +72,6 @@ class ListingCard extends React.Component {
     expanded: false,
     selectedDays: [],
     initialAvailabilities: []  //used to figure out which availablities to create and to delete
-    
   };
 
 //You should only fetch availabilities when the modal opens
@@ -115,6 +114,7 @@ class ListingCard extends React.Component {
   };
 
   handleDateSubmit = event => {
+    
     console.log("this has been submitted!!")
     const currentSet = (this.state.selectedDays)
 
@@ -158,14 +158,13 @@ class ListingCard extends React.Component {
       API.deleteAvailability(availability._id)
 
     })
-
+    this.setState({open2: false})
 
   }
 
 
   handleListingUpdate = event => {
   this.setState({open: false})
-    // window.location.reload(true)
     console.log("ListingCard.handleListingUpdate this.state", this.state)
     API.editListing(this.state)
     .then(res => {
@@ -367,5 +366,32 @@ ListingCard.propTypes = {
 };
 
 export default withStyles(styles)(ListingCard);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

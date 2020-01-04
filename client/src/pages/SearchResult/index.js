@@ -126,7 +126,7 @@ class SearchResult extends Component {
     }
   }
 
-  handleBookClick = (id, address, title, href, city, state, zipcode) => {
+  handleBookClick = (id, address, title, price, href, city, state, zipcode) => {
     console.log(address);
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
@@ -135,6 +135,7 @@ class SearchResult extends Component {
         userId: this.state.user._id,
         address: address + ", " + city + ", " + state + " " + zipcode,
         title: title,
+        price: price,
         photo: href
       });
     }
