@@ -58,17 +58,17 @@ class Profile extends Component {
   userInfo = () => {
     API.getUser()
       .then(res => {
-        console.log("=======");
-        console.log(res);
-        console.log("=======");
+        // console.log("=======");
+        // console.log(res);
+        // console.log("=======");
         this.setState({ user: res.data });
         this.setState({ userId: res.data.user._id });
         // this.setState({userName: res.data.user.firstname})
-        console.log(res.data.user._id);
-        console.log("++++++++++++++++++++++++++++++++++++++");
-        console.log(res.data.user.firstname);
-        console.log(this.state.user);
-        console.log("=======");
+        // console.log(res.data.user._id);
+        // console.log("++++++++++++++++++++++++++++++++++++++");
+        // console.log(res.data.user.firstname);
+        // console.log(this.state.user);
+        // console.log("=======");
         this.loadListings();
         this.loadReserved();
       })
@@ -83,14 +83,14 @@ class Profile extends Component {
   loadListings = () => {
     API.getListingsForProf()
       .then(res => {
-        console.log("xxxxxxxx");
-        console.log(res.data);
+        // console.log("xxxxxxxx");
+        // console.log(res.data);
         this.setState({ listing: res.data });
         console.log(this.state.listing);
         console.log(this.state.user);
-        console.log("xxxxx");
-        console.log("State User");
-        console.log(this.state.user.user._id);
+        // console.log("xxxxx");
+        // console.log("State User");
+        // console.log(this.state.user.user._id);
       })
       .catch(err => console.log(err));
   };
@@ -99,9 +99,9 @@ class Profile extends Component {
     API.getReservForProf(this.state.userId)
       .then(res => {
         this.setState({ reserved: res.data });
-        console.log("RESERVATIONS");
-        console.log(res.data);
-        // let reservListId =
+        // console.log("RESERVATIONS");
+        // console.log(res.data);
+   
       })
 
       .catch(err => console.log(err));
@@ -181,8 +181,6 @@ class Profile extends Component {
                       <h1>RESERVATIONS</h1>
                       {this.state.reserved.map(reserved => {
                         if (reserved.renter === this.state.userId)
-                          // {this.state.listings.map(listing) => {
-                          //   if(listing._id === reserved.listing)
 
                           return (
                             <div>
