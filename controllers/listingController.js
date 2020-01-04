@@ -107,9 +107,29 @@ module.exports = {
     console.log(floatLong); 
     console.log(floatLat); 
 
-    db.Listing.find({})
+    console.log("end: ---------------");
+    db.Listing.syncIndexes().then((index) => {
+      console.log("indexes:" , index); 
+      
+    }); 
+
+
+    db.Listing.find(
+      {location:
+        {$near: 
+          {$maxDistance: 2000,
+            $geometry: {
+              type: "Point",
+              coordinates: [floatLong, floatLat]
+            }
+          }
+        }
+    })
+      .find((error, results) => { if (error) console.log(error);
+      console.log(JSON.stringify(results, 0, 2))})
       .then(data => res.json(data))
-      .catch(err => res.status(422).json(err)); 
+      .catch(err => res.status(422).json(err))
+      
   },
   updateAvailabilityUser: function(req, res) {
     console.log("UPDATE USER", req.body.userId);
