@@ -194,7 +194,7 @@ class SearchResult extends Component {
         let emptyArr = []; // these are the items that we are displaying
 
         const datesLength = formattedDates.length;
-        console.log(datesLength);
+
 
         for (let i = 0; i < res.data.length; i++) {
           let count = 0;
@@ -223,10 +223,14 @@ class SearchResult extends Component {
           console.log("item is", item); 
           API.getListingById(item.listing).then(listing => {
 
+            console.log("search lat is ", this.state.latitude);
+            console.log("search lat is ", this.state.longitude); 
+
+            var longLatArray = [this.state.longitude, this.state.latitude]
 
             console.log("listing here", listing.data[0]);
-            API.getListingByIdAndProximity(listing.data[0]).then(data => {
-              console.log("data is: ", data); 
+            API.getListingByIdAndProximity(longLatArray).then(data => {
+              console.log("line 229 is: ", data); 
             })
 
 
