@@ -60,16 +60,17 @@ class Profile extends Component {
 
   componentDidMount() {
     this.userInfo();
+    this.loadListings();
   }
 
   userInfo = () => {
+    API.getUser()
+      .then(res => {
+        console.log("=======");
+        console.log(res);
+        console.log("=======");
+        this.setState({ user: res.data });
         this.setState({ userId: res.data.user._id });
-        // this.setState({userName: res.data.user.firstname})
-        // console.log(res.data.user._id);
-        // console.log("++++++++++++++++++++++++++++++++++++++");
-        // console.log(res.data.user.firstname);
-        // console.log(this.state.user);
-        // console.log("=======");
         this.loadListings();
         this.loadReserved();
       })
@@ -84,14 +85,8 @@ class Profile extends Component {
   loadListings = () => {
     API.getListingsForProf()
       .then(res => {
-        // console.log("xxxxxxxx");
-        // console.log(res.data);
+        console.log("Profile.loadListing res.date", res.data);
         this.setState({ listing: res.data });
-        console.log(this.state.listing);
-        console.log(this.state.user);
-        // console.log("xxxxx");
-        // console.log("State User");
-        // console.log(this.state.user.user._id);
       })
       .catch(err => console.log(err));
   };
@@ -100,6 +95,9 @@ class Profile extends Component {
     API.getReservForProf(this.state.userId)
       .then(res => {
         this.setState({ reserved: res.data });
+        console.log("RESERVATIONS");
+        console.log(res.data);
+        // let reservListId =
         // console.log("RESERVATIONS");
         // console.log(res.data);
       })
@@ -157,6 +155,7 @@ class Profile extends Component {
                             return (
                               <div>
                                 <ListingCard
+                                  loadListings={this.loadListings}
                                   key={listing._id}
                                   id={listing._id}
                                   title={listing.title}
