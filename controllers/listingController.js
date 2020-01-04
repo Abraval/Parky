@@ -18,12 +18,14 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   createListing: function(req, res) {
+    console.log("++++++++++++++++++++++++")
+    console.dir(req.body);
+    console.log("++++++++++++++++++++++++")
     db.Listing.create(req.body)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
   createAvailability: function(req, res) {
-    console.log("++++++++++++++++++++" + req.body + "++++++++++++++++++++++");
     db.Availability.create(req.body)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
@@ -70,10 +72,12 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   editListing: function(req, res) {
+
     console.dir(req.body);
     console.dir(req.body.listing.currentModalId);
     db.Listing.findOneAndUpdate(
       { _id: req.body.listing.currentModalId },
+
       {
         $set: {
           title: req.body.listing.title,
@@ -86,6 +90,26 @@ module.exports = {
     )
       .then(dbModel => res.json(dbModel))
       .catch(err => res.json(err));
+  },
+  findAllNear: function(req, res) {
+    console.log("beginning: ---------------");
+
+    console.log(req.query.data)
+
+    console.log("end: ---------------");
+
+    var long = req.query.data[0]
+    var lat = req.query.data[1]
+
+    var floatLong = parseFloat(long); 
+    var floatLat = parseFloat(lat); 
+
+    console.log(floatLong); 
+    console.log(floatLat); 
+
+    db.Listing.find({})
+      .then(data => res.json(data))
+      .catch(err => res.status(422).json(err)); 
   },
   updateAvailabilityUser: function(req, res) {
     console.log("UPDATE USER", req.body.userId);

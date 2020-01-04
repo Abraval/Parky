@@ -150,9 +150,8 @@ class AddListing extends Component {
             var neighborhood =
               response.data.results[0].address_components[2].long_name;
 
-            console.log(
-              response.data.results[0].address_components[2].long_name
-            );
+           var typeLat = typeof latitude; 
+           console.log(typeLat); 
 
             let apiKey = "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo";
 
@@ -175,9 +174,9 @@ class AddListing extends Component {
                 API.saveListing({
                   user: this.state.user._id,
                   title: this.state.title,
-                  parkingtype: this.state.parkingtype,
+                  parkingtype: this.state.parkingtype || "None",
                   photo: this.state.photo,
-                  price: this.state.price,
+                  price: this.state.price || 0,
                   address: this.state.address,
                   city: this.state.city,
                   state: this.state.state,
@@ -185,7 +184,7 @@ class AddListing extends Component {
                   streetName,
                   neighborhood,
                   location: {
-                    coordinates: [this.state.longitude, this.state.latitude]
+                    coordinates: [longitude, latitude]
                   }
                 })
                   .then(res => {

@@ -218,7 +218,7 @@ class SearchResult extends Component {
         let emptyArr = []; // these are the items that we are displaying
 
         const datesLength = formattedDates.length;
-        console.log(datesLength);
+
 
         for (let i = 0; i < res.data.length; i++) {
           let count = 0;
@@ -243,7 +243,21 @@ class SearchResult extends Component {
         // console.log(emptyArr);
 
         emptyArr.map(item => {
+
+          console.log("item is", item); 
           API.getListingById(item.listing).then(listing => {
+
+            console.log("search lat is ", this.state.latitude);
+            console.log("search lat is ", this.state.longitude); 
+
+            var longLatArray = [this.state.longitude, this.state.latitude]
+
+            console.log("listing here", listing.data[0]);
+            API.getListingByIdAndProximity(longLatArray).then(data => {
+              console.log("line 229 is: ", data); 
+            })
+
+
             // console.log("listing here", listing);
             // Set this.state.markerData here.
             const data = listing.data[0];
@@ -269,7 +283,23 @@ class SearchResult extends Component {
               ]
             });
           });
+
+
         });
+
+        // emptyArr.map(item => {
+          
+        //   // console.log("item is", item); 
+
+        //   console.log(this.state.latitude);
+        //   console.log(this.state.longitude);
+
+        //   API.getListingByIdAndProximity(item.listing).then(listing => {
+        //     console.log(listing); 
+        //   })
+        
+        // });
+
       });
     });
   };
