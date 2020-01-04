@@ -1,0 +1,6 @@
+.paper {
+  display: flex;
+  align-items: center;
+  max-width: 600px;
+  background-color: aqua;
+}

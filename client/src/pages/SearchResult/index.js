@@ -327,8 +327,7 @@ class SearchResult extends Component {
         <div className={classes.root}>
           <Grid container spacing={8}>
             <Grid item xs={3}>
-              <Paper className={classes.paper}>
-                Calendar & Search
+              <Paper className={classes.paper} elevation={1}>
                 <form onSubmit={this.handleSubmitSearch}>
                   <input
                     type="text"
@@ -355,8 +354,7 @@ class SearchResult extends Component {
               </Paper>
             </Grid>
             <Grid item xs={4}>
-              <Paper className={classes.paper}>
-                Listing Cards
+              <Paper className={classes.paper} elevation={1}>
                 <div>
                   {!this.state.markerData.length ? (
                     <h1 className="text-center">No Spots to Display</h1>
@@ -494,8 +492,7 @@ class SearchResult extends Component {
               </Paper>
             </Grid>
             <Grid item xs={5}>
-              <Paper className={classes.paper}>
-                Map
+              <Paper className={classes.paper} elevation={1}>
                 <main>
                   <div id="map"></div>
                 </main>
