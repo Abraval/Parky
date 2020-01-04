@@ -64,12 +64,6 @@ class Profile extends Component {
         console.log("=======");
         this.setState({ user: res.data });
         this.setState({ userId: res.data.user._id });
-        // this.setState({userName: res.data.user.firstname})
-        console.log(res.data.user._id);
-        console.log("++++++++++++++++++++++++++++++++++++++");
-        console.log(res.data.user.firstname);
-        console.log(this.state.user);
-        console.log("=======");
         this.loadListings();
         this.loadReserved();
       })
@@ -97,6 +91,9 @@ class Profile extends Component {
         console.log("RESERVATIONS");
         console.log(res.data);
         // let reservListId =
+        // console.log("RESERVATIONS");
+        // console.log(res.data);
+   
       })
 
       .catch(err => console.log(err));

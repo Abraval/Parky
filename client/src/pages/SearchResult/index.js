@@ -15,6 +15,14 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
 import Paper from "@material-ui/core/Paper";
+//Material Dialog
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+//end Dialog
 // Material UI Card Imports
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -62,6 +70,10 @@ const styles = theme => ({
 
 class SearchResult extends Component {
   state = {
+    //Dialog
+    open: false,
+    currentModalId: this.props.id,
+    //end Dialog
     addressQuery: "",
     latitude: 39.952583,
     longitude: -75.165222,
@@ -79,6 +91,12 @@ class SearchResult extends Component {
     this.setState({
       [key]: value
     });
+  };
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
+  handleClose = () => {
+    this.setState({ open: false });
   };
 
   componentDidMount() {
@@ -110,6 +128,7 @@ class SearchResult extends Component {
 
   handleBookClick = (id, address, title, href, city, state, zipcode) => {
     console.log(address);
+<<<<<<< HEAD
     // const Id = event.target.attributes.getNamedItem("data-id").value;
     // this.setState({
     //   idToBook: Id
@@ -127,16 +146,23 @@ class SearchResult extends Component {
     // this.setState({
     //   title: NewPhoto
     // });
+=======
+>>>>>>> 113b779efaa1a4509cbe2efc1f19e7b2b8919023
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
         date: this.state.selectedDays[i],
         listing: id,
         userId: this.state.user._id,
+<<<<<<< HEAD
         address: address + " " + city + " " + state + " " + zipcode,
+=======
+        address: address + ", " + city + ", " + state + " " + zipcode,
+>>>>>>> 113b779efaa1a4509cbe2efc1f19e7b2b8919023
         title: title,
         photo: href
       });
     }
+    this.handleClose()
   };
 
   constructor(props) {
@@ -325,8 +351,7 @@ class SearchResult extends Component {
         <div className={classes.root}>
           <Grid container spacing={8}>
             <Grid item xs={3}>
-              <Paper className={classes.paper}>
-                Calendar & Search
+              <Paper className={classes.paper} elevation={1}>
                 <form onSubmit={this.handleSubmitSearch}>
                   <input
                     type="text"
@@ -353,8 +378,7 @@ class SearchResult extends Component {
               </Paper>
             </Grid>
             <Grid item xs={4}>
-              <Paper className={classes.paper}>
-                Listing Cards
+              <Paper className={classes.paper} elevation={1}>
                 <div>
                   {!this.state.markerData.length ? (
                     <h1 className="text-center">No Spots to Display</h1>
@@ -364,6 +388,7 @@ class SearchResult extends Component {
                         // console.log(spot, this.handleBookClick);
                         return (
                           <div>
+<<<<<<< HEAD
                             {/* <ListingListItem
                               key={spot[3]}
                               title={spot[3]}
@@ -378,6 +403,8 @@ class SearchResult extends Component {
                               handleBookClick={this.handleBookClick}
                             /> */}
 
+=======
+>>>>>>> 113b779efaa1a4509cbe2efc1f19e7b2b8919023
                             <div className={classes.root}>
                               <Paper className={classes.paper}>
                                 <Grid container spacing={16}>
@@ -435,6 +462,7 @@ class SearchResult extends Component {
                                           variant="outlined"
                                           color="primary"
                                           className={classes.button}
+<<<<<<< HEAD
                                           onClick={event => {
                                             event.preventDefault();
                                             this.handleBookClick(
@@ -458,6 +486,10 @@ class SearchResult extends Component {
                                           // state={spot[9]}
                                           // zipcode={spot[10]}
                                           // address={spot[0]}
+=======
+                                          aria-label="Booking Summary"
+                                          onClick={() => this.handleClickOpen()}
+>>>>>>> 113b779efaa1a4509cbe2efc1f19e7b2b8919023
                                         >
                                           Book Now
                                         </Button>
@@ -470,6 +502,55 @@ class SearchResult extends Component {
                                     </Grid>
                                   </Grid>
                                 </Grid>
+<<<<<<< HEAD
+=======
+                                <Dialog
+                                  open={this.state.open}
+                                  handleClickOpen={this.handleClickOpen}
+                                >
+                                  <DialogTitle id="form-dialog-title">
+                                    Your Booking Information
+                                  </DialogTitle>
+                                  <DialogContent>
+                                    <p>Title: {spot[3]}</p>
+                                    <p>Address: {spot[0]}</p>
+                                    <p>City: {spot[8]}</p>
+                                    <p>State: {spot[9]}</p>
+                                    <p>Zipcode: {spot[10]}</p>
+                                    <p>Parking Type: {spot[12]}</p>
+                                    <p>Price: ${spot[11]}</p>
+                                    {/* <p>Dates: {this.state.selectedDays}</p> */}
+                                  </DialogContent>
+                                  <DialogActions>
+                                    <Button
+                                      variant="outlined"
+                                      color="primary"
+                                      className={classes.button}
+                                      onClick={event => {
+                                        event.preventDefault();
+                                        this.handleBookClick(
+                                          spot[7],
+                                          spot[0],
+                                          spot[3],
+                                          spot[6],
+                                          spot[8],
+                                          spot[9],
+                                          spot[10]
+                                        );
+                                      }}
+                                    >
+                                      Confirm Booking
+                                    </Button>
+                                    <Button
+                                      onClick={() => this.handleClose()}
+                                      variant="outlined"
+                                      color="secondary"
+                                    >
+                                      Cancel
+                                    </Button>
+                                  </DialogActions>
+                                </Dialog>
+>>>>>>> 113b779efaa1a4509cbe2efc1f19e7b2b8919023
                               </Paper>
                             </div>
                           </div>
@@ -481,8 +562,7 @@ class SearchResult extends Component {
               </Paper>
             </Grid>
             <Grid item xs={5}>
-              <Paper className={classes.paper}>
-                Map
+              <Paper className={classes.paper} elevation={1}>
                 <main>
                   <div id="map"></div>
                 </main>

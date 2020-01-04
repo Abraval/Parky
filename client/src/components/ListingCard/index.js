@@ -72,6 +72,7 @@ class ListingCard extends React.Component {
     expanded: false,
     selectedDays: [],
     initialAvailabilities: []  //used to figure out which availablities to create and to delete
+    
   };
 
 //You should only fetch availabilities when the modal opens
