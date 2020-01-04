@@ -18,12 +18,14 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   createListing: function(req, res) {
+    console.log("++++++++++++++++++++++++")
+    console.dir(req.body);
+    console.log("++++++++++++++++++++++++")
     db.Listing.create(req.body)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
   createAvailability: function(req, res) {
-    console.log("++++++++++++++++++++" + req.body + "++++++++++++++++++++++");
     db.Availability.create(req.body)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));

@@ -17,12 +17,7 @@ const listingSchema = new Schema({
   location: {
     type: { type: Number },
     coordinates: []
-  },
-  // reserved: {
-  //   type: Boolean,
-  //   default: false
-  // },
-  // renter: { type: Schema.Types.ObjectId, default: null},
+  }
 });
 
 const Listing = mongoose.model("Listing", listingSchema);
