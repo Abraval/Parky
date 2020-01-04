@@ -140,8 +140,8 @@ class SearchResult extends Component {
     }
   }
 
-  handleBookClick = (id, address, title, price, href, city, state, zipcode) => {
-    console.log(address);
+  handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
+    console.log("SearchResults.handleBookClick price", price, "SearchResults.handleBookClick id", id, "SearchResults.handleBookClick address", address, "SearchResults.handleBookClick title", title, "SearchResults.handleBookClick HREF", href);
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
         date: this.state.selectedDays[i],
@@ -468,7 +468,8 @@ class SearchResult extends Component {
                                               spot[6],
                                               spot[8],
                                               spot[9],
-                                              spot[10]
+                                              spot[10],
+                                              spot[11]
                                             );
                                           }}
                                           // onClick={this.handleBookClick}
@@ -504,6 +505,7 @@ class SearchResult extends Component {
                                     Your Booking Information
                                   </DialogTitle>
                                   <DialogContent>
+                                    {console.log(spot)}
                                     <p>Title: {spot[3]}</p>
                                     <p>Address: {spot[0]}</p>
                                     <p>City: {spot[8]}</p>
