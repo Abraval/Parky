@@ -4,22 +4,62 @@ import API from "../../utils/API";
 import axios from "axios";
 import DayPicker, { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
-// import Button from "../../components/Button";
-// import { makeStyles } from "@material-ui/core/styles";
-// import Button from "@material-ui/core/Button";
+// Material UI Input imports
+import PropTypes from "prop-types";
+import classNames from "classnames";
+import { withStyles } from "@material-ui/core/styles";
+import MenuItem from "@material-ui/core/MenuItem";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
 
-// const useStyles = makeStyles(theme => ({
-//   root: {
-//     "& > *": {
-//       margin: theme.spacing(1)
-//     }
-//   }
-// }));
+const styles = theme => ({
+  container: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit
+  },
+  dense: {
+    marginTop: 16
+  },
+  menu: {
+    width: 200
+  },
+  button: {
+    margin: theme.spacing.unit
+  },
+  input: {
+    display: "none"
+  }
+});
+
+const ranges = [
+  {
+    value: "Garage",
+    label: "Garage"
+  },
+  {
+    value: "Street",
+    label: "Street"
+  },
+  {
+    value: "Private Lot",
+    label: "Private Lot"
+  },
+  {
+    value: "Driveway",
+    label: "Driveway"
+  }
+];
 
 class AddListing extends Component {
   state = {
     title: "",
-    parkingType: "",
+    parkingtype: "",
     photo: "",
     price: 0.0,
     address: "",
@@ -135,8 +175,9 @@ class AddListing extends Component {
                 API.saveListing({
                   user: this.state.user._id,
                   title: this.state.title,
-                  parkingType: this.state.parkingType,
+                  parkingtype: this.state.parkingtype,
                   photo: this.state.photo,
+                  price: this.state.price,
                   address: this.state.address,
                   city: this.state.city,
                   state: this.state.state,
@@ -167,16 +208,12 @@ class AddListing extends Component {
   };
 
   render() {
-    // console.log(this.state);
-    // const classes = useStyles();
-
+    const { classes } = this.props;
     return (
       <div>
         <Nav />
-        <div className="container my-5">
-          <h4>Create Listing</h4>
 
-          <form>
+        {/* <form>
             <div className="form-group">
               <label for="title">Title</label>
               <input
@@ -191,24 +228,24 @@ class AddListing extends Component {
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label for="parkingType">Parking Type</label>
+                <label for="parkingtype">Parking Type</label>
                 <select
                   className="form-control"
-                  id="parkingType"
-                  name="parkingType"
-                  value={this.state.parkingType}
+                  id="parkingtype"
+                  name="parkingtype"
+                  value={this.state.parkingtype}
                   onChange={this.handleInputChange}
                 >
                   <option></option>
                   <option>Garage</option>
                   <option>Street</option>
-                  <option>Private Outdoor Lot Space</option>
+                  <option>Private Lot</option>
                   <option>Driveway</option>
                 </select>
               </div>
 
               <div className="form-group col-md-6">
-                <label for="photo">Price</label>
+                <label for="price">Price</label>
                 <input
                   value={this.state.price}
                   onChange={this.handleInputChange}
@@ -218,16 +255,6 @@ class AddListing extends Component {
                   name="price"
                   placeholder="Enter daily price"
                 />
-
-                {/* <input
-                  value={this.state.photo}
-                  onChange={this.handleInputChange}
-                  type="text"
-                  className="form-control"
-                  id="photo"
-                  name="photo"
-                  placeholder="Link to the photo here"
-                /> */}
               </div>
             </div>
             <div className="form-group">
@@ -266,13 +293,6 @@ class AddListing extends Component {
                   onChange={this.handleInputChange}
                 />
               </div>
-              {/* <div className="form-group col-md-4">
-            <label for="inputState">State</label>
-            <select id="inputState" className="form-control">
-              <option selected>Choose...</option>
-              <option>...</option>
-            </select>
-          </div> */}
               <div className="form-group col-md-2">
                 <label for="inputZip">Zip</label>
                 <input
@@ -294,26 +314,152 @@ class AddListing extends Component {
             >
               Add Listing
             </button>
-            {/* <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              onClick={this.handleFormSubmit}
-              id="addListing"
-            >
-              Add Listing
-            </Button> */}
-          </form>
-          <div>
-            <DayPicker
-              selectedDays={this.state.selectedDays}
-              onDayClick={this.handleDayClick}
-            />
-          </div>
-        </div>
+          </form> */}
+
+        <Grid
+          container
+          spacing={8}
+          alignItems="center"
+          justify="center"
+          style={{ minHeight: "100vh" }}
+        >
+          <Grid item xs={2}>
+            <Paper className={classes.root} elevation={1} mx="auto">
+              <form className={classes.container} noValidate autoComplete="off">
+                {/* //TITLE */}
+                <TextField
+                  id="title"
+                  label="Title"
+                  placeholder="Open driveway on quiet street"
+                  className={classes.textField}
+                  margin="normal"
+                  variant="outlined"
+                  value={this.state.title}
+                  onChange={this.handleInputChange}
+                  name="title"
+                />
+
+                {/* // PARKING Type */}
+                <TextField
+                  id="parkingtype"
+                  select
+                  label="Select"
+                  className={classes.textField}
+                  value={this.state.parkingtype}
+                  onChange={this.handleInputChange}
+                  SelectProps={{
+                    MenuProps: {
+                      className: classes.menu
+                    }
+                  }}
+                  helperText="Select spot type"
+                  margin="normal"
+                >
+                  {ranges.map(option => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+
+                {/* // PRICE */}
+                <TextField
+                  id="price"
+                  label="Daily Price"
+                  value={this.state.price}
+                  onChange={this.handleInputChange}
+                  type="number"
+                  className={classes.textField}
+                  InputLabelProps={{
+                    shrink: true
+                  }}
+                  margin="normal"
+                  variant="outlined"
+                  placeholder="$"
+                />
+
+                {/* //ADDRESS */}
+                <TextField
+                  id="address"
+                  label="Street Address"
+                  placeholder="1200 Market Street"
+                  className={classes.textField}
+                  margin="normal"
+                  variant="outlined"
+                  value={this.state.address}
+                  onChange={this.handleInputChange}
+                  name="address"
+                />
+
+                {/* //City */}
+                <TextField
+                  id="city"
+                  label="City"
+                  placeholder="Philadelphia"
+                  className={classes.textField}
+                  margin="normal"
+                  variant="outlined"
+                  value={this.state.city}
+                  onChange={this.handleInputChange}
+                  name="city"
+                />
+
+                {/* //State */}
+                <TextField
+                  id="state"
+                  label="State"
+                  placeholder="PA"
+                  className={classes.textField}
+                  margin="normal"
+                  variant="outlined"
+                  value={this.state.state}
+                  onChange={this.handleInputChange}
+                  name="state"
+                />
+
+                {/* //Zip */}
+                <TextField
+                  id="zipcode"
+                  label="Zip"
+                  placeholder="19107"
+                  className={classes.textField}
+                  margin="normal"
+                  variant="outlined"
+                  value={this.state.zipcode}
+                  onChange={this.handleInputChange}
+                  name="zipcode"
+                />
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className={classes.button}
+                  onClick={this.handleFormSubmit}
+                  id="addListing"
+                >
+                  Add Listing
+                </Button>
+              </form>
+            </Paper>
+          </Grid>
+
+          <Grid item xs={2} elevation={1}>
+            <Paper>
+              <DayPicker
+                selectedDays={this.state.selectedDays}
+                onDayClick={this.handleDayClick}
+              />
+            </Paper>
+          </Grid>
+        </Grid>
       </div>
     );
   }
 }
 
-export default AddListing;
+// export default AddListing;
+
+AddListing.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(AddListing);
