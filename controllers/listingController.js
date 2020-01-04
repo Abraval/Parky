@@ -88,10 +88,20 @@ module.exports = {
   },
   findAllNear: function(req, res) {
     console.log("beginning: ---------------");
-    console.dir(req.body); 
-    console.dir(req.query); 
-    console.dir(req.params); 
+
+    console.log(req.query.data)
+
     console.log("end: ---------------");
+
+    var long = req.query.data[0]
+    var lat = req.query.data[1]
+
+    var floatLong = parseFloat(long); 
+    var floatLat = parseFloat(lat); 
+
+    console.log(floatLong); 
+    console.log(floatLat); 
+
     db.Listing.find({})
       .then(data => res.json(data))
       .catch(err => res.status(422).json(err)); 
