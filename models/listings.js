@@ -15,10 +15,18 @@ const listingSchema = new Schema({
   streetName: { type: String, unique: false, required: false },
   neighborhood: { type: String, unique: false, required: false },
   location: {
-    type: { type: Number },
-    coordinates: []
+    type: { 
+      type: String,
+      enum: ['Point'],
+      required: false 
+      },
+    coordinates: {
+      type: [Number]
+    } 
   }
 });
+
+
 
 const Listing = mongoose.model("Listing", listingSchema);
 module.exports = Listing;
