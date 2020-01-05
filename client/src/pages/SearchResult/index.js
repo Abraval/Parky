@@ -107,8 +107,8 @@ class SearchResult extends Component {
     currentModalId: this.props.id,
     //end Dialog
     addressQuery: "",
-    latitude: 39.952583,
-    longitude: -75.165222,
+    latitude: 0.0,
+    longitude: 0.0,
     selectedDays: [],
     markerData: [],
     cardsArray: [],
@@ -130,6 +130,8 @@ class SearchResult extends Component {
   };
   handleClose = () => {
     this.setState({ open: false });
+
+  
     
 
   };
@@ -152,7 +154,7 @@ class SearchResult extends Component {
   }
   componentDidUpdate(prevProps, props) {
     if (this.state.markerData !== props.markerData) {
-      this.renderMap();
+      // this.renderMap();
       // this.renderCards();
     }
   }
@@ -321,7 +323,7 @@ class SearchResult extends Component {
     console.log(this.state.longitude); 
     var map = new window.google.maps.Map(document.getElementById("map"), {
       center: { lat: this.state.latitude, lng: this.state.longitude },
-      zoom: 16
+      zoom: 15
     });
     // Create An InfoWindow
     var infoWindow = new window.google.maps.InfoWindow(),
@@ -367,7 +369,7 @@ class SearchResult extends Component {
         // console.log(response);
         var latitude = response.data.results[0].geometry.location.lat;
         var longitude = response.data.results[0].geometry.location.lng;
-        this.setState({ latitude, longitude });
+        this.setState({ latitude, longitude }, () => {this.renderMap()});
         // this.renderMap();
       });
   };
@@ -575,7 +577,7 @@ class SearchResult extends Component {
                                           spot[0].photo,
                                           spot[0].city,
                                           spot[0].state,
-                                          spot[10].zipcode
+                                          spot[0].zipcode
                                         );
                                       }}
                                     >
