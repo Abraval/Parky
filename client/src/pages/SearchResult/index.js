@@ -156,7 +156,7 @@ class SearchResult extends Component {
       // this.renderCards();
     }
   }
-  handleBookClick = (id, address, title, href, city, state, zipcode) => {
+  handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
     // console.log(address);
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
