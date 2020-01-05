@@ -58,14 +58,31 @@ class LoginForm extends Component {
       lastname: "",
       email: "",
       dob: "",
-      license: ""
+      license: "",
+      //error messages
+      usernameError: "",
+      passwordError: "",
+      firstnameError: "",
+      lastnameError: "",
+      emailError: "",
+      // dobError: "",
+      licenseError: ""
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmitForm = this.handleSubmitForm.bind(this);
   }
   handleClickOpen = () => {
-    this.setState({ open: true });
+    this.setState({
+      open: true,
+      usernameError: "",
+      passwordError: "",
+      firstnameError: "",
+      lastnameError: "",
+      emailError: "",
+      // dobError: "",
+      licenseError: ""
+    });
   };
 
   handleClose = () => {
@@ -77,6 +94,60 @@ class LoginForm extends Component {
       [event.target.name]: event.target.value
     });
   }
+
+  // Form Validation function
+
+  validate = () => {
+    let usernameError = "";
+    let passwordError = "";
+    let firstnameError = "";
+    let lastnameError = "";
+    let emailError = "";
+    // let dobError = "";
+    let licenseError = "";
+
+    if (!this.state.username) {
+      usernameError = "can not be blank";
+    }
+    if (!this.state.firstname) {
+      firstnameError = "can not be blank";
+    }
+    if (!this.state.lastname) {
+      lastnameError = "can not be blank";
+    }
+    if (!this.state.password) {
+      passwordError = "no password provided";
+    }
+    if (isNaN(this.state.license) || !this.state.license) {
+      licenseError = "invalid license number";
+    }
+    // if (isNaN(this.state.dob) ||  !this.state.dob) {
+    //   dobError = "invalid date of birth"
+    // }
+    if (!this.state.email.includes("@") || !this.state.email) {
+      emailError = "invalid email";
+    }
+    if (
+      emailError ||
+      usernameError ||
+      firstnameError ||
+      lastnameError ||
+      passwordError ||
+      licenseError
+    ) {
+      this.setState({
+        emailError,
+        usernameError,
+        firstnameError,
+        lastnameError,
+        passwordError,
+        licenseError
+      });
+      return false;
+    }
+
+    return true;
+  };
 
   handleSubmit(event) {
     event.preventDefault();
@@ -98,7 +169,7 @@ class LoginForm extends Component {
           // })
           // update the state to redirect to home
           this.setState({
-            redirectTo: "/main"
+            redirectTo: "/searchresult"
           });
         }
       })
@@ -107,35 +178,50 @@ class LoginForm extends Component {
         console.log(error);
       });
   }
+
   handleSubmitForm(event) {
-    // console.log("sign-up handleSubmit, username: ");
-    // console.log(this.state.username);
     // event.preventDefault();
 
-    //request to server to add a new username/password
-    axios
-      .post("/user/", {
-        username: this.state.username,
-        password: this.state.password,
-        firstname: this.state.firstname,
-        lastname: this.state.lastname,
-        email: this.state.email,
-        dob: this.state.dob,
-        license: this.state.license
-      })
-      .then(response => {
-        // console.log(response);
-        if (!response.data.errmsg) {
-          console.log("successful signup");
-          this.setState({ open: false });
-        } else {
-          console.log("username already taken");
-        }
-      })
-      .catch(error => {
-        console.log("signup error: ");
-        console.log(error);
+    //FORM VALIDATION
+    const isValid = this.validate();
+    if (isValid) {
+      console.log(this.state);
+      this.setState({
+        username: "",
+        password: "",
+        firstname: "",
+        lastname: "",
+        email: "",
+        dob: "",
+        license: ""
       });
+
+      axios
+        .post("/user/", {
+          username: this.state.username,
+          password: this.state.password,
+          firstname: this.state.firstname,
+          lastname: this.state.lastname,
+          email: this.state.email,
+          dob: this.state.dob,
+          license: this.state.license
+        })
+        .then(response => {
+          // console.log(response);
+          if (!response.data.errmsg) {
+            console.log("successful signup");
+            this.setState({ open: false });
+          } else {
+            console.log("username already taken");
+          }
+        })
+        .catch(error => {
+          console.log("signup error: ");
+          console.log(error);
+        });
+    } else {
+      this.setState({ open: true });
+    }
   }
 
   render() {
@@ -180,6 +266,7 @@ class LoginForm extends Component {
                   autoComplete="username"
                   autoFocus
                 />
+
                 <TextField
                   variant="outlined"
                   margin="normal"
@@ -339,6 +426,17 @@ class LoginForm extends Component {
                     Cancel
                   </Button>
                 </DialogActions>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} align="center" margin="normal">
+                    <Link
+                      style={{ cursor: "pointer" }}
+                      href="/signin"
+                      variant="body2"
+                    >
+                      {"Already have an account? Sign In"}
+                    </Link>
+                  </Grid>
+                </Grid>
               </Dialog>
             </Paper>
           </Grid>
