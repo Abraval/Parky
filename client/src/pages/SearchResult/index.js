@@ -111,6 +111,7 @@ class SearchResult extends Component {
     longitude: -75.165222,
     selectedDays: [],
     markerData: [],
+    cardsArray: [],
     idToBook: "",
     user: {},
     address: "",
@@ -227,7 +228,6 @@ class SearchResult extends Component {
           }
         }
         // console.log(emptyArr);
-<<<<<<< HEAD
 
 /******************************************Start******************************************/
 
@@ -254,6 +254,8 @@ class SearchResult extends Component {
               if (listing.data[0]._id === item.data[i]._id) {
                 console.log("this is true and item should be pushed")
                 cardsArray.push(item.data[i]); 
+
+
               }
 
             }
@@ -261,6 +263,8 @@ class SearchResult extends Component {
           });
 
           console.log("cardsArray is: ", cardsArray)
+
+          // next step is to map over the cardsArray 
             
           })
 
@@ -281,15 +285,6 @@ class SearchResult extends Component {
             // console.log("listing here", listing.data[0]._id);
 
             // (1) I might need to create an empty array, once that item is found as near then push it into the empty array // then on that array, have the cards map over that array as opposed the markerData (then confirm that this works)
-=======
-        emptyArr.map(item => {
-          console.log("item is", item);
-          API.getListingById(item.listing).then(listing => {
-            console.log("search lat is ", this.state.latitude);
-            console.log("search lat is ", this.state.longitude);
-            var longLatArray = [this.state.longitude, this.state.latitude];
-            console.log("listing here", listing.data[0]);
->>>>>>> 3600295b02812d6bed1ab0457fff7dba89f3222d
             API.getListingByIdAndProximity(longLatArray).then(data => {
               // console.log("line 229 is: ", data);
             });
@@ -449,6 +444,9 @@ class SearchResult extends Component {
                   ) : (
                     <div>
                       {this.state.markerData.map(spot => {
+                        console.log(spot); 
+                        console.log(this.state.markerData); 
+                        console.log(this.state.cardsArray); 
                         return (
                           <div>
                             <div className={classes.root}>
