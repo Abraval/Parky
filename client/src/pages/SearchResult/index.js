@@ -240,9 +240,9 @@ class SearchResult extends Component {
             var longLatArray = [this.state.longitude, this.state.latitude];
 
             console.log("listing here", listing.data[0]);
-            API.getListingByIdAndProximity(longLatArray).then(data => {
-              console.log("line 229 is: ", data);
-            });
+            // API.getListingByIdAndProximity(longLatArray).then(data => {
+            //   console.log("line 229 is: ", data);
+            // });
 
             // console.log("listing here", listing);
             // Set this.state.markerData here.

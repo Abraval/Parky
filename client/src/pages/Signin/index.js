@@ -55,14 +55,31 @@ class LoginForm extends Component {
       lastname: "",
       email: "",
       dob: "",
-      license: ""
+      license: "",
+      //error messages
+      usernameError: "",
+      passwordError: "",
+      firstnameError: "",
+      lastnameError: "",
+      emailError: "",
+      // dobError: "",
+      licenseError: ""
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmitForm = this.handleSubmitForm.bind(this);
   }
   handleClickOpen = () => {
-    this.setState({ open: true });
+    this.setState({
+      open: true,
+      usernameError: "",
+      passwordError: "",
+      firstnameError: "",
+      lastnameError: "",
+      emailError: "",
+      // dobError: "",
+      licenseError: ""
+    });
   };
 
   handleClose = () => {
@@ -74,6 +91,46 @@ class LoginForm extends Component {
       [event.target.name]: event.target.value
     });
   }
+
+   // Form Validation function
+
+   validate = () => {
+    let usernameError = "";
+    let passwordError = "";
+    let firstnameError = "";
+    let lastnameError =  "";
+    let emailError = "";
+    // let dobError = "";
+    let licenseError = "";
+
+    if (!this.state.username) {
+      usernameError = "can not be blank"; 
+    }
+    if (!this.state.firstname) {
+      firstnameError = "can not be blank"; 
+    }
+    if (!this.state.lastname) {
+      lastnameError = "can not be blank"; 
+    }
+    if (!this.state.password) {
+      passwordError = "no password provided"; 
+    }
+    if (isNaN(this.state.license) ||  !this.state.license) {
+      licenseError = "invalid license number"
+    }
+    // if (isNaN(this.state.dob) ||  !this.state.dob) {
+    //   dobError = "invalid date of birth"
+    // }
+    if (!this.state.email.includes("@") || !this.state.email) {
+      emailError = "invalid email";
+    }
+    if (emailError || usernameError || firstnameError || lastnameError || passwordError || licenseError) {
+      this.setState({ emailError, usernameError,firstnameError, lastnameError, passwordError, licenseError});
+      return false;
+    }
+
+    return true;
+  };
 
   handleSubmit(event) {
     event.preventDefault();
@@ -95,7 +152,7 @@ class LoginForm extends Component {
           // })
           // update the state to redirect to home
           this.setState({
-            redirectTo: "/main"
+            redirectTo: "/searchresult"
           });
         }
       })
@@ -103,36 +160,52 @@ class LoginForm extends Component {
         console.log("login error: ");
         console.log(error);
       });
+  
   }
+
   handleSubmitForm(event) {
-    // console.log("sign-up handleSubmit, username: ");
-    // console.log(this.state.username);
     // event.preventDefault();
 
-    //request to server to add a new username/password
-    axios
-      .post("/user/", {
-        username: this.state.username,
-        password: this.state.password,
-        firstname: this.state.firstname,
-        lastname: this.state.lastname,
-        email: this.state.email,
-        dob: this.state.dob,
-        license: this.state.license
-      })
-      .then(response => {
-        // console.log(response);
-        if (!response.data.errmsg) {
-          console.log("successful signup");
-          this.setState({ open: false });
-        } else {
-          console.log("username already taken");
-        }
-      })
-      .catch(error => {
-        console.log("signup error: ");
-        console.log(error);
+    //FORM VALIDATION
+    const isValid = this.validate();
+    if (isValid) {
+      console.log(this.state);
+      this.setState({
+        username: "",
+        password: "",
+        firstname: "",
+        lastname: "",
+        email: "",
+        dob: "",
+        license: ""
       });
+
+      axios
+        .post("/user/", {
+          username: this.state.username,
+          password: this.state.password,
+          firstname: this.state.firstname,
+          lastname: this.state.lastname,
+          email: this.state.email,
+          dob: this.state.dob,
+          license: this.state.license
+        })
+        .then(response => {
+          // console.log(response);
+          if (!response.data.errmsg) {
+            console.log("successful signup");
+            this.setState({ open: false });
+          } else {
+            console.log("username already taken");
+          }
+        })
+        .catch(error => {
+          console.log("signup error: ");
+          console.log(error);
+        });
+    } else {
+      this.setState({ open: true });
+    }
   }
 
   render() {
@@ -177,6 +250,7 @@ class LoginForm extends Component {
                   autoComplete="username"
                   autoFocus
                 />
+                
                 <TextField
                   variant="outlined"
                   margin="normal"
@@ -217,106 +291,118 @@ class LoginForm extends Component {
                 open={this.state.open}
                 handleClickOpen={this.handleClickOpen}
               >
-                <DialogTitle id="form-dialog-title">
-                  Create an Account
-                </DialogTitle>
+                <DialogTitle id="form-dialog-title">Create Account</DialogTitle>
                 <DialogContent>
-                  <span>Username: </span>
-                  <TextField
-                    autoFocus
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    id="username"
-                    name="username"
-                    type="text"
-                    placeholder="username"
-                    fullWidth
-                    value={this.state.username}
-                    onChange={this.handleChange}
-                  />
-                  <span>Password: </span>
-                  <TextField
-                    autoFocus
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    name="password"
-                    id="password"
-                    type="password"
-                    fullWidth
-                    value={this.state.password}
-                    onChange={this.handleChange}
-                  />
-                  <span>First Name: </span>
-                  <TextField
-                    autoFocus
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    id="firstname"
-                    name="firstname"
-                    placeholder="First name"
-                    fullWidth
-                    value={this.state.firstname}
-                    onChange={this.handleChange}
-                  />
-                  <span>Last Name: </span>
-                  <TextField
-                    autoFocus
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    type="text"
-                    id="lastname"
-                    name="lastname"
-                    placeholder="Last name"
-                    fullWidth
-                    value={this.state.lastname}
-                    onChange={this.handleChange}
-                  />
-                  <span>Email: </span>
-                  <TextField
-                    autoFocus
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    type="text"
-                    id="email"
-                    name="email"
-                    placeholder="email@email.com"
-                    fullWidth
-                    value={this.state.email}
-                    onChange={this.handleChange}
-                  />
-                  <span>Date of Birth: </span>
-                  <TextField
-                    autoFocus
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    type="text"
-                    id="dob"
-                    name="dob"
-                    placeholder="dd/mm/yy"
-                    value={this.state.dob}
-                    onChange={this.handleChange}
-                    fullWidth
-                  />
-                  <span>Licence #: </span>
-                  <TextField
-                    autoFocus
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    type="password"
-                    id="license"
-                    name="license"
-                    fullWidth
-                    placeholder="11-111-1111"
-                    value={this.state.license}
-                    onChange={this.handleChange}
-                  />
+                  <form className={classes.form} noValidate>
+                    <span>Username: </span>
+                    <TextField
+                      variant="outlined"
+                      margin="dense"
+                      required
+                      id="username"
+                      name="username"
+                      type="text"
+                      placeholder="username"
+                      fullWidth
+                      value={this.state.username}
+                      onChange={this.handleChange}
+                    />
+                    <Typography style={{ color: "red" }}>
+                      {this.state.usernameError}
+                    </Typography>
+                    <span>Password: </span>
+                    <TextField
+                      variant="outlined"
+                      margin="dense"
+                      required
+                      name="password"
+                      id="password"
+                      type="password"
+                      fullWidth
+                      value={this.state.password}
+                      onChange={this.handleChange}
+                    />
+                    <Typography style={{ color: "red" }}>
+                      {this.state.passwordError}
+                    </Typography>
+                    <span>First Name: </span>
+                    <TextField
+                      variant="outlined"
+                      margin="dense"
+                      required
+                      id="firstname"
+                      name="firstname"
+                      placeholder="First name"
+                      fullWidth
+                      value={this.state.firstname}
+                      onChange={this.handleChange}
+                    />
+                    <Typography style={{ color: "red" }}>
+                      {this.state.firstnameError}
+                    </Typography>
+                    <span>Last Name: </span>
+                    <TextField
+                      variant="outlined"
+                      margin="dense"
+                      required
+                      type="text"
+                      id="lastname"
+                      name="lastname"
+                      placeholder="Last name"
+                      fullWidth
+                      value={this.state.lastname}
+                      onChange={this.handleChange}
+                    />
+                    <Typography style={{ color: "red" }}>
+                      {this.state.lastnameError}
+                    </Typography>
+                    <span>Email: </span>
+                    <TextField
+                      variant="outlined"
+                      margin="dense"
+                      required
+                      type="email"
+                      id="email"
+                      name="email"
+                      placeholder="email@email.com"
+                      fullWidth
+                      value={this.state.email}
+                      onChange={this.handleChange}
+                    />
+                    <Typography style={{ color: "red" }}>
+                      {this.state.emailError}
+                    </Typography>
+                    <span>Date of Birth: </span>
+                    <TextField
+                      variant="outlined"
+                      margin="dense"
+                      required
+                      type="text"
+                      id="dob"
+                      name="dob"
+                      placeholder="dd/mm/yy"
+                      fullWidth
+                      value={this.state.dob}
+                      onChange={this.handleChange}
+                    />
+                    {/* <div style={{color:"red"}}>{this.state.dobError}</div> */}
+                    <span>Licence #: </span>
+                    <TextField
+                      variant="outlined"
+                      margin="dense"
+                      required
+                      type="password"
+                      id="license"
+                      name="license"
+                      fullWidth
+                      placeholder="11-111-1111"
+                      value={this.state.license}
+                      onChange={this.handleChange}
+                    />
+                    <Typography style={{ color: "red" }}>
+                      {this.state.licenseError}
+                    </Typography>
+                  </form>
                 </DialogContent>
                 <DialogActions>
                   <Button
@@ -334,53 +420,22 @@ class LoginForm extends Component {
                     Cancel
                   </Button>
                 </DialogActions>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} align="center" margin="normal">
+                    <Link
+                      style={{ cursor: "pointer" }}
+                      href="/signin"
+                      variant="body2"
+                    >
+                      {"Already have an account? Sign In"}
+                    </Link>
+                  </Grid>
+                </Grid>
               </Dialog>
             </Paper>
           </Grid>
         </Grid>
 
-        // <div>
-        //     <h4>Login</h4>
-        //     <form className="form-horizontal">
-        //         <div className="form-group">
-        //             <div className="col-1 col-ml-auto">
-        //                 <label className="form-label" htmlFor="username">Username</label>
-        //             </div>
-        //             <div className="col-3 col-mr-auto">
-        //                 <input className="form-input"
-        //                     type="text"
-        //                     id="username"
-        //                     name="username"
-        //                     placeholder="Username"
-        //                     value={this.state.username}
-        //                     onChange={this.handleChange}
-        //                 />
-        //             </div>
-        //         </div>
-        //         <div className="form-group">
-        //             <div className="col-1 col-ml-auto">
-        //                 <label className="form-label" htmlFor="password">Password: </label>
-        //             </div>
-        //             <div className="col-3 col-mr-auto">
-        //                 <input className="form-input"
-        //                     placeholder="password"
-        //                     type="password"
-        //                     name="password"
-        //                     value={this.state.password}
-        //                     onChange={this.handleChange}
-        //                 />
-        //             </div>
-        //         </div>
-        //         <div className="form-group ">
-        //             <div className="col-7"></div>
-        //             <button
-        //                 className="btn btn-primary col-1 col-mr-auto"
-
-        //                 onClick={this.handleSubmit}
-        //                 type="submit">Login</button>
-        //         </div>
-        //     </form>
-        // </div>
       );
     }
   }
@@ -391,5 +446,3 @@ LoginForm.propTypes = {
 };
 
 export default withStyles(styles)(LoginForm);
-
-// export default LoginForm;
