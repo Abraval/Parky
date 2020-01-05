@@ -70,7 +70,15 @@ class AddListing extends Component {
     fulladdress: "",
     coordinates: {},
     longitude: 0.0,
-    latitude: 0.0
+    latitude: 0.0,
+    //errors
+    titleError: "",
+    parkingtypeError: "",
+    priceError: "",
+    addressError: "",
+    cityError: "",
+    stateError: "",
+    zipcodeError: "",
   };
 
   componentDidMount() {
@@ -84,6 +92,46 @@ class AddListing extends Component {
       selectedDays: []
     };
   }
+
+//Validation function
+  validate = () => {
+    let titleError = "";
+    let parkingtypeError = "";
+    let priceError = "";
+    let addressError =  "";
+    let cityError = "";
+    let stateError = "";
+    let zipcodeError = "";
+
+    if (!this.state.title) {
+      titleError = "can not be blank"; 
+    }
+    if (!this.state.parkingtype) {
+      parkingtypeError = "pick a parking type"; 
+    }
+    if (isNaN(this.state.price) ||  !this.state.price) {
+      priceError = "input a number"
+    }
+    if (!this.state.address) {
+      addressError = "no password provided"; 
+    }
+    if (!this.state.city) {
+      cityError = "can not be blank"; 
+    }
+    if (!this.state.state) {
+      stateError = "can not be blank"
+    }
+    if (isNaN(this.state.zipcode)|| !this.state.zipcode) {
+      zipcodeError = "invalid zip";
+    }
+    if (titleError || parkingtypeError || priceError || addressError ||  cityError || stateError || zipcodeError) {
+      this.setState({ titleError, parkingtypeError, priceError, addressError, cityError, stateError, zipcodeError});
+      return false;
+    }
+
+    return true;
+  };
+
 
   handleDayClick(day, { selected }) {
     const { selectedDays } = this.state;
@@ -118,6 +166,8 @@ class AddListing extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
+    const isValid = this.validate();
+    if (isValid) {
 
     this.setState(
       {
@@ -204,6 +254,7 @@ class AddListing extends Component {
           });
       }
     );
+    }
   };
 
   render() {
@@ -338,6 +389,9 @@ class AddListing extends Component {
                   onChange={this.handleInputChange}
                   name="title"
                 />
+                <div style={{ color: "red" }}>
+                      {this.state.titleError}
+                    </div>
 
                 {/* // PARKING Type */}
                 <TextField
@@ -363,6 +417,9 @@ class AddListing extends Component {
                     </MenuItem>
                   ))}
                 </TextField>
+                <div style={{ color: "red" }}>
+                      {this.state.parkingtypeError}
+                    </div>
 
                 {/* // PRICE */}
                 <TextField
@@ -376,10 +433,14 @@ class AddListing extends Component {
                   InputLabelProps={{
                     shrink: true
                   }}
+                  name="price"
                   margin="normal"
                   variant="outlined"
                   placeholder="$"
                 />
+                <div style={{ color: "red" }}>
+                      {this.state.priceError}
+                    </div>
 
                 {/* //ADDRESS */}
                 <TextField
@@ -394,6 +455,9 @@ class AddListing extends Component {
                   onChange={this.handleInputChange}
                   name="address"
                 />
+                <div style={{ color: "red" }}>
+                      {this.state.addressError}
+                    </div>
 
                 {/* //City */}
                 <TextField
@@ -408,6 +472,9 @@ class AddListing extends Component {
                   onChange={this.handleInputChange}
                   name="city"
                 />
+                <div style={{ color: "red" }}>
+                      {this.state.cityError}
+                    </div>
 
                 {/* //State */}
                 <TextField
@@ -422,6 +489,9 @@ class AddListing extends Component {
                   onChange={this.handleInputChange}
                   name="state"
                 />
+                <div style={{ color: "red" }}>
+                      {this.state.stateError}
+                    </div>
 
                 {/* //Zip */}
                 <TextField
@@ -436,6 +506,9 @@ class AddListing extends Component {
                   name="zipcode"
                   fullWidth={true}
                 />
+                <div style={{ color: "red" }}>
+                {this.state.zipcodeError}
+              </div>
                 <Button
                   variant="contained"
                   color="secondary"

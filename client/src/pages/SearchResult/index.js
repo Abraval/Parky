@@ -106,7 +106,8 @@ class SearchResult extends Component {
       [key]: value
     });
   };
-  handleClickOpen = () => {
+
+  handleClickOpen = (id, address, title, href, city, state, zipcode) => {
     this.setState({ open: true });
   };
   handleClose = () => {
@@ -158,6 +159,7 @@ class SearchResult extends Component {
   constructor(props) {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
+    this.handleBookClick = this.handleBookClick.bind(this);
   }
 
   handleDayClick(day, { selected }) {
@@ -459,7 +461,13 @@ class SearchResult extends Component {
                                           color="primary"
                                           className={classes.button}
                                           aria-label="Booking Summary"
-                                          onClick={() => this.handleClickOpen()}
+                                          onClick={() => this.handleClickOpen(spot[7],
+                                            spot[0],
+                                            spot[3],
+                                            spot[6],
+                                            spot[8],
+                                            spot[9],
+                                            spot[10])}
                                         >
                                           Book Now
                                         </Button>
