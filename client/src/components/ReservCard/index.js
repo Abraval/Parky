@@ -33,14 +33,16 @@ const styles = theme => ({
     display: "none"
   },
   card: {
-    maxWidth: 400
+    maxWidth: 250,
+    margin: "8px"
   },
   media: {
     height: 0,
     paddingTop: "56.25%" // 16:9
   },
   actions: {
-    display: "flex"
+    display: "flex",
+    justifyContent: "center"
   },
   expand: {
     transform: "rotate(0deg)",
@@ -68,6 +70,25 @@ class ReservCard extends React.Component {
   render() {
     const { classes } = this.props;
     return (
+      // <Card className={classes.card}>
+      //   <CardMedia
+      //     className={classes.media}
+      //     image={this.props.photo}
+      //     title={this.props.title}
+      //   />
+      //   <CardHeader title={this.props.title} subheader={this.props.address} />
+      //   <CardContent>
+      //     <Typography component="p">Date: {this.props.date}</Typography>
+      //   </CardContent>
+      //   <CardActions className={classes.actions} disableActionSpacing>
+      //     <IconButton
+      //       aria-label="Cancel Reservation"
+      //       onClick={() => this.handleClickOpen()}
+      //     >
+      //       <CancelIcon /> Cancel
+      //     </IconButton>
+      //   </CardActions>
+
       <Card className={classes.card}>
         <CardMedia
           className={classes.media}
@@ -76,91 +97,17 @@ class ReservCard extends React.Component {
         />
         <CardHeader title={this.props.title} subheader={this.props.address} />
         <CardContent>
-          <Typography component="p">Date: {this.props.date}</Typography>
+          <Typography component="p">{this.props.date}</Typography>
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
-          <IconButton
-            aria-label="Cancel Reservation"
+          <Button
+            variant="contained"
+            className={classes.button}
             onClick={() => this.handleClickOpen()}
           >
-            <CancelIcon /> Cancel
-          </IconButton>
+            Cancel Reservation
+          </Button>
         </CardActions>
-
-        {/* // Start Dialog */}
-        {/* <Dialog open={this.state.open} handleClickOpen={this.handleClickOpen}>
-          <DialogTitle id="form-dialog-title">Edit Listing</DialogTitle>
-          <DialogContent>
-            <span>Title: </span>
-            <TextField
-              autoFocus
-              margin="dense"
-              // id="name"
-              name="title"
-              // label="Email Address"
-              type="text"
-              fullWidth
-              value={this.state.title}
-              onChange={this.handleInputChange}
-            />
-            <span>Address: </span>
-            <TextField
-              autoFocus
-              margin="dense"
-              // id="name"
-              name="address"
-              // label="Email Address"
-              type="text"
-              fullWidth
-              value={this.state.address}
-              onChange={this.handleInputChange}
-            />
-            <span>City: </span>
-            <TextField
-              autoFocus
-              margin="dense"
-              // id="name"
-              name="city"
-              // label="Email Address"
-              type="text"
-              fullWidth
-              value={this.state.city}
-              onChange={this.handleInputChange}
-            />
-            <span>State: </span>
-            <TextField
-              autoFocus
-              margin="dense"
-              // id="name"
-              name="state"
-              // label="Email Address"
-              type="text"
-              fullWidth
-              value={this.state.state}
-              onChange={this.handleInputChange}
-            />
-            <span>Zipcode: </span>
-            <TextField
-              autoFocus
-              margin="dense"
-              // id="name"
-              name="zipcode"
-              // label="Email Address"
-              type="text"
-              fullWidth
-              value={this.state.zipcode}
-              onChange={this.handleInputChange}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => this.handleListingUpdate()} color="primary">
-              Submit
-            </Button>
-            <Button onClick={() => this.handleClose()} color="secondary">
-              Cancel
-            </Button>
-          </DialogActions>
-        </Dialog> */}
       </Card>
 
       // <div className="card" {...this.props} tabIndex="0">

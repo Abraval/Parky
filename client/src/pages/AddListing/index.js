@@ -61,7 +61,7 @@ class AddListing extends Component {
     title: "",
     parkingtype: "",
     photo: "",
-    price: 0.0,
+    price: 0,
     address: "",
     city: "",
     state: "",
@@ -176,7 +176,7 @@ class AddListing extends Component {
                   title: this.state.title,
                   parkingtype: this.state.parkingtype || "None",
                   photo: this.state.photo,
-                  price: this.state.price || 0,
+                  price: this.state.price,
                   address: this.state.address,
                   city: this.state.city,
                   state: this.state.state,
@@ -207,6 +207,7 @@ class AddListing extends Component {
   };
 
   render() {
+    console.log(this.state);
     const { classes } = this.props;
     return (
       <div>
@@ -379,6 +380,7 @@ class AddListing extends Component {
                   margin="normal"
                   variant="outlined"
                   placeholder="$"
+                  name="price"
                 />
 
                 {/* //ADDRESS */}
