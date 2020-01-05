@@ -94,7 +94,12 @@ class Nav extends Component {
               fontFamily: this.props.theme.typography.navFont
             }}
           >
-            <Typography variant="h6" color="secondary" className={classes.grow}>
+            <Typography
+              variant="h6"
+              color="secondary"
+              className={classes.grow}
+              style={{ fontFamily: "Galada", fontSize: "34px" }}
+            >
               Parky
             </Typography>
             <Button color="secondary" href="/searchresult">
@@ -103,9 +108,7 @@ class Nav extends Component {
             <Button color="secondary" href="/addlisting">
               Create
             </Button>
-            <Button color="secondary" href="/signup">
-              Sign Up
-            </Button>
+
             {this.renderRedirect()}
             <Button color="secondary" href="/profile">
               <AccountCircleIcon />

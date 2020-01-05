@@ -6,28 +6,17 @@ router
   .get(listingController.findAll)
   .post(listingController.createListing);
 
-router
-  .route("/near")
-  .get(listingController.findAllNear)
+router.route("/near").get(listingController.findAllNear);
 
-  router
+router
   .route("/profile")
   .get(listingController.findAllProfListing)
-  .put(listingController.editListing)
+  .put(listingController.editListing);
 
-  router
-  .route("/profile/:id")
-  .delete(listingController.deleteListing)
-  
+router.route("/profile/:id").delete(listingController.deleteListing);
 
-  router
-  .route("/reserved/")
-  .get(listingController.findReserved)
+router.route("/reserved/").get(listingController.findReserved);
 
-  router
-  .route("/reserved/:id")
-  .get(listingController.findReservedById)
-
-
+router.route("/reserved/:id").get(listingController.findReservedById);
 
 module.exports = router;

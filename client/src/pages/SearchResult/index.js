@@ -32,7 +32,6 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import ButtonBase from "@material-ui/core/ButtonBase";
-
 const styles = theme => ({
   root: {
     flexGrow: 1
@@ -81,7 +80,6 @@ const styles = theme => ({
     display: "none"
   }
 });
-
 class SearchResult extends Component {
   state = {
     //Dialog
@@ -100,7 +98,6 @@ class SearchResult extends Component {
     title: ""
     // availId: ""
   };
-
   handleChange = key => (event, value) => {
     this.setState({
       [key]: value
@@ -112,10 +109,8 @@ class SearchResult extends Component {
   handleClose = () => {
     this.setState({ open: false });
   };
-
   componentDidMount() {
     this.renderMap();
-
     this.userInfo().then(response =>
       this.setState(
         {
@@ -125,11 +120,9 @@ class SearchResult extends Component {
       )
     );
   }
-
   tester() {
     console.log(this.state.user);
   }
-
   userInfo() {
     return axios.get("/user/");
   }
@@ -139,7 +132,6 @@ class SearchResult extends Component {
       // this.renderCards();
     }
   }
-
   handleBookClick = (id, address, title, href, city, state, zipcode) => {
     console.log(address);
     for (var i = 0; i < this.state.selectedDays.length; i++) {
@@ -154,15 +146,12 @@ class SearchResult extends Component {
     }
     this.handleClose();
   };
-
   constructor(props) {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
   }
-
   handleDayClick(day, { selected }) {
     const { selectedDays } = this.state;
-
     if (selected) {
       const selectedIndex = selectedDays.findIndex(selectedDay => {
         DateUtils.isSameDay(selectedDay, day);
@@ -173,42 +162,32 @@ class SearchResult extends Component {
     }
     this.setState({ selectedDays });
   }
-
   handleInputChange = event => {
     const { name, value } = event.target;
     this.setState({
       [name]: value
     });
   };
-
   handleSubmitSearch = e => {
     e.preventDefault();
     console.log("handleSubmitSearch");
     const address = this.getAddress();
-
     let a = this.state.selectedDays.map(i => {
       // console.log(i);
       // console.log(b);
     });
-
     // console.log(a);
-
     address.then(data => {
       const formattedDates = this.state.selectedDays.map(date =>
         date.toISOString()
       );
-
       // // console.log(formattedDates);
-      // this.setState({ markerData: [] });
-      // this.setState({ listings: [] });
-
+      this.setState({ markerData: [] });
+      this.setState({ listings: [] });
       API.getAvailableListings(formattedDates).then(res => {
         console.log("here", res);
-
         let emptyArr = []; // these are the items that we are displaying
-
         const datesLength = formattedDates.length;
-
         for (let i = 0; i < res.data.length; i++) {
           let count = 0;
           for (let j = 0; j < res.data.length; j++) {
@@ -217,7 +196,6 @@ class SearchResult extends Component {
               count++;
               // console.log(count);
               // console.log(emptyArr.findIndex(x => x.listing === res.data[i].listing) === -1);
-
               if (
                 count == datesLength &&
                 emptyArr.findIndex(x => x.listing === res.data[i].listing) ===
@@ -228,22 +206,17 @@ class SearchResult extends Component {
             }
           }
         }
-
         // console.log(emptyArr);
-
         emptyArr.map(item => {
           console.log("item is", item);
           API.getListingById(item.listing).then(listing => {
             console.log("search lat is ", this.state.latitude);
             console.log("search lat is ", this.state.longitude);
-
             var longLatArray = [this.state.longitude, this.state.latitude];
-
             console.log("listing here", listing.data[0]);
             API.getListingByIdAndProximity(longLatArray).then(data => {
               console.log("line 229 is: ", data);
             });
-
             // console.log("listing here", listing);
             // Set this.state.markerData here.
             const data = listing.data[0];
@@ -270,23 +243,17 @@ class SearchResult extends Component {
             });
           });
         });
-
         // emptyArr.map(item => {
-
         //   // console.log("item is", item);
-
         //   console.log(this.state.latitude);
         //   console.log(this.state.longitude);
-
         //   API.getListingByIdAndProximity(item.listing).then(listing => {
         //     console.log(listing);
         //   })
-
         // });
       });
     });
   };
-
   renderMap = () => {
     loadScript(
       "https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo&callback=initMap"
@@ -294,21 +261,17 @@ class SearchResult extends Component {
     window.initMap = this.initMap;
     // console.log(this.state.markerData);
   };
-
   initMap = () => {
     var map = new window.google.maps.Map(document.getElementById("map"), {
       center: { lat: this.state.latitude, lng: this.state.longitude },
       zoom: 16
     });
-
     // Create An InfoWindow
     var infoWindow = new window.google.maps.InfoWindow(),
       marker,
       i;
-
     // We will need to change this
     var contentString = this.state.address;
-
     for (i = 0; i < this.state.markerData.length; i++) {
       var position = new window.google.maps.LatLng(
         this.state.markerData[i][1],
@@ -321,7 +284,6 @@ class SearchResult extends Component {
         map: map,
         title: this.state.markerData[i][0]
       });
-
       // Allow each marker to have an info window
       window.google.maps.event.addListener(
         marker,
@@ -335,10 +297,8 @@ class SearchResult extends Component {
       );
     }
   };
-
   getAddress = async () => {
     let location = this.state.addressQuery;
-
     axios
       .get("https://maps.googleapis.com/maps/api/geocode/json", {
         params: {
@@ -354,7 +314,6 @@ class SearchResult extends Component {
         // this.renderMap();
       });
   };
-
   render() {
     const { classes } = this.props;
     const { spacing } = this.state;
@@ -542,11 +501,9 @@ class SearchResult extends Component {
     );
   }
 }
-
 SearchResult.propTypes = {
   classes: PropTypes.object.isRequired
 };
-
 function loadScript(url) {
   let index = window.document.getElementsByTagName("script")[0];
   let script = window.document.createElement("script");
@@ -555,5 +512,4 @@ function loadScript(url) {
   script.defer = true;
   index.parentNode.insertBefore(script, index);
 }
-
 export default withStyles(styles)(SearchResult);

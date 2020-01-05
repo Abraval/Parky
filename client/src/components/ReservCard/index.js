@@ -100,88 +100,14 @@ class ReservCard extends React.Component {
           <Typography component="p">{this.props.date}</Typography>
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
-          <IconButton
-            aria-label="Cancel Reservation"
+          <Button
+            variant="contained"
+            className={classes.button}
             onClick={() => this.handleClickOpen()}
           >
-            <CancelIcon /> Cancel
-          </IconButton>
+            Cancel Reservation
+          </Button>
         </CardActions>
-
-        {/* // Start Dialog */}
-        {/* <Dialog open={this.state.open} handleClickOpen={this.handleClickOpen}>
-          <DialogTitle id="form-dialog-title">Edit Listing</DialogTitle>
-          <DialogContent>
-            <span>Title: </span>
-            <TextField
-              autoFocus
-              margin="dense"
-              // id="name"
-              name="title"
-              // label="Email Address"
-              type="text"
-              fullWidth
-              value={this.state.title}
-              onChange={this.handleInputChange}
-            />
-            <span>Address: </span>
-            <TextField
-              autoFocus
-              margin="dense"
-              // id="name"
-              name="address"
-              // label="Email Address"
-              type="text"
-              fullWidth
-              value={this.state.address}
-              onChange={this.handleInputChange}
-            />
-            <span>City: </span>
-            <TextField
-              autoFocus
-              margin="dense"
-              // id="name"
-              name="city"
-              // label="Email Address"
-              type="text"
-              fullWidth
-              value={this.state.city}
-              onChange={this.handleInputChange}
-            />
-            <span>State: </span>
-            <TextField
-              autoFocus
-              margin="dense"
-              // id="name"
-              name="state"
-              // label="Email Address"
-              type="text"
-              fullWidth
-              value={this.state.state}
-              onChange={this.handleInputChange}
-            />
-            <span>Zipcode: </span>
-            <TextField
-              autoFocus
-              margin="dense"
-              // id="name"
-              name="zipcode"
-              // label="Email Address"
-              type="text"
-              fullWidth
-              value={this.state.zipcode}
-              onChange={this.handleInputChange}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => this.handleListingUpdate()} color="primary">
-              Submit
-            </Button>
-            <Button onClick={() => this.handleClose()} color="secondary">
-              Cancel
-            </Button>
-          </DialogActions>
-        </Dialog> */}
       </Card>
 
       // <div className="card" {...this.props} tabIndex="0">
