@@ -155,8 +155,9 @@ class SearchResult extends Component {
       // this.renderCards();
     }
   }
-  handleBookClick = (id, address, title, href, city, state, zipcode) => {
-    console.log(address);
+
+  handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
+    console.log("SearchResults.handleBookClick price", price, "SearchResults.handleBookClick id", id, "SearchResults.handleBookClick address", address, "SearchResults.handleBookClick title", title, "SearchResults.handleBookClick HREF", href);
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
         date: this.state.selectedDays[i],
@@ -164,6 +165,7 @@ class SearchResult extends Component {
         userId: this.state.user._id,
         address: address + ", " + city + ", " + state + " " + zipcode,
         title: title,
+        price: price,
         photo: href
       });
     }
@@ -400,6 +402,7 @@ class SearchResult extends Component {
                   ) : (
                     <div>
                       {this.state.markerData.map(spot => {
+                        console.log(spot, this.handleBookClick);
                         return (
                           <div>
                             <div className={classes.root}>
@@ -457,6 +460,31 @@ class SearchResult extends Component {
                                           variant="outlined"
                                           color="primary"
                                           className={classes.button}
+                                          onClick={event => {
+                                            event.preventDefault();
+                                            console.log("SearchResult.buttonhandelick spot", spot)
+                                            this.handleBookClick(
+                                              spot[7],
+                                              spot[0],
+                                              spot[3],
+                                              spot[6],
+                                              spot[8],
+                                              spot[9],
+                                              spot[10],
+                                              spot[11] * this.state.selectedDays.count
+                                            );
+                                          }}
+                                          // onClick={this.handleBookClick}
+                                          // id={spot[7]}
+                                          // key={spot[3]}
+                                          // title={spot[3]}
+                                          // href={spot[6]}
+                                          // street={spot[4]}
+                                          // neighborhood={spot[5]}
+                                          // city={spot[8]}
+                                          // state={spot[9]}
+                                          // zipcode={spot[10]}
+                                          // address={spot[0]}
                                           aria-label="Booking Summary"
                                           onClick={event => {
                                             event.preventDefault();
@@ -490,6 +518,8 @@ class SearchResult extends Component {
                                     Your Booking Information
                                   </DialogTitle>
                                   <DialogContent>
+                                    {console.log(spot)}
+                                    <p>Title: {spot[3]}</p>
                                     {/* WRONG INFO */}
                                     {/* <p>Title: {spot[3]}</p>
                                     <p>Address: {spot[0]}</p>
@@ -497,6 +527,7 @@ class SearchResult extends Component {
                                     <p>State: {spot[9]}</p>
                                     <p>Zipcode: {spot[10]}</p>
                                     <p>Parking Type: {spot[12]}</p>
+                                    <p>Price: ${spot[11]  * this.state.selectedDays.length}</p>
                                     <p>Price: ${spot[11]}</p> */}
                                     {/* <p>Dates: {this.state.selectedDays}</p> */}
                                   </DialogContent>
@@ -505,6 +536,23 @@ class SearchResult extends Component {
                                       variant="outlined"
                                       color="primary"
                                       className={classes.button}
+                                      onClick={event => {
+                                        event.preventDefault();
+                                        this.handleBookClick(
+                                          spot[7],
+                                          spot[0],
+                                          spot[3],
+                                          spot[6],
+                                          spot[8],
+                                          spot[9],
+                                          spot[10],
+                                          spot[11]
+                                        );
+                                      }}
+                                    >
+                                      Confirm Booking
+                                    </Button>
+                                    <Button
                                       onClick={() => this.handleClose()}
                                       variant="outlined"
                                       color="secondary"
@@ -548,3 +596,5 @@ function loadScript(url) {
   index.parentNode.insertBefore(script, index);
 }
 export default withStyles(styles)(SearchResult);
+
+
