@@ -231,7 +231,7 @@ class SearchResult extends Component {
 
 /******************************************Start******************************************/
 
-        let cardsArray = []; 
+        let cardsArray2 = []; 
 
         emptyArr.map(item => {
           // console.log(item); 
@@ -253,8 +253,13 @@ class SearchResult extends Component {
               console.log(listing.data[0]._id === item.data[i]._id); 
               if (listing.data[0]._id === item.data[i]._id) {
                 console.log("this is true and item should be pushed")
-                cardsArray.push(item.data[i]); 
-
+                cardsArray2.push(item.data[i]); 
+                this.setState({cardsArray: [
+                  ...this.state.cardsArray,
+                  [
+                    item.data[i]
+                  ]
+                ]})
 
               }
 
@@ -262,7 +267,7 @@ class SearchResult extends Component {
 
           });
 
-          console.log("cardsArray is: ", cardsArray)
+          console.log("cardsArray is: ", cardsArray2)
 
           // next step is to map over the cardsArray 
             
@@ -388,7 +393,8 @@ class SearchResult extends Component {
   render() {
     const { classes } = this.props;
     const { spacing } = this.state;
-    console.log(this.state.markerData);
+    // console.log(this.state.markerData);
+    // console.log(this.state.cardsArray); 
     return (
       <div>
         <Nav />
