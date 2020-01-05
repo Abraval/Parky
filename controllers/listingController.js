@@ -18,9 +18,17 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   createListing: function(req, res) {
-    console.log("++++++++++++++++++++++++")
+    console.log("+++++++++++REQ.BODY CREATE LISTING+++++++++++++")
     console.dir(req.body);
+    console.log("--")
+    console.dir(req.body.location.coordinates[0]); 
     console.log("++++++++++++++++++++++++")
+    var a = req.body.location;
+    var aTYPEOF = typeof a; 
+    console.log("typeof is: ", a);
+
+    req.body.location.type = 'Point'
+
     db.Listing.create(req.body)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
@@ -92,22 +100,28 @@ module.exports = {
       .catch(err => res.json(err));
   },
   findAllNear: function(req, res) {
-    console.log("beginning: ---------------");
 
-    console.log(req.query.data)
 
-    console.log("end: ---------------");
+    console.log("START: ---------------");
 
     var long = req.query.data[0]
     var lat = req.query.data[1]
 
+    long.type = 'Point';
+    lat.type = 'Point';
+
     var floatLong = parseFloat(long); 
     var floatLat = parseFloat(lat); 
+
+    console.log("1: ", req.query.data[0].type = "Point");
+    console.log("2: ", req.query.data[0].type);
+
+    console.log("line 111 typeof Long Point", long); 
 
     console.log(floatLong); 
     console.log(floatLat); 
 
-    console.log("end: ---------------");
+    console.log("END: ---------------");
     db.Listing.syncIndexes().then((index) => {
       console.log("indexes:" , index); 
       
@@ -117,7 +131,7 @@ module.exports = {
     db.Listing.find(
       {location:
         {$near: 
-          {$maxDistance: 2000,
+          {$maxDistance: 1000,
             $geometry: {
               type: "Point",
               coordinates: [floatLong, floatLat]
