@@ -146,14 +146,20 @@ module.exports = {
   },
   updateAvailabilityUser: function(req, res) {
     console.log("UPDATE USER", req.body);
+
     const earning = req.body.price
     const date = new Date()
     const earningObject = { amount: earning, date: date}
+
+    console.log("line 154: ", req.body.renter); 
 
     //Find a listing and push an earning into it's earning array
     db.Listing.findOneAndUpdate({_id: req.body.listing}, {$push: {earnings: earningObject}}, {"new": true, "upsert": true})
     .then(() => {
       // Find an availability and update it with new availability info
+
+      console.log("req.body inside of findeOne", req.body); 
+
       db.Availability.findOneAndUpdate(
         {
           listing: req.body.listing,
@@ -169,8 +175,17 @@ module.exports = {
           }
         }
       )
-    })
+      .then(function(dbListing) {
+        res.json(dbListing);
+      })
 
+
+    })
+    .catch((error) => {
+      res.status(400).json({
+        error: error
+      })
+    })
       // .then(function(dbAvailability) {
       //   db.Listing.findOneAndUpdate(
       //     {
@@ -183,14 +198,7 @@ module.exports = {
       // }
       //   }
       // )
-      .then(function(dbListing) {
-        res.json(dbListing);
-      })
-      .catch((error) => {
-        res.status(400).json({
-          error: error
-        })
-      })
+     
     // });
   },
   deleteListing: function(req, res) {

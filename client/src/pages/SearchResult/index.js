@@ -128,6 +128,7 @@ class SearchResult extends Component {
   handleClickOpen = (id, address, title, href, city, state, zipcode) => {
     this.setState({ open: true });
   };
+
   handleClose = () => {
     this.setState({ open: false });
 
@@ -160,6 +161,21 @@ class SearchResult extends Component {
   }
   handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
     // console.log(address);
+
+    console.log("---------------------"); 
+
+    console.log("selectedDaysLength: ", this.state.selectedDays.length); 
+    console.log("id: ", id); 
+    console.log("user id: ", this.state.user._id); 
+    console.log("address: ", address);
+    console.log("city: ", city); 
+    console.log("state: ", state); 
+    console.log("zipcode: ", zipcode); 
+    console.log("title: ", title); 
+    console.log("price: ", price); 
+    console.log("href: ", href); 
+
+    console.log("---------------------"); 
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
         date: this.state.selectedDays[i],
@@ -169,13 +185,17 @@ class SearchResult extends Component {
         title: title,
         price: price,
         photo: href
-      });
+      }).then(res => console.log(res)); 
     }
     
-    this. handleClickOpen();
-
+    // this.handleClickOpen();
     
   };
+
+  handleDialogOpen = event => {
+    this.handleClickOpen();
+  }
+
   constructor(props) {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
@@ -460,6 +480,7 @@ class SearchResult extends Component {
                                       price={spot[0].price}
                                       parkingtype={spot[0].parkingtype}
                                       handleBookClick={this.handleBookClick}
+                                      handleDialogOpen={this.handleDialogOpen}
                                     >
                                       <img
                                         className={classes.img}
@@ -495,44 +516,12 @@ class SearchResult extends Component {
                                         <Button
                                           variant="outlined"
                                           color="primary"
+                                          aria-label="Booking Summary"
                                           className={classes.button}
                                           onClick={event => {
                                             event.preventDefault();
                                             console.log("SearchResult.buttonhandelick spot", spot)
-                                            this.handleBookClick(
-                                              spot[0]._id,
-                                              spot[0].address,
-                                              spot[0].title,
-                                              spot[0].price,
-                                              spot[0].city,
-                                              spot[0].state,
-                                              spot[0].zipcode,
-                                              spot[0].price * this.state.selectedDays.count
-                                            );
-                                          }}
-                                          // onClick={this.handleBookClick}
-                                          // id={spot[7]}
-                                          // key={spot[3]}
-                                          // title={spot[3]}
-                                          // href={spot[6]}
-                                          // street={spot[4]}
-                                          // neighborhood={spot[5]}
-                                          // city={spot[8]}
-                                          // state={spot[9]}
-                                          // zipcode={spot[10]}
-                                          // address={spot[0]}
-                                          aria-label="Booking Summary"
-                                          onClick={event => {
-                                            event.preventDefault();
-                                            this.handleBookClick(
-                                              spot[7],
-                                              spot[0],
-                                              spot[3],
-                                              spot[6],
-                                              spot[8],
-                                              spot[9],
-                                              spot[10]
-                                            );
+                                            this.handleDialogOpen();
                                           }}
                                         >
                                           Book Now
@@ -577,7 +566,8 @@ class SearchResult extends Component {
                                           spot[0].photo,
                                           spot[0].city,
                                           spot[0].state,
-                                          spot[0].zipcode
+                                          spot[0].zipcode,
+                                          spot[0].price
                                         );
                                       }}
                                     >
@@ -588,7 +578,7 @@ class SearchResult extends Component {
                                       variant="outlined"
                                       color="secondary"
                                     >
-                                      Confirm Booking
+                                     Close
                                     </Button>
                                   </DialogActions>
                                 </Dialog>
