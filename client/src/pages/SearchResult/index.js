@@ -231,17 +231,60 @@ class SearchResult extends Component {
 
         // console.log(emptyArr);
 
+/******************************************Start******************************************/
+
+        let cardsArray = []; 
+
+        emptyArr.map(item => {
+          // console.log(item); 
+
+          API.getListingById(item.listing).then(listing => {
+
+          var longLatArray = [this.state.longitude, this.state.latitude];
+
+          // console.log(longLatArray); 
+
+          console.log("SearchResult.index.API.getListingbyID.listing ", listing.data[0]._id);
+          
+          API.getListingByIdAndProximity(longLatArray).then(item => {
+            console.log("line 250 is: ", item);
+
+            for (let i = 0; i < item.data.length; i++) {
+              console.log("a");
+
+              console.log(listing.data[0]._id === item.data[i]._id); 
+              if (listing.data[0]._id === item.data[i]._id) {
+                console.log("this is true and item should be pushed")
+                cardsArray.push(item.data[i]); 
+              }
+
+            }
+
+          });
+
+          console.log("cardsArray is: ", cardsArray)
+            
+          })
+
+        })
+
+
+/******************************************End******************************************/
+
+
         emptyArr.map(item => {
           console.log("item is", item);
           API.getListingById(item.listing).then(listing => {
-            console.log("search lat is ", this.state.latitude);
-            console.log("search lat is ", this.state.longitude);
+            // console.log("search lat is ", this.state.latitude);
+            // console.log("search lat is ", this.state.longitude);
 
             var longLatArray = [this.state.longitude, this.state.latitude];
 
-            console.log("listing here", listing.data[0]);
+            // console.log("listing here", listing.data[0]._id);
+
+            // (1) I might need to create an empty array, once that item is found as near then push it into the empty array // then on that array, have the cards map over that array as opposed the markerData (then confirm that this works)
             API.getListingByIdAndProximity(longLatArray).then(data => {
-              console.log("line 229 is: ", data);
+              // console.log("line 229 is: ", data);
             });
 
             // console.log("listing here", listing);
