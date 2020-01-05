@@ -67,6 +67,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   findAllProfListing: function(req, res) {
+
     db.Listing.find(req.query)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
@@ -131,21 +132,31 @@ module.exports = {
   },
   updateAvailabilityUser: function(req, res) {
     console.log("UPDATE USER", req.body);
-    db.Availability.findOneAndUpdate(
-      {
-        listing: req.body.listing,
-        date: req.body.date
-      },
-      {
-        $set: {
-          renter: mongoose.Types.ObjectId(req.body.userId),
-          address: req.body.address,
-          title: req.body.title,
-          photo: req.body.photo,
-          price: req.body.price
+    const earning = req.body.price
+    const date = new Date()
+    const earningObject = { amount: earning, date: date}
+
+    //Find a listing and push an earning into it's earning array
+    db.Listing.findOneAndUpdate({_id: req.body.listing}, {$push: {earnings: earningObject}}, {"new": true, "upsert": true})
+    .then(() => {
+      // Find an availability and update it with new availability info
+      db.Availability.findOneAndUpdate(
+        {
+          listing: req.body.listing,
+          date: req.body.date
+        },
+        {
+          $set: {
+            renter: mongoose.Types.ObjectId(req.body.userId),
+            address: req.body.address,
+            title: req.body.title,
+            photo: req.body.photo,
+            price: req.body.price
+          }
         }
-      }
-    )
+      )
+    })
+
       // .then(function(dbAvailability) {
       //   db.Listing.findOneAndUpdate(
       //     {
@@ -160,7 +171,12 @@ module.exports = {
       // )
       .then(function(dbListing) {
         res.json(dbListing);
-      });
+      })
+      .catch((error) => {
+        res.status(400).json({
+          error: error
+        })
+      })
     // });
   },
   deleteListing: function(req, res) {

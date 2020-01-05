@@ -64,6 +64,7 @@ class ListingCard extends React.Component {
   state = {
     open: false,
     open2: false,
+    openEarnings: false,
     title: this.props.title,
     address: this.props.address,
     city: this.props.city,
@@ -73,12 +74,16 @@ class ListingCard extends React.Component {
     //Material UI card
     expanded: false,
     selectedDays: [],
+    lastWeekEarnings: 0,
+    lastMonthEarnings: 0,
     initialAvailabilities: []  //used to figure out which availablities to create and to delete
   };
 
 //You should only fetch availabilities when the modal opens
 //availabilites modal should be a class componenent.
   componentDidMount = ()  => {
+    console.log("props... ", this.props)
+    this.processEarnings(this.props.earnings)
     API.getAvailabilitiesByListingId(this.props.id)
     .then(res => { 
       console.log("ListingCard.ComponentDIdMount res", res)
@@ -101,6 +106,14 @@ class ListingCard extends React.Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+
+  showEarning = () => {
+    this.setState({ openEarnings: true})
+  }
+
+  hideEarning = () => {
+    this.setState({ openEarnings : false})
+  }
 
   handleClose2 = () => {
     this.setState({ open2: false });
@@ -186,6 +199,32 @@ class ListingCard extends React.Component {
       .catch(err => console.log(err));
   };
 
+  processEarnings = earnings => {
+    //Define temporary variable to hold computtion
+    let lastWeekEarnings = 0
+    let lastMonthEarnings = 0
+
+    // For each earning, check what date bracket it falls into
+    earnings.forEach((earning)=> {
+    // Compare the earnings date to the date today
+      let today = new Date()
+      let earningDate = new Date(earning.date)
+      const diffTime = Math.abs(today - earningDate)
+      const diffDays = Math.ceil(diffTime/(1000 * 60 * 60 * 24))
+      if(diffDays <= 7) {
+        lastWeekEarnings += earning.amount
+        lastMonthEarnings += earning.amount
+      } else if(diffDays <= 30) {
+        lastMonthEarnings += earning.amount
+      }
+    })
+    console.log("earnings....", lastWeekEarnings, lastMonthEarnings)
+    this.setState({
+      lastWeekEarnings,
+      lastMonthEarnings
+    })
+  }
+
   constructor(props) {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
@@ -257,6 +296,12 @@ class ListingCard extends React.Component {
           </IconButton>
           <IconButton aria-label="Delete Listing" onClick={() => this.handleDelete(this.state.currentModalId)}>
             <DeleteIcon />
+          </IconButton>
+          <IconButton
+            aria-label="Edit Availability"
+            onClick={() => this.showEarning()}
+          >
+            <DateRangeIcon />
           </IconButton>
         </CardActions>
         <Dialog open={this.state.open} handleClickOpen={this.handleClickOpen}>
@@ -332,6 +377,23 @@ class ListingCard extends React.Component {
               Submit
             </Button>
             <Button onClick={() => this.handleClose()} color="secondary">
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog open={this.state.openEarnings} handleClickOpen={this.showEarning}>
+          <DialogTitle id="form-dialog-title">Earnings</DialogTitle>
+          <DialogContent>
+
+            <span>Total Earnings: {this.props.earning} </span>
+            <span>Last 7 Days: {this.state.lastWeekEarnings} </span>
+            <span>Last 30 Days: {this.state.lastMonthEarnings} </span>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => console.log("Submitting")} color="primary">
+              Submit
+            </Button>
+            <Button onClick={() => this.hideEarning()} color="secondary">
               Cancel
             </Button>
           </DialogActions>

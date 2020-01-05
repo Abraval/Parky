@@ -161,6 +161,8 @@ class Profile extends Component {
                                   title={listing.title}
                                   photo={listing.photo}
                                   address={listing.address}
+                                  earning={listing.earning}
+                                  earnings={listing.earnings}
                                   city={listing.city}
                                   state={listing.state}
                                   zipcode={listing.zipcode}

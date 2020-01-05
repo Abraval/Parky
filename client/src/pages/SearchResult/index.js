@@ -470,7 +470,7 @@ class SearchResult extends Component {
                                               spot[8],
                                               spot[9],
                                               spot[10],
-                                              spot[11]
+                                              spot[11] * this.state.selectedDays.count
                                             );
                                           }}
                                           // onClick={this.handleBookClick}
@@ -513,7 +513,7 @@ class SearchResult extends Component {
                                     <p>State: {spot[9]}</p>
                                     <p>Zipcode: {spot[10]}</p>
                                     <p>Parking Type: {spot[12]}</p>
-                                    <p>Price: ${spot[11]}</p>
+                                    <p>Price: ${spot[11]  * this.state.selectedDays.length}</p>
                                     {/* <p>Dates: {this.state.selectedDays}</p> */}
                                   </DialogContent>
                                   <DialogActions>
@@ -584,3 +584,5 @@ function loadScript(url) {
 }
 
 export default withStyles(styles)(SearchResult);
+
+

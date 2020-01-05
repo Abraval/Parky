@@ -14,6 +14,8 @@ const listingSchema = new Schema({
   zipcode: { type: Number, unique: false, required: false },
   streetName: { type: String, unique: false, required: false },
   neighborhood: { type: String, unique: false, required: false },
+  earning: {type: Number, unique: false, required: false, default: 0},
+  earnings: {type: [{}], unique: false, required: false, default: []},
   location: {
     type: { 
       type: String,
