@@ -39,7 +39,10 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit * 2
   },
   avatar: {
-    margin: "0 auto"
+    margin: "0 auto",
+    marginBottom: "12px",
+    marginTop: "12px",
+    backgroundColor: theme.palette.error.main
   }
 });
 
@@ -157,7 +160,7 @@ class LoginForm extends Component {
             }}
           >
             <Paper className={classes.root} elevation={1} mx="auto">
-              <Avatar className={classes.avatar}>
+              <Avatar className={classes.avatar} color="primary">
                 <LockOutlinedIcon />
               </Avatar>
               <Typography component="h1" variant="h5" align="center">
@@ -213,14 +216,16 @@ class LoginForm extends Component {
                   </Grid>
                 </Grid>
               </form>
+
               <Dialog
                 open={this.state.open}
                 handleClickOpen={this.handleClickOpen}
+                style={{ fontFamily: "Roboto" }}
               >
                 <DialogTitle id="form-dialog-title">
                   Create an Account
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent style={{ fontFamily: "Roboto" }}>
                   <span>Username: </span>
                   <TextField
                     autoFocus
@@ -321,14 +326,14 @@ class LoginForm extends Component {
                 <DialogActions>
                   <Button
                     onClick={() => this.handleSubmitForm()}
-                    color="primary"
+                    color="error"
                     variant="outlined"
                   >
                     Sign Up
                   </Button>
                   <Button
                     onClick={() => this.handleClose()}
-                    color="secondary"
+                    color="error"
                     variant="outlined"
                   >
                     Cancel
@@ -338,49 +343,6 @@ class LoginForm extends Component {
             </Paper>
           </Grid>
         </Grid>
-
-        // <div>
-        //     <h4>Login</h4>
-        //     <form className="form-horizontal">
-        //         <div className="form-group">
-        //             <div className="col-1 col-ml-auto">
-        //                 <label className="form-label" htmlFor="username">Username</label>
-        //             </div>
-        //             <div className="col-3 col-mr-auto">
-        //                 <input className="form-input"
-        //                     type="text"
-        //                     id="username"
-        //                     name="username"
-        //                     placeholder="Username"
-        //                     value={this.state.username}
-        //                     onChange={this.handleChange}
-        //                 />
-        //             </div>
-        //         </div>
-        //         <div className="form-group">
-        //             <div className="col-1 col-ml-auto">
-        //                 <label className="form-label" htmlFor="password">Password: </label>
-        //             </div>
-        //             <div className="col-3 col-mr-auto">
-        //                 <input className="form-input"
-        //                     placeholder="password"
-        //                     type="password"
-        //                     name="password"
-        //                     value={this.state.password}
-        //                     onChange={this.handleChange}
-        //                 />
-        //             </div>
-        //         </div>
-        //         <div className="form-group ">
-        //             <div className="col-7"></div>
-        //             <button
-        //                 className="btn btn-primary col-1 col-mr-auto"
-
-        //                 onClick={this.handleSubmit}
-        //                 type="submit">Login</button>
-        //         </div>
-        //     </form>
-        // </div>
       );
     }
   }
@@ -391,5 +353,3 @@ LoginForm.propTypes = {
 };
 
 export default withStyles(styles)(LoginForm);
-
-// export default LoginForm;
