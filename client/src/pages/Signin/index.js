@@ -313,102 +313,112 @@ class LoginForm extends Component {
                   Create an Account
                 </DialogTitle>
                 <DialogContent style={{ fontFamily: "Roboto" }}>
-                  <span>Username: </span>
-                  <TextField
-                    autoFocus
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    id="username"
-                    name="username"
-                    type="text"
-                    placeholder="username"
-                    fullWidth
-                    value={this.state.username}
-                    onChange={this.handleChange}
-                  />
-                  <span>Password: </span>
-                  <TextField
-                    autoFocus
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    name="password"
-                    id="password"
-                    type="password"
-                    fullWidth
-                    value={this.state.password}
-                    onChange={this.handleChange}
-                  />
-                  <span>First Name: </span>
-                  <TextField
-                    autoFocus
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    id="firstname"
-                    name="firstname"
-                    placeholder="First name"
-                    fullWidth
-                    value={this.state.firstname}
-                    onChange={this.handleChange}
-                  />
-                  <span>Last Name: </span>
-                  <TextField
-                    autoFocus
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    type="text"
-                    id="lastname"
-                    name="lastname"
-                    placeholder="Last name"
-                    fullWidth
-                    value={this.state.lastname}
-                    onChange={this.handleChange}
-                  />
-                  <span>Email: </span>
-                  <TextField
-                    autoFocus
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    type="text"
-                    id="email"
-                    name="email"
-                    placeholder="email@email.com"
-                    fullWidth
-                    value={this.state.email}
-                    onChange={this.handleChange}
-                  />
-                  <span>Date of Birth: </span>
-                  <TextField
-                    autoFocus
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    type="text"
-                    id="dob"
-                    name="dob"
-                    placeholder="dd/mm/yy"
-                    value={this.state.dob}
-                    onChange={this.handleChange}
-                    fullWidth
-                  />
-                  <span>Licence #: </span>
-                  <TextField
-                    autoFocus
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    type="password"
-                    id="license"
-                    name="license"
-                    fullWidth
-                    placeholder="11-111-1111"
-                    value={this.state.license}
-                    onChange={this.handleChange}
-                  />
+                  <form
+                    className={classes.container}
+                    noValidate
+                    autoComplete="off"
+                  >
+                    <TextField
+                      autoFocus
+                      label="Name"
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      id="username"
+                      name="username"
+                      type="text"
+                      placeholder="username"
+                      fullWidth
+                      value={this.state.username}
+                      onChange={this.handleChange}
+                    />
+                    <TextField
+                      label="Password"
+                      autoFocus
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      name="password"
+                      id="password"
+                      type="password"
+                      fullWidth
+                      value={this.state.password}
+                      onChange={this.handleChange}
+                    />
+                    <TextField
+                      label="First Name"
+                      autoFocus
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      id="firstname"
+                      name="firstname"
+                      placeholder="First name"
+                      fullWidth
+                      value={this.state.firstname}
+                      onChange={this.handleChange}
+                    />
+
+                    <TextField
+                      label="Last Name"
+                      autoFocus
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      type="text"
+                      id="lastname"
+                      name="lastname"
+                      placeholder="Last name"
+                      fullWidth
+                      value={this.state.lastname}
+                      onChange={this.handleChange}
+                    />
+
+                    <TextField
+                      label="Email Address"
+                      autoFocus
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      type="text"
+                      id="email"
+                      name="email"
+                      placeholder="email@email.com"
+                      fullWidth
+                      value={this.state.email}
+                      onChange={this.handleChange}
+                    />
+
+                    <TextField
+                      label="Date of Birth"
+                      autoFocus
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      type="text"
+                      id="dob"
+                      name="dob"
+                      placeholder="dd/mm/yy"
+                      value={this.state.dob}
+                      onChange={this.handleChange}
+                      fullWidth
+                    />
+
+                    <TextField
+                      label="Driver's License ID #"
+                      autoFocus
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      type="password"
+                      id="license"
+                      name="license"
+                      fullWidth
+                      placeholder="11-111-1111"
+                      value={this.state.license}
+                      onChange={this.handleChange}
+                    />
+                  </form>
                 </DialogContent>
                 <DialogActions>
                   <Button
@@ -426,17 +436,6 @@ class LoginForm extends Component {
                     Cancel
                   </Button>
                 </DialogActions>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} align="center" margin="normal">
-                    <Link
-                      style={{ cursor: "pointer" }}
-                      href="/signin"
-                      variant="body2"
-                    >
-                      {"Already have an account? Sign In"}
-                    </Link>
-                  </Grid>
-                </Grid>
               </Dialog>
             </Paper>
           </Grid>
