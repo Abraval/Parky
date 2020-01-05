@@ -500,14 +500,14 @@ class SearchResult extends Component {
                                             event.preventDefault();
                                             console.log("SearchResult.buttonhandelick spot", spot)
                                             this.handleBookClick(
-                                              spot[7],
-                                              spot[0],
-                                              spot[3],
-                                              spot[6],
-                                              spot[8],
-                                              spot[9],
-                                              spot[10],
-                                              spot[11] * this.state.selectedDays.count
+                                              spot[0]._id,
+                                              spot[0].address,
+                                              spot[0].title,
+                                              spot[0].price,
+                                              spot[0].city,
+                                              spot[0].state,
+                                              spot[0].zipcode,
+                                              spot[0].price * this.state.selectedDays.count
                                             );
                                           }}
                                           // onClick={this.handleBookClick}
