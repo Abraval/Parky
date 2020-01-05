@@ -202,7 +202,8 @@ class SearchResult extends Component {
       const formattedDates = this.state.selectedDays.map(date =>
         date.toISOString()
       );
-      // // console.log(formattedDates);
+
+      this.setState({ cardsArray: [] });
       this.setState({ markerData: [] });
       this.setState({ listings: [] });
       API.getAvailableListings(formattedDates).then(res => {
@@ -227,33 +228,24 @@ class SearchResult extends Component {
             }
           }
         }
-        // console.log(emptyArr);
 
 /******************************************Start******************************************/
 
-        let cardsArray2 = []; 
-
         emptyArr.map(item => {
-          // console.log(item); 
 
           API.getListingById(item.listing).then(listing => {
 
           var longLatArray = [this.state.longitude, this.state.latitude];
-
-          // console.log(longLatArray); 
-
-          console.log("SearchResult.index.API.getListingbyID.listing ", listing.data[0]._id);
           
           API.getListingByIdAndProximity(longLatArray).then(item => {
             console.log("line 250 is: ", item);
 
             for (let i = 0; i < item.data.length; i++) {
-              console.log("a");
 
               console.log(listing.data[0]._id === item.data[i]._id); 
               if (listing.data[0]._id === item.data[i]._id) {
-                console.log("this is true and item should be pushed")
-                cardsArray2.push(item.data[i]); 
+
+
                 this.setState({cardsArray: [
                   ...this.state.cardsArray,
                   [
@@ -266,30 +258,19 @@ class SearchResult extends Component {
             }
 
           });
-
-          console.log("cardsArray is: ", cardsArray2)
-
-          // next step is to map over the cardsArray 
             
           })
 
         })
 
-
 /******************************************End******************************************/
 
-
         emptyArr.map(item => {
-          console.log("item is", item);
-          API.getListingById(item.listing).then(listing => {
-            // console.log("search lat is ", this.state.latitude);
-            // console.log("search lat is ", this.state.longitude);
 
+          API.getListingById(item.listing).then(listing => {
+       
             var longLatArray = [this.state.longitude, this.state.latitude];
 
-            // console.log("listing here", listing.data[0]._id);
-
-            // (1) I might need to create an empty array, once that item is found as near then push it into the empty array // then on that array, have the cards map over that array as opposed the markerData (then confirm that this works)
             API.getListingByIdAndProximity(longLatArray).then(data => {
               // console.log("line 229 is: ", data);
             });
@@ -449,8 +430,8 @@ class SearchResult extends Component {
                     <h1 className="text-center">No Spots to Display</h1>
                   ) : (
                     <div>
-                      {this.state.markerData.map(spot => {
-                        console.log(spot); 
+                      {this.state.cardsArray.map(spot => {
+                        console.log(spot[0].title); 
                         console.log(this.state.markerData); 
                         console.log(this.state.cardsArray); 
                         return (
@@ -461,24 +442,24 @@ class SearchResult extends Component {
                                   <Grid item>
                                     <ButtonBase
                                       className={classes.image}
-                                      key={spot[3]}
-                                      title={spot[3]}
-                                      href={spot[6]}
-                                      street={spot[4]}
-                                      neighborhood={spot[5]}
-                                      id={spot[7]}
-                                      city={spot[8]}
-                                      state={spot[9]}
-                                      zipcode={spot[10]}
-                                      address={spot[0]}
-                                      price={spot[11]}
-                                      parkingtype={spot[12]}
+                                      key={spot[0]._id}
+                                      title={spot[0].title}
+                                      href={spot[0].photo}
+                                      street={spot[0].streetName}
+                                      neighborhood={spot[0].neighborhood}
+                                      id={spot[0]._id}
+                                      city={spot[0].city}
+                                      state={spot[0].state}
+                                      zipcode={spot[0].zipcode}
+                                      address={spot[0].address}
+                                      price={spot[0].price}
+                                      parkingtype={spot[0].parkingtype}
                                       handleBookClick={this.handleBookClick}
                                     >
                                       <img
                                         className={classes.img}
                                         alt="complex"
-                                        src={spot[6]}
+                                        src={spot[0].photo}
                                       />
                                     </ButtonBase>
                                   </Grid>
@@ -495,16 +476,16 @@ class SearchResult extends Component {
                                           gutterBottom
                                           variant="subtitle1"
                                         >
-                                          {spot[3]}
+                                          {spot[0].title}
                                         </Typography>
                                         <Typography gutterBottom>
-                                          {spot[4]}
+                                          {spot[0].streetName}
                                         </Typography>
                                         <Typography color="textSecondary">
-                                          {spot[5]}
+                                          {spot[0].neighborhood}
                                         </Typography>
                                         <Typography color="textSecondary">
-                                          {spot[12]}
+                                          {spot[0].parkingtype}
                                         </Typography>
                                       </Grid>
                                       <Grid item>
@@ -521,7 +502,7 @@ class SearchResult extends Component {
                                     </Grid>
                                     <Grid item>
                                       <Typography variant="subtitle1">
-                                        ${spot[11]}
+                                        ${spot[0].price}
                                       </Typography>
                                     </Grid>
                                   </Grid>
@@ -534,13 +515,13 @@ class SearchResult extends Component {
                                     Your Booking Information
                                   </DialogTitle>
                                   <DialogContent>
-                                    <p>Title: {spot[3]}</p>
-                                    <p>Address: {spot[0]}</p>
-                                    <p>City: {spot[8]}</p>
-                                    <p>State: {spot[9]}</p>
-                                    <p>Zipcode: {spot[10]}</p>
-                                    <p>Parking Type: {spot[12]}</p>
-                                    <p>Price: ${spot[11]}</p>
+                                    <p>Title: {spot[0].title}</p>
+                                    <p>Address: {spot[0].address}</p>
+                                    <p>City: {spot[0].city}</p>
+                                    <p>State: {spot[0].state}</p>
+                                    <p>Zipcode: {spot[0].zipcode}</p>
+                                    <p>Parking Type: {spot[0].parkingtype}</p>
+                                    <p>Price: ${spot[0].price}</p>
                                     {/* <p>Dates: {this.state.selectedDays}</p> */}
                                   </DialogContent>
                                   <DialogActions>
@@ -551,13 +532,13 @@ class SearchResult extends Component {
                                       onClick={event => {
                                         event.preventDefault();
                                         this.handleBookClick(
-                                          spot[7],
-                                          spot[0],
-                                          spot[3],
-                                          spot[6],
-                                          spot[8],
-                                          spot[9],
-                                          spot[10]
+                                          spot[0]._id,
+                                          spot[0].address,
+                                          spot[0].title,
+                                          spot[0].photo,
+                                          spot[0].city,
+                                          spot[0].state,
+                                          spot[10].zipcode
                                         );
                                       }}
                                     >
