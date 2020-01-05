@@ -68,7 +68,7 @@ class AddListing extends Component {
     title: "",
     parkingtype: "",
     photo: "",
-    price: 0.0,
+    price: 0,
     address: "",
     city: "",
     state: "",
@@ -115,7 +115,14 @@ class AddListing extends Component {
       address: "",
       city: "",
       state: "",
-      zipcode: ""
+      zipcode: "",
+      titleError: "",
+      parkingtypeError: "",
+      priceError: "",
+      addressError: "",
+      cityError: "",
+      stateError: "",
+      zipcodeError: ""
     });
   };
 
@@ -224,188 +231,104 @@ class AddListing extends Component {
           let location = this.state.fulladdress;
           // console.log(location);
 
-          axios
-            .get("https://maps.googleapis.com/maps/api/geocode/json", {
-              params: {
-                address: location,
-                key: "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo"
-              }
-            })
-            .then(response => {
-              var latitude = response.data.results[0].geometry.location.lat;
-              var longitude = response.data.results[0].geometry.location.lng;
-              var coordinates = { longitude, latitude };
-              var streetName =
-                response.data.results[0].address_components[1].long_name;
-              var neighborhood =
-                response.data.results[0].address_components[2].long_name;
+          this.setState(
+            {
+              fulladdress:
+                this.state.address +
+                " " +
+                this.state.city +
+                " " +
+                this.state.state +
+                " " +
+                this.state.zipcode
+            },
+            () => {
+              let location = this.state.fulladdress;
+              // console.log(location);
 
-              var typeLat = typeof latitude;
-              console.log(typeLat);
+              axios
+                .get("https://maps.googleapis.com/maps/api/geocode/json", {
+                  params: {
+                    address: location,
+                    key: "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo"
+                  }
+                })
+                .then(response => {
+                  var latitude = response.data.results[0].geometry.location.lat;
+                  var longitude =
+                    response.data.results[0].geometry.location.lng;
+                  var coordinates = { longitude, latitude };
+                  var streetName =
+                    response.data.results[0].address_components[1].long_name;
+                  var neighborhood =
+                    response.data.results[0].address_components[2].long_name;
 
-              let apiKey = "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo";
+                  var typeLat = typeof latitude;
+                  console.log(typeLat);
 
-              var queryUrl =
-                "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=" +
-                latitude +
-                "," +
-                longitude +
-                "&fov=80&heading=70&pitch=0&key=" +
-                apiKey;
+                  let apiKey = "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo";
 
-              this.setState(
-                {
-                  coordinates: coordinates,
-                  longitude: longitude,
-                  latitude: latitude,
-                  photo: queryUrl
-                },
-                () => {
-                  API.saveListing({
-                    user: this.state.user._id,
-                    title: this.state.title,
-                    parkingtype: this.state.parkingtype || "None",
-                    photo: this.state.photo,
-                    price: this.state.price || 0,
-                    address: this.state.address,
-                    city: this.state.city,
-                    state: this.state.state,
-                    zipcode: this.state.zipcode,
-                    streetName,
-                    neighborhood,
-                    location: {
-                      coordinates: [longitude, latitude]
+                  var queryUrl =
+                    "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=" +
+                    latitude +
+                    "," +
+                    longitude +
+                    "&fov=80&heading=70&pitch=0&key=" +
+                    apiKey;
+
+                  this.setState(
+                    {
+                      coordinates: coordinates,
+                      longitude: longitude,
+                      latitude: latitude,
+                      photo: queryUrl
+                    },
+                    () => {
+                      API.saveListing({
+                        user: this.state.user._id,
+                        title: this.state.title,
+                        parkingtype: this.state.parkingtype || "None",
+                        photo: this.state.photo,
+                        price: this.state.price,
+                        address: this.state.address,
+                        city: this.state.city,
+                        state: this.state.state,
+                        zipcode: this.state.zipcode,
+                        streetName,
+                        neighborhood,
+                        location: {
+                          coordinates: [longitude, latitude]
+                        }
+                      })
+                        .then(res => {
+                          this.state.selectedDays.map(date => {
+                            const listingId = res.data._id;
+
+                            API.createAvailability({
+                              date,
+                              listing: listingId
+                              // .map over all selected dates in array and create a new row in the avail collection for each date and include the the the id of listing
+                            });
+                          });
+                          this.handleClickOpen();
+                        })
+                        .catch(err => console.log(err));
                     }
-                  })
-                    .then(res => {
-                      this.state.selectedDays.map(date => {
-                        const listingId = res.data._id;
-
-                        API.createAvailability({
-                          date,
-                          listing: listingId
-                          // .map over all selected dates in array and create a new row in the avail collection for each date and include the the the id of listing
-                        });
-                      });
-                      this.handleClickOpen();
-                    })
-                    .catch(err => console.log(err));
-                }
-              );
-            });
+                  );
+                });
+            }
+          );
         }
       );
     }
   };
 
   render() {
+    console.log(this.state);
     const { classes } = this.props;
     return (
       <div>
         <Nav />
-
-        {/* <form>
-            <div className="form-group">
-              <label for="title">Title</label>
-              <input
-                value={this.state.title}
-                onChange={this.handleInputChange}
-                type="text"
-                name="title"
-                className="form-control"
-                id="title"
-                placeholder="Open driveway on quiet street"
-              />
-            </div>
-            <div className="form-row">
-              <div className="form-group col-md-6">
-                <label for="parkingtype">Parking Type</label>
-                <select
-                  className="form-control"
-                  id="parkingtype"
-                  name="parkingtype"
-                  value={this.state.parkingtype}
-                  onChange={this.handleInputChange}
-                >
-                  <option></option>
-                  <option>Garage</option>
-                  <option>Street</option>
-                  <option>Private Lot</option>
-                  <option>Driveway</option>
-                </select>
-              </div>
-
-              <div className="form-group col-md-6">
-                <label for="price">Price</label>
-                <input
-                  value={this.state.price}
-                  onChange={this.handleInputChange}
-                  type="text"
-                  className="form-control"
-                  id="price"
-                  name="price"
-                  placeholder="Enter daily price"
-                />
-              </div>
-            </div>
-            <div className="form-group">
-              <label for="address">Address</label>
-
-              <input
-                value={this.state.address}
-                onChange={this.handleInputChange}
-                type="text"
-                className="form-control"
-                name="address"
-                id="address"
-                placeholder="1234 Main St"
-              />
-            </div>
-            <div className="form-row">
-              <div className="form-group col-md-6">
-                <label for="city">City</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="city"
-                  name="city"
-                  value={this.state.city}
-                  onChange={this.handleInputChange}
-                />
-              </div>
-              <div className="form-group col-md-4">
-                <label for="state">State</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="state"
-                  name="state"
-                  value={this.state.state}
-                  onChange={this.handleInputChange}
-                />
-              </div>
-              <div className="form-group col-md-2">
-                <label for="inputZip">Zip</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="zipcode"
-                  name="zipcode"
-                  value={this.state.zipcode}
-                  onChange={this.handleInputChange}
-                />
-              </div>
-            </div>
-            <div className="form-group"></div>
-            <button
-              type="submit"
-              onClick={this.handleFormSubmit}
-              className="btn btn-primary"
-              id="addListing"
-            >
-              Add Listing
-            </button>
-          </form> */}
 
         <Grid
           container
@@ -476,6 +399,7 @@ class AddListing extends Component {
                   margin="normal"
                   variant="outlined"
                   placeholder="$"
+                  name="price"
                 />
                 <div style={{ color: "red" }}>{this.state.priceError}</div>
 
@@ -567,9 +491,9 @@ class AddListing extends Component {
                   Listing Summary
                 </DialogTitle>
                 <DialogContent>
-                <Typography>Listing is created successfully!</Typography>
+                  <Typography>Listing is created successfully!</Typography>
                 </DialogContent>
-               
+
                 <DialogActions>
                   <Button
                     onClick={() => this.handleClose()}
