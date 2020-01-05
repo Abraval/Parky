@@ -112,6 +112,8 @@ class SearchResult extends Component {
   };
   handleClose = () => {
     this.setState({ open: false });
+    
+
   };
 
   componentDidMount() {
@@ -153,13 +155,16 @@ class SearchResult extends Component {
         photo: href
       });
     }
-    this.handleClose();
+    
+    this. handleClickOpen();
+
+    
   };
 
   constructor(props) {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
-    this.handleBookClick = this.handleBookClick.bind(this);
+    
   }
 
   handleDayClick(day, { selected }) {
@@ -434,8 +439,6 @@ class SearchResult extends Component {
                                     <Grid
                                       item
                                       xs
-                                      container
-                                      direction="column"
                                       spacing={16}
                                     >
                                       <Grid item xs>
@@ -461,13 +464,18 @@ class SearchResult extends Component {
                                           color="primary"
                                           className={classes.button}
                                           aria-label="Booking Summary"
-                                          onClick={() => this.handleClickOpen(spot[7],
-                                            spot[0],
-                                            spot[3],
-                                            spot[6],
-                                            spot[8],
-                                            spot[9],
-                                            spot[10])}
+                                          onClick={event => {
+                                            event.preventDefault();
+                                            this.handleBookClick(
+                                              spot[7],
+                                              spot[0],
+                                              spot[3],
+                                              spot[6],
+                                              spot[8],
+                                              spot[9],
+                                              spot[10]
+                                            );
+                                          }}
                                         >
                                           Book Now
                                         </Button>
@@ -475,7 +483,7 @@ class SearchResult extends Component {
                                     </Grid>
                                     <Grid item>
                                       <Typography variant="subtitle1">
-                                        ${spot[11]}
+                                        {/* {spot[11]} */}
                                       </Typography>
                                     </Grid>
                                   </Grid>
@@ -488,13 +496,14 @@ class SearchResult extends Component {
                                     Your Booking Information
                                   </DialogTitle>
                                   <DialogContent>
-                                    <p>Title: {spot[3]}</p>
+                                    {/* WRONG INFO */}
+                                    {/* <p>Title: {spot[3]}</p>
                                     <p>Address: {spot[0]}</p>
                                     <p>City: {spot[8]}</p>
                                     <p>State: {spot[9]}</p>
                                     <p>Zipcode: {spot[10]}</p>
                                     <p>Parking Type: {spot[12]}</p>
-                                    <p>Price: ${spot[11]}</p>
+                                    <p>Price: ${spot[11]}</p> */}
                                     {/* <p>Dates: {this.state.selectedDays}</p> */}
                                   </DialogContent>
                                   <DialogActions>
@@ -502,27 +511,11 @@ class SearchResult extends Component {
                                       variant="outlined"
                                       color="primary"
                                       className={classes.button}
-                                      onClick={event => {
-                                        event.preventDefault();
-                                        this.handleBookClick(
-                                          spot[7],
-                                          spot[0],
-                                          spot[3],
-                                          spot[6],
-                                          spot[8],
-                                          spot[9],
-                                          spot[10]
-                                        );
-                                      }}
-                                    >
-                                      Confirm Booking
-                                    </Button>
-                                    <Button
                                       onClick={() => this.handleClose()}
                                       variant="outlined"
                                       color="secondary"
                                     >
-                                      Cancel
+                                      Confirm Booking
                                     </Button>
                                   </DialogActions>
                                 </Dialog>
