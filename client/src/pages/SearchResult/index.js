@@ -154,7 +154,7 @@ class SearchResult extends Component {
     }
   }
   handleBookClick = (id, address, title, href, city, state, zipcode) => {
-    console.log(address);
+    // console.log(address);
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
         date: this.state.selectedDays[i],
@@ -191,7 +191,7 @@ class SearchResult extends Component {
   };
   handleSubmitSearch = e => {
     e.preventDefault();
-    console.log("handleSubmitSearch");
+
     const address = this.getAddress();
     let a = this.state.selectedDays.map(i => {
       // console.log(i);
@@ -207,7 +207,9 @@ class SearchResult extends Component {
       this.setState({ markerData: [] });
       this.setState({ listings: [] });
       API.getAvailableListings(formattedDates).then(res => {
-        console.log("here", res);
+
+        // console.log("here", res);
+
         let emptyArr = []; // these are the items that we are displaying
         const datesLength = formattedDates.length;
         for (let i = 0; i < res.data.length; i++) {
@@ -242,7 +244,7 @@ class SearchResult extends Component {
 
             for (let i = 0; i < item.data.length; i++) {
 
-              console.log(listing.data[0]._id === item.data[i]._id); 
+              // console.log(listing.data[0]._id === item.data[i]._id); 
               if (listing.data[0]._id === item.data[i]._id) {
 
 
@@ -258,59 +260,46 @@ class SearchResult extends Component {
             }
 
           });
-            
+        
+
+          const data = listing.data[0];
+
+          this.setState({
+            markerData: [
+              ...this.state.markerData,
+              [
+                data.address,
+                data.location.coordinates[1],
+                data.location.coordinates[0],
+                data.title,
+                data.streetName,
+                data.neighborhood,
+                data.photo,
+                data._id,
+                data.city,
+                data.state,
+                data.zipcode,
+                data.price,
+                data.parkingtype
+              ]
+            ]
+          });
+
+
+
           })
 
         })
 
 /******************************************End******************************************/
 
-        emptyArr.map(item => {
+  
 
-          API.getListingById(item.listing).then(listing => {
-       
-            var longLatArray = [this.state.longitude, this.state.latitude];
-
-            API.getListingByIdAndProximity(longLatArray).then(data => {
-              // console.log("line 229 is: ", data);
-            });
-            // console.log("listing here", listing);
-            // Set this.state.markerData here.
-            const data = listing.data[0];
-            // console.log(data._id);
-            this.setState({
-              markerData: [
-                ...this.state.markerData,
-                [
-                  data.address,
-                  data.location.coordinates[1],
-                  data.location.coordinates[0],
-                  data.title,
-                  data.streetName,
-                  data.neighborhood,
-                  data.photo,
-                  data._id,
-                  data.city,
-                  data.state,
-                  data.zipcode,
-                  data.price,
-                  data.parkingtype
-                ]
-              ]
-            });
-          });
-        });
-        // emptyArr.map(item => {
-        //   // console.log("item is", item);
-        //   console.log(this.state.latitude);
-        //   console.log(this.state.longitude);
-        //   API.getListingByIdAndProximity(item.listing).then(listing => {
-        //     console.log(listing);
-        //   })
-        // });
+    
       });
     });
   };
+
   renderMap = () => {
     loadScript(
       "https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo&callback=initMap"
@@ -319,6 +308,9 @@ class SearchResult extends Component {
     // console.log(this.state.markerData);
   };
   initMap = () => {
+
+    console.log(this.state.latitude); 
+    console.log(this.state.longitude); 
     var map = new window.google.maps.Map(document.getElementById("map"), {
       center: { lat: this.state.latitude, lng: this.state.longitude },
       zoom: 16
@@ -376,8 +368,11 @@ class SearchResult extends Component {
     const { spacing } = this.state;
     // console.log(this.state.markerData);
     // console.log(this.state.cardsArray); 
+    // console.log(this.state); 
     return (
+     
       <div>
+         {console.log(this.state.cardsArray)}
         <Nav />
         <div className={classes.root}>
           <Grid className={classes.container} container spacing={8}>
@@ -431,9 +426,9 @@ class SearchResult extends Component {
                   ) : (
                     <div>
                       {this.state.cardsArray.map(spot => {
-                        console.log(spot[0].title); 
-                        console.log(this.state.markerData); 
-                        console.log(this.state.cardsArray); 
+                        // console.log(spot[0].title); 
+                        // console.log(this.state.markerData); 
+                        // console.log(this.state.cardsArray); 
                         return (
                           <div>
                             <div className={classes.root}>
