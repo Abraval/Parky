@@ -32,9 +32,22 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import ButtonBase from "@material-ui/core/ButtonBase";
+//Material UI Search Bar Imports
+import InputBase from "@material-ui/core/InputBase";
+import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import SearchIcon from "@material-ui/icons/Search";
+
 const styles = theme => ({
   root: {
     flexGrow: 1
+  },
+  searchBar: {
+    padding: "2px 4px",
+    margin: "8px 0",
+    display: "flex",
+    alignItems: "center"
   },
   paper: {
     padding: theme.spacing.unit * 1,
@@ -51,6 +64,9 @@ const styles = theme => ({
     paddingLeft: "8px",
     paddingRight: "8px"
   },
+  calendar: {
+    marginRight: "4px"
+  },
   calendarContainer: {
     minWidth: "250px"
   },
@@ -60,12 +76,9 @@ const styles = theme => ({
   mapContainer: {
     minWidth: "400px"
   },
-  // media: {
-  //   height: 140
-  // },
   image: {
-    width: 128,
-    height: 128
+    width: 180,
+    height: 180
   },
   img: {
     margin: "auto",
@@ -77,8 +90,15 @@ const styles = theme => ({
     margin: theme.spacing.unit
   },
   input: {
-    display: "none"
+    marginLeft: 8,
+    flex: 1
+  },
+  iconButton: {
+    padding: 10
   }
+  // input: {
+  //   display: "none"
+  // }
 });
 class SearchResult extends Component {
   state = {
@@ -323,42 +343,56 @@ class SearchResult extends Component {
         <Nav />
         <div className={classes.root}>
           <Grid className={classes.container} container spacing={8}>
-            <Grid className={classes.calendarContainer} item xs sm={2}>
+            <Grid className={classes.calendarContainer} item width={1 / 4}>
               <Paper className={classes.paper} elevation={0}>
                 <form onSubmit={this.handleSubmitSearch}>
-                  <input
-                    type="text"
-                    name="addressQuery"
-                    value={this.state.address}
-                    onChange={this.handleInputChange}
-                    placeholder="Search for your address here"
-                  />
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    id="queryAddress"
-                  >
-                    Search
-                  </button>
+                  <Paper className={classes.searchBar} elevation={1}>
+                    <InputBase
+                      className={classes.input}
+                      placeholder="Search for a spot"
+                      type="search"
+                      name="addressQuery"
+                      value={this.state.address}
+                      onChange={this.handleInputChange}
+                    />
+                    <IconButton
+                      className={classes.iconButton}
+                      aria-label="Search"
+                      type="submit"
+                      id="queryAddress"
+                    >
+                      <SearchIcon />
+                    </IconButton>
+                  </Paper>
                 </form>
-                <div>
-                  <DayPicker
-                    locale="en"
-                    selectedDays={this.state.selectedDays}
-                    onDayClick={this.handleDayClick}
-                  />
-                </div>
+
+                <Paper
+                  className={classes.calendar}
+                  elevation={0}
+                  style={{ fontFamily: "Roboto" }}
+                >
+                  <div>
+                    <DayPicker
+                      locale="en"
+                      selectedDays={this.state.selectedDays}
+                      onDayClick={this.handleDayClick}
+                    />
+                  </div>
+                </Paper>
               </Paper>
             </Grid>
             <Grid className={classes.bookingContainer} item xs>
-              <Paper className={classes.paper} elevation={0}>
+              <Paper
+                className={classes.paper}
+                elevation={0}
+                style={{ fontFamily: "Roboto" }}
+              >
                 <div>
                   {!this.state.markerData.length ? (
                     <h1 className="text-center">No Spots to Display</h1>
                   ) : (
                     <div>
                       {this.state.markerData.map(spot => {
-                        // console.log(spot, this.handleBookClick);
                         return (
                           <div>
                             <div className={classes.root}>
