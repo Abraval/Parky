@@ -129,8 +129,6 @@ class SearchResult extends Component {
   };
   handleClose = () => {
     this.setState({ open: false });
-    
-
   };
   componentDidMount() {
     this.renderMap();
@@ -167,15 +165,12 @@ class SearchResult extends Component {
         photo: href
       });
     }
-    
-    this. handleClickOpen();
 
-    
+    this.handleClickOpen();
   };
   constructor(props) {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
-    
   }
   handleDayClick(day, { selected }) {
     const { selectedDays } = this.state;
@@ -191,6 +186,7 @@ class SearchResult extends Component {
   }
   handleInputChange = event => {
     const { name, value } = event.target;
+
     this.setState({
       [name]: value
     });
@@ -359,8 +355,9 @@ class SearchResult extends Component {
                       placeholder="Search for a spot"
                       type="search"
                       name="addressQuery"
-                      value={this.state.address}
+                      value={this.state.addressQuery}
                       onChange={this.handleInputChange}
+                      disabled={false}
                     />
                     <IconButton
                       className={classes.iconButton}
@@ -430,11 +427,7 @@ class SearchResult extends Component {
                                     </ButtonBase>
                                   </Grid>
                                   <Grid item xs={12} sm container>
-                                    <Grid
-                                      item
-                                      xs
-                                      spacing={16}
-                                    >
+                                    <Grid item xs spacing={16}>
                                       <Grid item xs>
                                         <Typography
                                           gutterBottom
