@@ -33,7 +33,7 @@ export default {
     });
   },
   getListingByIdAndProximity: function(data) {
-    console.log("line 35 data is", data); 
+    console.log("line 35 data is", data);
     return axios.get("api/listing/near", {
       params: {
         data
@@ -41,9 +41,8 @@ export default {
     });
   },
   updateAvailability: function(availabilityData) {
-    console.log("updateAvailability.API availDATA", availabilityData)
-    return axios.put("api/availability", availabilityData) 
-
+    console.log("updateAvailability.API availDATA", availabilityData);
+    return axios.put("api/availability", availabilityData);
   },
   createAvailability: function(availabilityData) {
     return axios.post("api/availability", availabilityData);

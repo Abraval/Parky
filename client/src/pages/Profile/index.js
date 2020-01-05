@@ -120,7 +120,6 @@ class Profile extends Component {
           <Grid container spacing={0}>
             <Grid item xs={2}>
               <Paper className={classes.paper} square={true} elevation={0}>
-                Sidebar & Profile Image
                 <h2>Welcome back, {this.state.userName}!</h2>
               </Paper>
             </Grid>
@@ -180,22 +179,24 @@ class Profile extends Component {
               )}
               {value === 1 && (
                 <TabContainer>
-                  <Paper className={classes.paper}>
+                  <Paper className={classes.paper} elevation={0}>
                     <div>
                       <h1>RESERVATIONS</h1>
-                      {this.state.reserved.map(reserved => {
-                        if (reserved.renter === this.state.userId)
-                          return (
-                            <div>
-                              <ReservCard
-                                date={moment(reserved.date).format("LL")}
-                                address={reserved.address}
-                                title={reserved.title}
-                                photo={reserved.photo}
-                              />
-                            </div>
-                          );
-                      })}
+                      <div className={classes.cardContainer}>
+                        {this.state.reserved.map(reserved => {
+                          if (reserved.renter === this.state.userId)
+                            return (
+                              <div>
+                                <ReservCard
+                                  date={moment(reserved.date).format("LL")}
+                                  address={reserved.address}
+                                  title={reserved.title}
+                                  photo={reserved.photo}
+                                />
+                              </div>
+                            );
+                        })}
+                      </div>
                     </div>
                   </Paper>
                 </TabContainer>

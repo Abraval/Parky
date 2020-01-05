@@ -17,18 +17,18 @@ const listingSchema = new Schema({
   earning: {type: Number, unique: false, required: false, default: 0},
   earnings: {type: [{}], unique: false, required: false, default: []},
   location: {
-    type: { 
+    type: {
       type: String,
-      enum: ['Point'],
-      required: false 
-      },
+      enum: ["Point"],
+      required: false
+    },
     coordinates: {
       type: [Number]
-    } 
+    }
   }
 });
 
-listingSchema.index({location: '2dsphere'});
+// listingSchema.index({location: '2dsphere'});
 
 const Listing = mongoose.model("Listing", listingSchema);
 module.exports = Listing;

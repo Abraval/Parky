@@ -279,7 +279,6 @@ class ListingCard extends React.Component {
             cook together with your guests. Add 1 cup of frozen peas along with
             the mussels, if you like.
           </Typography>
-          {/* <DeleteIcon className={classes.icon} /> */}
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
           <IconButton
@@ -307,10 +306,6 @@ class ListingCard extends React.Component {
         <Dialog open={this.state.open} handleClickOpen={this.handleClickOpen}>
           <DialogTitle id="form-dialog-title">Edit Listing</DialogTitle>
           <DialogContent>
-            {/* <DialogContentText>
-                To subscribe to this website, please enter your email address
-                here. We will send updates occasionally.
-              </DialogContentText> */}
             <span>Title: </span>
             <TextField
               autoFocus

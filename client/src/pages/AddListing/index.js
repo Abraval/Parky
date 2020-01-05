@@ -13,6 +13,13 @@ import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+//Dialog
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 const styles = theme => ({
   container: {
@@ -70,7 +77,15 @@ class AddListing extends Component {
     fulladdress: "",
     coordinates: {},
     longitude: 0.0,
-    latitude: 0.0
+    latitude: 0.0,
+    //errors
+    titleError: "",
+    parkingtypeError: "",
+    priceError: "",
+    addressError: "",
+    cityError: "",
+    stateError: "",
+    zipcodeError: ""
   };
 
   componentDidMount() {
@@ -84,6 +99,87 @@ class AddListing extends Component {
       selectedDays: []
     };
   }
+  handleClickOpen = () => {
+    this.setState({
+      open: true
+    });
+  };
+
+  handleClose = () => {
+    this.setState({
+      open: false,
+      title: "",
+      parkingtype: "",
+      photo: "",
+      price: 0.0,
+      address: "",
+      city: "",
+      state: "",
+      zipcode: "",
+      titleError: "",
+      parkingtypeError: "",
+      priceError: "",
+      addressError: "",
+      cityError: "",
+      stateError: "",
+      zipcodeError: ""
+    });
+  };
+
+  //Validation function
+  validate = () => {
+    let titleError = "";
+    let parkingtypeError = "";
+    let priceError = "";
+    let addressError = "";
+    let cityError = "";
+    let stateError = "";
+    let zipcodeError = "";
+
+    if (!this.state.title) {
+      titleError = "can not be blank";
+    }
+    if (!this.state.parkingtype) {
+      parkingtypeError = "pick a parking type";
+    }
+    if (isNaN(this.state.price) || !this.state.price) {
+      priceError = "input a number";
+    }
+    if (!this.state.address) {
+      addressError = "no password provided";
+    }
+    if (!this.state.city) {
+      cityError = "can not be blank";
+    }
+    if (!this.state.state) {
+      stateError = "can not be blank";
+    }
+    if (isNaN(this.state.zipcode) || !this.state.zipcode) {
+      zipcodeError = "invalid zip";
+    }
+    if (
+      titleError ||
+      parkingtypeError ||
+      priceError ||
+      addressError ||
+      cityError ||
+      stateError ||
+      zipcodeError
+    ) {
+      this.setState({
+        titleError,
+        parkingtypeError,
+        priceError,
+        addressError,
+        cityError,
+        stateError,
+        zipcodeError
+      });
+      return false;
+    }
+
+    return true;
+  };
 
   handleDayClick(day, { selected }) {
     const { selectedDays } = this.state;
@@ -118,203 +214,121 @@ class AddListing extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
+    const isValid = this.validate();
+    if (isValid) {
+      this.setState(
+        {
+          fulladdress:
+            this.state.address +
+            " " +
+            this.state.city +
+            " " +
+            this.state.state +
+            " " +
+            this.state.zipcode
+        },
+        () => {
+          let location = this.state.fulladdress;
+          // console.log(location);
 
-    this.setState(
-      {
-        fulladdress:
-          this.state.address +
-          " " +
-          this.state.city +
-          " " +
-          this.state.state +
-          " " +
-          this.state.zipcode
-      },
-      () => {
-        let location = this.state.fulladdress;
-        // console.log(location);
+          this.setState(
+            {
+              fulladdress:
+                this.state.address +
+                " " +
+                this.state.city +
+                " " +
+                this.state.state +
+                " " +
+                this.state.zipcode
+            },
+            () => {
+              let location = this.state.fulladdress;
+              // console.log(location);
 
-        axios
-          .get("https://maps.googleapis.com/maps/api/geocode/json", {
-            params: {
-              address: location,
-              key: "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo"
-            }
-          })
-          .then(response => {
-            var latitude = response.data.results[0].geometry.location.lat;
-            var longitude = response.data.results[0].geometry.location.lng;
-            var coordinates = { longitude, latitude };
-            var streetName =
-              response.data.results[0].address_components[1].long_name;
-            var neighborhood =
-              response.data.results[0].address_components[2].long_name;
-
-            var typeLat = typeof latitude;
-            console.log(typeLat);
-
-            let apiKey = "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo";
-
-            var queryUrl =
-              "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=" +
-              latitude +
-              "," +
-              longitude +
-              "&fov=80&heading=70&pitch=0&key=" +
-              apiKey;
-
-            this.setState(
-              {
-                coordinates: coordinates,
-                longitude: longitude,
-                latitude: latitude,
-                photo: queryUrl
-              },
-              () => {
-                API.saveListing({
-                  user: this.state.user._id,
-                  title: this.state.title,
-                  parkingtype: this.state.parkingtype || "None",
-                  photo: this.state.photo,
-                  price: this.state.price,
-                  address: this.state.address,
-                  city: this.state.city,
-                  state: this.state.state,
-                  zipcode: this.state.zipcode,
-                  streetName,
-                  neighborhood,
-                  location: {
-                    coordinates: [longitude, latitude]
+              axios
+                .get("https://maps.googleapis.com/maps/api/geocode/json", {
+                  params: {
+                    address: location,
+                    key: "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo"
                   }
                 })
-                  .then(res => {
-                    this.state.selectedDays.map(date => {
-                      const listingId = res.data._id;
+                .then(response => {
+                  var latitude = response.data.results[0].geometry.location.lat;
+                  var longitude =
+                    response.data.results[0].geometry.location.lng;
+                  var coordinates = { longitude, latitude };
+                  var streetName =
+                    response.data.results[0].address_components[1].long_name;
+                  var neighborhood =
+                    response.data.results[0].address_components[2].long_name;
 
-                      API.createAvailability({
-                        date,
-                        listing: listingId
-                        // .map over all selected dates in array and create a new row in the avail collection for each date and include the the the id of listing
-                      });
-                    });
-                  })
-                  .catch(err => console.log(err));
-              }
-            );
-          });
-      }
-    );
+                  var typeLat = typeof latitude;
+                  console.log(typeLat);
+
+                  let apiKey = "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo";
+
+                  var queryUrl =
+                    "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=" +
+                    latitude +
+                    "," +
+                    longitude +
+                    "&fov=80&heading=70&pitch=0&key=" +
+                    apiKey;
+
+                  this.setState(
+                    {
+                      coordinates: coordinates,
+                      longitude: longitude,
+                      latitude: latitude,
+                      photo: queryUrl
+                    },
+                    () => {
+                      API.saveListing({
+                        user: this.state.user._id,
+                        title: this.state.title,
+                        parkingtype: this.state.parkingtype || "None",
+                        photo: this.state.photo,
+                        price: this.state.price,
+                        address: this.state.address,
+                        city: this.state.city,
+                        state: this.state.state,
+                        zipcode: this.state.zipcode,
+                        streetName,
+                        neighborhood,
+                        location: {
+                          coordinates: [longitude, latitude]
+                        }
+                      })
+                        .then(res => {
+                          this.state.selectedDays.map(date => {
+                            const listingId = res.data._id;
+
+                            API.createAvailability({
+                              date,
+                              listing: listingId
+                              // .map over all selected dates in array and create a new row in the avail collection for each date and include the the the id of listing
+                            });
+                          });
+                          this.handleClickOpen();
+                        })
+                        .catch(err => console.log(err));
+                    }
+                  );
+                });
+            }
+          );
+        }
+      );
+    }
   };
 
   render() {
-    console.log(this.state); 
+    console.log(this.state);
     const { classes } = this.props;
     return (
       <div>
         <Nav />
-
-        {/* <form>
-            <div className="form-group">
-              <label for="title">Title</label>
-              <input
-                value={this.state.title}
-                onChange={this.handleInputChange}
-                type="text"
-                name="title"
-                className="form-control"
-                id="title"
-                placeholder="Open driveway on quiet street"
-              />
-            </div>
-            <div className="form-row">
-              <div className="form-group col-md-6">
-                <label for="parkingtype">Parking Type</label>
-                <select
-                  className="form-control"
-                  id="parkingtype"
-                  name="parkingtype"
-                  value={this.state.parkingtype}
-                  onChange={this.handleInputChange}
-                >
-                  <option></option>
-                  <option>Garage</option>
-                  <option>Street</option>
-                  <option>Private Lot</option>
-                  <option>Driveway</option>
-                </select>
-              </div>
-
-              <div className="form-group col-md-6">
-                <label for="price">Price</label>
-                <input
-                  value={this.state.price}
-                  onChange={this.handleInputChange}
-                  type="text"
-                  className="form-control"
-                  id="price"
-                  name="price"
-                  placeholder="Enter daily price"
-                />
-              </div>
-            </div>
-            <div className="form-group">
-              <label for="address">Address</label>
-
-              <input
-                value={this.state.address}
-                onChange={this.handleInputChange}
-                type="text"
-                className="form-control"
-                name="address"
-                id="address"
-                placeholder="1234 Main St"
-              />
-            </div>
-            <div className="form-row">
-              <div className="form-group col-md-6">
-                <label for="city">City</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="city"
-                  name="city"
-                  value={this.state.city}
-                  onChange={this.handleInputChange}
-                />
-              </div>
-              <div className="form-group col-md-4">
-                <label for="state">State</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="state"
-                  name="state"
-                  value={this.state.state}
-                  onChange={this.handleInputChange}
-                />
-              </div>
-              <div className="form-group col-md-2">
-                <label for="inputZip">Zip</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="zipcode"
-                  name="zipcode"
-                  value={this.state.zipcode}
-                  onChange={this.handleInputChange}
-                />
-              </div>
-            </div>
-            <div className="form-group"></div>
-            <button
-              type="submit"
-              onClick={this.handleFormSubmit}
-              className="btn btn-primary"
-              id="addListing"
-            >
-              Add Listing
-            </button>
-          </form> */}
 
         <Grid
           container
@@ -339,6 +353,7 @@ class AddListing extends Component {
                   onChange={this.handleInputChange}
                   name="title"
                 />
+                <div style={{ color: "red" }}>{this.state.titleError}</div>
 
                 {/* // PARKING Type */}
                 <TextField
@@ -364,6 +379,9 @@ class AddListing extends Component {
                     </MenuItem>
                   ))}
                 </TextField>
+                <div style={{ color: "red" }}>
+                  {this.state.parkingtypeError}
+                </div>
 
                 {/* // PRICE */}
                 <TextField
@@ -377,11 +395,13 @@ class AddListing extends Component {
                   InputLabelProps={{
                     shrink: true
                   }}
+                  name="price"
                   margin="normal"
                   variant="outlined"
                   placeholder="$"
                   name="price"
                 />
+                <div style={{ color: "red" }}>{this.state.priceError}</div>
 
                 {/* //ADDRESS */}
                 <TextField
@@ -396,6 +416,7 @@ class AddListing extends Component {
                   onChange={this.handleInputChange}
                   name="address"
                 />
+                <div style={{ color: "red" }}>{this.state.addressError}</div>
 
                 {/* //City */}
                 <TextField
@@ -410,6 +431,7 @@ class AddListing extends Component {
                   onChange={this.handleInputChange}
                   name="city"
                 />
+                <div style={{ color: "red" }}>{this.state.cityError}</div>
 
                 {/* //State */}
                 <TextField
@@ -424,6 +446,7 @@ class AddListing extends Component {
                   onChange={this.handleInputChange}
                   name="state"
                 />
+                <div style={{ color: "red" }}>{this.state.stateError}</div>
 
                 {/* //Zip */}
                 <TextField
@@ -438,6 +461,7 @@ class AddListing extends Component {
                   name="zipcode"
                   fullWidth={true}
                 />
+                <div style={{ color: "red" }}>{this.state.zipcodeError}</div>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -458,6 +482,28 @@ class AddListing extends Component {
                 selectedDays={this.state.selectedDays}
                 onDayClick={this.handleDayClick}
               />
+
+              <Dialog
+                open={this.state.open}
+                handleClickOpen={this.handleClickOpen}
+              >
+                <DialogTitle id="form-dialog-title">
+                  Listing Summary
+                </DialogTitle>
+                <DialogContent>
+                  <Typography>Listing is created successfully!</Typography>
+                </DialogContent>
+
+                <DialogActions>
+                  <Button
+                    onClick={() => this.handleClose()}
+                    color="secondary"
+                    variant="outlined"
+                  >
+                    CLose
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </Paper>
           </Grid>
         </Grid>
