@@ -39,7 +39,10 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit * 2
   },
   avatar: {
-    margin: "0 auto"
+    margin: "0 auto",
+    marginBottom: "12px",
+    marginTop: "12px",
+    backgroundColor: theme.palette.error.main
   }
 });
 
@@ -92,31 +95,31 @@ class LoginForm extends Component {
     });
   }
 
-   // Form Validation function
+  // Form Validation function
 
-   validate = () => {
+  validate = () => {
     let usernameError = "";
     let passwordError = "";
     let firstnameError = "";
-    let lastnameError =  "";
+    let lastnameError = "";
     let emailError = "";
     // let dobError = "";
     let licenseError = "";
 
     if (!this.state.username) {
-      usernameError = "can not be blank"; 
+      usernameError = "can not be blank";
     }
     if (!this.state.firstname) {
-      firstnameError = "can not be blank"; 
+      firstnameError = "can not be blank";
     }
     if (!this.state.lastname) {
-      lastnameError = "can not be blank"; 
+      lastnameError = "can not be blank";
     }
     if (!this.state.password) {
-      passwordError = "no password provided"; 
+      passwordError = "no password provided";
     }
-    if (isNaN(this.state.license) ||  !this.state.license) {
-      licenseError = "invalid license number"
+    if (isNaN(this.state.license) || !this.state.license) {
+      licenseError = "invalid license number";
     }
     // if (isNaN(this.state.dob) ||  !this.state.dob) {
     //   dobError = "invalid date of birth"
@@ -124,8 +127,22 @@ class LoginForm extends Component {
     if (!this.state.email.includes("@") || !this.state.email) {
       emailError = "invalid email";
     }
-    if (emailError || usernameError || firstnameError || lastnameError || passwordError || licenseError) {
-      this.setState({ emailError, usernameError,firstnameError, lastnameError, passwordError, licenseError});
+    if (
+      emailError ||
+      usernameError ||
+      firstnameError ||
+      lastnameError ||
+      passwordError ||
+      licenseError
+    ) {
+      this.setState({
+        emailError,
+        usernameError,
+        firstnameError,
+        lastnameError,
+        passwordError,
+        licenseError
+      });
       return false;
     }
 
@@ -160,7 +177,6 @@ class LoginForm extends Component {
         console.log("login error: ");
         console.log(error);
       });
-  
   }
 
   handleSubmitForm(event) {
@@ -230,7 +246,7 @@ class LoginForm extends Component {
             }}
           >
             <Paper className={classes.root} elevation={1} mx="auto">
-              <Avatar className={classes.avatar}>
+              <Avatar className={classes.avatar} color="primary">
                 <LockOutlinedIcon />
               </Avatar>
               <Typography component="h1" variant="h5" align="center">
@@ -250,7 +266,7 @@ class LoginForm extends Component {
                   autoComplete="username"
                   autoFocus
                 />
-                
+
                 <TextField
                   variant="outlined"
                   margin="normal"
@@ -287,17 +303,26 @@ class LoginForm extends Component {
                   </Grid>
                 </Grid>
               </form>
+
               <Dialog
                 open={this.state.open}
                 handleClickOpen={this.handleClickOpen}
+                style={{ fontFamily: "Roboto" }}
               >
-                <DialogTitle id="form-dialog-title">Create Account</DialogTitle>
-                <DialogContent>
-                  <form className={classes.form} noValidate>
-                    <span>Username: </span>
+                <DialogTitle id="form-dialog-title">
+                  Create an Account
+                </DialogTitle>
+                <DialogContent style={{ fontFamily: "Roboto" }}>
+                  <form
+                    className={classes.container}
+                    noValidate
+                    autoComplete="off"
+                  >
                     <TextField
+                      autoFocus
+                      label="Name"
                       variant="outlined"
-                      margin="dense"
+                      margin="normal"
                       required
                       id="username"
                       name="username"
@@ -307,13 +332,11 @@ class LoginForm extends Component {
                       value={this.state.username}
                       onChange={this.handleChange}
                     />
-                    <Typography style={{ color: "red" }}>
-                      {this.state.usernameError}
-                    </Typography>
-                    <span>Password: </span>
                     <TextField
+                      label="Password"
+                      autoFocus
                       variant="outlined"
-                      margin="dense"
+                      margin="normal"
                       required
                       name="password"
                       id="password"
@@ -322,13 +345,11 @@ class LoginForm extends Component {
                       value={this.state.password}
                       onChange={this.handleChange}
                     />
-                    <Typography style={{ color: "red" }}>
-                      {this.state.passwordError}
-                    </Typography>
-                    <span>First Name: </span>
                     <TextField
+                      label="First Name"
+                      autoFocus
                       variant="outlined"
-                      margin="dense"
+                      margin="normal"
                       required
                       id="firstname"
                       name="firstname"
@@ -337,13 +358,12 @@ class LoginForm extends Component {
                       value={this.state.firstname}
                       onChange={this.handleChange}
                     />
-                    <Typography style={{ color: "red" }}>
-                      {this.state.firstnameError}
-                    </Typography>
-                    <span>Last Name: </span>
+
                     <TextField
+                      label="Last Name"
+                      autoFocus
                       variant="outlined"
-                      margin="dense"
+                      margin="normal"
                       required
                       type="text"
                       id="lastname"
@@ -353,15 +373,14 @@ class LoginForm extends Component {
                       value={this.state.lastname}
                       onChange={this.handleChange}
                     />
-                    <Typography style={{ color: "red" }}>
-                      {this.state.lastnameError}
-                    </Typography>
-                    <span>Email: </span>
+
                     <TextField
+                      label="Email Address"
+                      autoFocus
                       variant="outlined"
-                      margin="dense"
+                      margin="normal"
                       required
-                      type="email"
+                      type="text"
                       id="email"
                       name="email"
                       placeholder="email@email.com"
@@ -369,27 +388,27 @@ class LoginForm extends Component {
                       value={this.state.email}
                       onChange={this.handleChange}
                     />
-                    <Typography style={{ color: "red" }}>
-                      {this.state.emailError}
-                    </Typography>
-                    <span>Date of Birth: </span>
+
                     <TextField
+                      label="Date of Birth"
+                      autoFocus
                       variant="outlined"
-                      margin="dense"
+                      margin="normal"
                       required
                       type="text"
                       id="dob"
                       name="dob"
                       placeholder="dd/mm/yy"
-                      fullWidth
                       value={this.state.dob}
                       onChange={this.handleChange}
+                      fullWidth
                     />
-                    {/* <div style={{color:"red"}}>{this.state.dobError}</div> */}
-                    <span>Licence #: </span>
+
                     <TextField
+                      label="Driver's License ID #"
+                      autoFocus
                       variant="outlined"
-                      margin="dense"
+                      margin="normal"
                       required
                       type="password"
                       id="license"
@@ -399,43 +418,28 @@ class LoginForm extends Component {
                       value={this.state.license}
                       onChange={this.handleChange}
                     />
-                    <Typography style={{ color: "red" }}>
-                      {this.state.licenseError}
-                    </Typography>
                   </form>
                 </DialogContent>
                 <DialogActions>
                   <Button
                     onClick={() => this.handleSubmitForm()}
-                    color="primary"
+                    color="error"
                     variant="outlined"
                   >
                     Sign Up
                   </Button>
                   <Button
                     onClick={() => this.handleClose()}
-                    color="secondary"
+                    color="error"
                     variant="outlined"
                   >
                     Cancel
                   </Button>
                 </DialogActions>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} align="center" margin="normal">
-                    <Link
-                      style={{ cursor: "pointer" }}
-                      href="/signin"
-                      variant="body2"
-                    >
-                      {"Already have an account? Sign In"}
-                    </Link>
-                  </Grid>
-                </Grid>
               </Dialog>
             </Paper>
           </Grid>
         </Grid>
-
       );
     }
   }

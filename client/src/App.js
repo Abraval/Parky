@@ -1,15 +1,12 @@
 import React, { Component } from "react";
-
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import axios from "axios";
-
 import SignUp from "./pages/SignUp/index";
 import SignIn from "./pages/Signin/index";
 import Main from "./pages/Main/index";
 import AddListing from "./pages/AddListing";
 import Calendar from "./pages/Calendar";
 import Profile from "./pages/Profile";
-
 import SearchResult from "./pages/SearchResult";
 
 class App extends Component {
