@@ -33,7 +33,7 @@ const styles = theme => ({
     display: "none"
   },
   card: {
-    maxWidth: 250,
+    maxWidth: 300,
     margin: "8px"
   },
   media: {
@@ -68,7 +68,6 @@ class ReservCard extends React.Component {
     currentReservedId: this.props.id
   };
 
-
   handleDelete = id => {
     console.log("id", id);
     API.deleteAvailability(id)
@@ -81,10 +80,9 @@ class ReservCard extends React.Component {
       .catch(err => console.log(err));
   };
 
-
   render() {
     const { classes } = this.props;
-    
+
     return (
       // <Card className={classes.card}>
       //   <CardMedia
@@ -104,7 +102,6 @@ class ReservCard extends React.Component {
       //       <CancelIcon /> Cancel
       //     </IconButton>
       //   </CardActions>
-      
 
       <Card className={classes.card}>
         {console.log("kajsdkla", this.state.currentReservedId)}

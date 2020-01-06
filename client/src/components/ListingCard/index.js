@@ -25,6 +25,7 @@ import red from "@material-ui/core/colors/red";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import DateRangeIcon from "@material-ui/icons/DateRange";
+import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 
 const styles = theme => ({
   button: {
@@ -34,7 +35,8 @@ const styles = theme => ({
     display: "none"
   },
   card: {
-    maxWidth: 250,
+    minWidth: 300,
+    maxWidth: 300,
     margin: "8px"
   },
   media: {
@@ -57,6 +59,11 @@ const styles = theme => ({
   },
   avatar: {
     backgroundColor: red[500]
+  },
+  dialog: {
+    minWidth: 500,
+    minHeight: 275,
+    textAlign: "center"
   }
 });
 
@@ -289,38 +296,52 @@ class ListingCard extends React.Component {
         />
         <CardHeader title={this.props.title} subheader={this.props.address} />
         <CardContent>
-          <Typography component="p">
+          {/* <Typography component="p">
             This impressive paella is a perfect party dish and a fun meal to
             cook together with your guests. Add 1 cup of frozen peas along with
             the mussels, if you like.
-          </Typography>
+          </Typography> */}
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
           <IconButton
             aria-label="Edit Listing"
+            title="Edit"
             onClick={() => this.handleClickOpen()}
           >
             <EditIcon />
           </IconButton>
           <IconButton
             aria-label="Edit Availability"
+            title="Availability"
             onClick={() => this.handleClickOpen2()}
           >
             <DateRangeIcon />
           </IconButton>
+<<<<<<< HEAD
           <IconButton
             aria-label="Delete Listing"
             onClick={() => this.handleDelete(this.state.currentModalId)}
           >
             <DeleteIcon />
           </IconButton>
+=======
+>>>>>>> 7cab21f8645acb19ca884af7a17e4cfc86417d38
           <IconButton
-            aria-label="Edit Availability"
+            aria-label="Show Earnings"
+            title="Earnings"
             onClick={() => this.showEarning()}
           >
-            <DateRangeIcon />
+            <AttachMoneyIcon />
+          </IconButton>
+          <IconButton
+            aria-label="Delete Listing"
+            title="Delete"
+            onClick={() => this.handleDelete(this.state.currentModalId)}
+          >
+            <DeleteIcon />
           </IconButton>
         </CardActions>
+<<<<<<< HEAD
         <Dialog
           open={this.state.openEarnings}
           handleClickOpen={this.showEarning}
@@ -341,68 +362,83 @@ class ListingCard extends React.Component {
           </DialogActions>
         </Dialog>
         <Dialog open={this.state.open} handleClickOpen={this.handleClickOpen}>
+=======
+
+        <Dialog
+          open={this.state.open}
+          style={{ fontFamily: "Roboto" }}
+          handleClickOpen={this.handleClickOpen}
+        >
+>>>>>>> 7cab21f8645acb19ca884af7a17e4cfc86417d38
           <DialogTitle id="form-dialog-title">Edit Listing</DialogTitle>
           <DialogContent>
-            <span>Title: </span>
-            <TextField
-              autoFocus
-              margin="dense"
-              // id="name"
-              name="title"
-              // label="Email Address"
-              type="text"
-              fullWidth
-              value={this.state.title}
-              onChange={this.handleInputChange}
-            />
-            <span>Address: </span>
-            <TextField
-              autoFocus
-              margin="dense"
-              // id="name"
-              name="address"
-              // label="Email Address"
-              type="text"
-              fullWidth
-              value={this.state.address}
-              onChange={this.handleInputChange}
-            />
-            <span>City: </span>
-            <TextField
-              autoFocus
-              margin="dense"
-              // id="name"
-              name="city"
-              // label="Email Address"
-              type="text"
-              fullWidth
-              value={this.state.city}
-              onChange={this.handleInputChange}
-            />
-            <span>State: </span>
-            <TextField
-              autoFocus
-              margin="dense"
-              // id="name"
-              name="state"
-              // label="Email Address"
-              type="text"
-              fullWidth
-              value={this.state.state}
-              onChange={this.handleInputChange}
-            />
-            <span>Zipcode: </span>
-            <TextField
-              autoFocus
-              margin="dense"
-              // id="name"
-              name="zipcode"
-              // label="Email Address"
-              type="text"
-              fullWidth
-              value={this.state.zipcode}
-              onChange={this.handleInputChange}
-            />
+            <form className={classes.container} noValidate autoComplete="off">
+              <TextField
+                autoFocus
+                margin="dense"
+                name="title"
+                type="text"
+                fullWidth
+                value={this.state.title}
+                onChange={this.handleInputChange}
+                label="Title"
+                variant="outlined"
+              />
+
+              <TextField
+                autoFocus
+                margin="dense"
+                // id="name"
+                name="address"
+                // label="Email Address"
+                type="text"
+                fullWidth
+                value={this.state.address}
+                onChange={this.handleInputChange}
+                label="Address"
+                variant="outlined"
+              />
+
+              <TextField
+                autoFocus
+                margin="dense"
+                name="city"
+                type="text"
+                fullWidth
+                value={this.state.city}
+                onChange={this.handleInputChange}
+                label="City"
+                variant="outlined"
+              />
+
+              <TextField
+                autoFocus
+                margin="dense"
+                // id="name"
+                name="state"
+                // label="Email Address"
+                type="text"
+                fullWidth
+                value={this.state.state}
+                onChange={this.handleInputChange}
+                label="State"
+                variant="outlined"
+              />
+
+              <TextField
+                autoFocus
+                margin="dense"
+                // id="name"
+                name="zipcode"
+                // label="Email Address"
+                type="text"
+                fullWidth
+                value={this.state.zipcode}
+                onChange={this.handleInputChange}
+                label="Zipcode"
+                variant="outlined"
+              />
+            </form>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => this.handleListingUpdate()} color="primary">
@@ -413,15 +449,31 @@ class ListingCard extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
+<<<<<<< HEAD
         <Dialog
+=======
+
+        {/* This is a new dialog */}
+
+        <Dialog
+          style={{ fontFamily: "Roboto" }}
+>>>>>>> 7cab21f8645acb19ca884af7a17e4cfc86417d38
           open={this.state.openEarnings}
           handleClickOpen={this.showEarning}
         >
           <DialogTitle id="form-dialog-title">Earnings</DialogTitle>
+<<<<<<< HEAD
           <DialogContent>
             <span>Total Earnings: {this.props.earning} </span>
             <span>Last 7 Days: {this.state.lastWeekEarnings} </span>
             <span>Last 30 Days: {this.state.lastMonthEarnings} </span>
+=======
+          <DialogContent className={classes.dialog}>
+            <h4>Total Earnings: {this.props.earning} </h4>
+            <h6>Total earnings to date, incluing future bookings</h6>
+            <h4>Last 7 Days: {this.state.lastWeekEarnings} </h4>
+            <h4>Last 30 Days: {this.state.lastMonthEarnings} </h4>
+>>>>>>> 7cab21f8645acb19ca884af7a17e4cfc86417d38
           </DialogContent>
           <DialogActions>
             <Button onClick={() => console.log("Submitting")} color="primary">
@@ -432,8 +484,21 @@ class ListingCard extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
+<<<<<<< HEAD
         <Dialog open={this.state.open2} handleClickOpen={this.handleClickOpen2}>
           <DialogActions>
+=======
+
+        {/* This is a new dialog */}
+        <Dialog
+          style={{ fontFamily: "Roboto" }}
+          open={this.state.open2}
+          handleClickOpen={this.handleClickOpen2}
+        >
+          <DialogTitle id="form-dialog-title">Edit Availability</DialogTitle>
+
+          <DialogContent className={classes.dialog}>
+>>>>>>> 7cab21f8645acb19ca884af7a17e4cfc86417d38
             {/* <Button onClick={() => this.handleListingUpdate()} color="primary">
       Submit
     </Button> */}
@@ -443,6 +508,11 @@ class ListingCard extends React.Component {
                 onDayClick={this.handleDayClick}
               />
             </div>
+<<<<<<< HEAD
+=======
+          </DialogContent>
+          <DialogActions>
+>>>>>>> 7cab21f8645acb19ca884af7a17e4cfc86417d38
             <Button onClick={() => this.handleDateSubmit()} color="primary">
               Submit
             </Button>
