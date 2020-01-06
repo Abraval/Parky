@@ -54,6 +54,9 @@ class Profile extends Component {
     user: {},
     userId: "",
     userName: "",
+    firstname: "",
+    lastname: "",
+    photo: "",
     // For tabs
     value: 0
   };
@@ -71,6 +74,9 @@ class Profile extends Component {
         console.log("=======");
         this.setState({ user: res.data });
         this.setState({ userId: res.data.user._id });
+        this.setState({ firstname: res.data.user.firstname});
+        this.setState({ lastname: res.data.user.firstname});
+        this.setState({ photo: res.data.user.photo});
         this.loadListings();
         this.loadReserved();
       })
