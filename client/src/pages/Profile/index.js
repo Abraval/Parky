@@ -94,7 +94,7 @@ class Profile extends Component {
   loadReserved = () => {
     API.getReservForProf(this.state.userId)
       .then(res => {
-        this.setState({ reserved: res.data });
+        this.setState({ reserved:  res.data });
         console.log("RESERVATIONS");
         console.log(res.data);
         // let reservListId =
@@ -104,6 +104,37 @@ class Profile extends Component {
 
       .catch(err => console.log(err));
   };
+
+  loadReserved = () => {
+    API.getReservForProf(this.state.userId)
+      .then(res => {
+        this.setState({ reserved:  res.data });
+        console.log("RESERVATIONS");
+        console.log(res.data);
+        // let reservListId =
+        // console.log("RESERVATIONS");
+        // console.log(res.data);
+      })
+
+      .catch(err => console.log(err));
+  };
+  loadReserved2 = () => {
+    API.getReservForProf()
+      .then(res => {
+        this.setState({ reserved:  res.data });
+        console.log("RESERVATIONS");
+        console.log(res.data);
+        // let reservListId =
+        // console.log("RESERVATIONS");
+        // console.log(res.data);
+      })
+
+      .catch(err => console.log(err));
+  };
+  
+  
+
+
 
   handleChange = (event, value) => {
     this.setState({ value });
@@ -150,6 +181,8 @@ class Profile extends Component {
                       <h1>LISTINGS</h1>
                       <div className={classes.cardContainer}>
                         {this.state.listing.map(listing => {
+
+                  
                           if (listing.user === this.state.userId) {
                             return (
                               <div>
@@ -184,14 +217,18 @@ class Profile extends Component {
                       <h1>RESERVATIONS</h1>
                       <div className={classes.cardContainer}>
                         {this.state.reserved.map(reserved => {
+                          console.log("jknasjdnasjnd", reserved)
                           if (reserved.renter === this.state.userId)
-                            return (
+                          return (
+                      
                               <div>
                                 <ReservCard
                                   date={moment(reserved.date).format("LL")}
+                                  id={reserved._id}
                                   address={reserved.address}
                                   title={reserved.title}
                                   photo={reserved.photo}
+                                  loadReserved={this.loadReserved2}
                                 />
                               </div>
                             );

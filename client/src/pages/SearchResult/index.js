@@ -41,7 +41,8 @@ import SearchIcon from "@material-ui/icons/Search";
 
 const styles = theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    margin: "6px 0"
   },
   searchBar: {
     padding: "2px 4px",
@@ -57,7 +58,8 @@ const styles = theme => ({
     height: "100%"
   },
   card: {
-    width: "100%"
+    width: "100%",
+    margin: "8px"
   },
   container: {
     paddingTop: "8px",
@@ -131,10 +133,6 @@ class SearchResult extends Component {
 
   handleClose = () => {
     this.setState({ open: false });
-
-  
-    
-
   };
   componentDidMount() {
     this.renderMap();
@@ -162,20 +160,20 @@ class SearchResult extends Component {
   handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
     // console.log(address);
 
-    console.log("---------------------"); 
+    console.log("---------------------");
 
-    console.log("selectedDaysLength: ", this.state.selectedDays.length); 
-    console.log("id: ", id); 
-    console.log("user id: ", this.state.user._id); 
+    console.log("selectedDaysLength: ", this.state.selectedDays.length);
+    console.log("id: ", id);
+    console.log("user id: ", this.state.user._id);
     console.log("address: ", address);
-    console.log("city: ", city); 
-    console.log("state: ", state); 
-    console.log("zipcode: ", zipcode); 
-    console.log("title: ", title); 
-    console.log("price: ", price); 
-    console.log("href: ", href); 
+    console.log("city: ", city);
+    console.log("state: ", state);
+    console.log("zipcode: ", zipcode);
+    console.log("title: ", title);
+    console.log("price: ", price);
+    console.log("href: ", href);
 
-    console.log("---------------------"); 
+    console.log("---------------------");
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
         date: this.state.selectedDays[i],
@@ -185,21 +183,19 @@ class SearchResult extends Component {
         title: title,
         price: price,
         photo: href
-      }).then(res => console.log(res)); 
+      }).then(res => console.log(res));
     }
-    
-    // this.handleClickOpen();
-    
+
+    this.handleClickOpen();
   };
 
   handleDialogOpen = event => {
     this.handleClickOpen();
-  }
+  };
 
   constructor(props) {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
-    
   }
   handleDayClick(day, { selected }) {
     const { selectedDays } = this.state;
@@ -215,6 +211,7 @@ class SearchResult extends Component {
   }
   handleInputChange = event => {
     const { name, value } = event.target;
+
     this.setState({
       [name]: value
     });
@@ -237,7 +234,6 @@ class SearchResult extends Component {
       this.setState({ markerData: [] });
       this.setState({ listings: [] });
       API.getAvailableListings(formattedDates).then(res => {
-
         // console.log("here", res);
 
         let emptyArr = []; // these are the items that we are displaying
@@ -261,65 +257,52 @@ class SearchResult extends Component {
           }
         }
 
-/******************************************Start******************************************/
+        /******************************************Start******************************************/
 
         emptyArr.map(item => {
-
           API.getListingById(item.listing).then(listing => {
+            var longLatArray = [this.state.longitude, this.state.latitude];
 
-          var longLatArray = [this.state.longitude, this.state.latitude];
-          
-          API.getListingByIdAndProximity(longLatArray).then(item => {
-            console.log("line 250 is: ", item);
+            API.getListingByIdAndProximity(longLatArray).then(item => {
+              console.log("line 250 is: ", item);
 
-            for (let i = 0; i < item.data.length; i++) {
-
-              // console.log(listing.data[0]._id === item.data[i]._id); 
-              if (listing.data[0]._id === item.data[i]._id) {
-
-
-                this.setState({cardsArray: [
-                  ...this.state.cardsArray,
-                  [
-                    item.data[i]
-                  ]
-                ]})
-
+              for (let i = 0; i < item.data.length; i++) {
+                // console.log(listing.data[0]._id === item.data[i]._id);
+                if (listing.data[0]._id === item.data[i]._id) {
+                  this.setState({
+                    cardsArray: [...this.state.cardsArray, [item.data[i]]]
+                  });
+                }
               }
+            });
 
-            }
+            const data = listing.data[0];
 
-          });
-
-          const data = listing.data[0];
-
-          this.setState({
-            markerData: [
-              ...this.state.markerData,
-              [
-                data.address,
-                data.location.coordinates[1],
-                data.location.coordinates[0],
-                data.title,
-                data.streetName,
-                data.neighborhood,
-                data.photo,
-                data._id,
-                data.city,
-                data.state,
-                data.zipcode,
-                data.price,
-                data.parkingtype
+            this.setState({
+              markerData: [
+                ...this.state.markerData,
+                [
+                  data.address,
+                  data.location.coordinates[1],
+                  data.location.coordinates[0],
+                  data.title,
+                  data.streetName,
+                  data.neighborhood,
+                  data.photo,
+                  data._id,
+                  data.city,
+                  data.state,
+                  data.zipcode,
+                  data.price,
+                  data.parkingtype
+                ]
               ]
-            ]
+            });
+            
           });
+        });
 
-          })
-
-        })
-
-/******************************************End******************************************/
-
+        /******************************************End******************************************/
       });
     });
   };
@@ -335,9 +318,8 @@ class SearchResult extends Component {
   
 
   initMap = () => {
-
-    console.log(this.state.latitude); 
-    console.log(this.state.longitude); 
+    console.log(this.state.latitude);
+    console.log(this.state.longitude);
     var map = new window.google.maps.Map(document.getElementById("map"), {
       center: { lat: this.state.latitude, lng: this.state.longitude },
       zoom: 15
@@ -408,7 +390,9 @@ class SearchResult extends Component {
         // console.log(response);
         var latitude = response.data.results[0].geometry.location.lat;
         var longitude = response.data.results[0].geometry.location.lng;
-        this.setState({ latitude, longitude }, () => {this.renderMap()});
+        this.setState({ latitude, longitude }, () => {
+          this.renderMap();
+        });
         // this.renderMap();
       });
   };
@@ -417,12 +401,11 @@ class SearchResult extends Component {
     const { classes } = this.props;
     const { spacing } = this.state;
     // console.log(this.state.markerData);
-    // console.log(this.state.cardsArray); 
-    // console.log(this.state); 
+    // console.log(this.state.cardsArray);
+    // console.log(this.state);
     return (
-     
       <div>
-         {console.log(this.state.cardsArray)}
+        {console.log(this.state.cardsArray)}
         <Nav />
         <div className={classes.root}>
           <Grid className={classes.container} container spacing={8}>
@@ -435,8 +418,9 @@ class SearchResult extends Component {
                       placeholder="Search for a spot"
                       type="search"
                       name="addressQuery"
-                      value={this.state.address}
+                      value={this.state.addressQuery}
                       onChange={this.handleInputChange}
+                      disabled={false}
                     />
                     <IconButton
                       className={classes.iconButton}
@@ -476,9 +460,9 @@ class SearchResult extends Component {
                   ) : (
                     <div>
                       {this.state.cardsArray.map(spot => {
-                        // console.log(spot[0].title); 
-                        // console.log(this.state.markerData); 
-                        // console.log(this.state.cardsArray); 
+                        // console.log(spot[0].title);
+                        // console.log(this.state.markerData);
+                        // console.log(this.state.cardsArray);
                         return (
                           <div>
                             <div className={classes.root}>
@@ -510,11 +494,7 @@ class SearchResult extends Component {
                                     </ButtonBase>
                                   </Grid>
                                   <Grid item xs={12} sm container>
-                                    <Grid
-                                      item
-                                      xs
-                                      spacing={16}
-                                    >
+                                    <Grid item xs spacing={16}>
                                       <Grid item xs>
                                         <Typography
                                           gutterBottom
@@ -540,7 +520,10 @@ class SearchResult extends Component {
                                           className={classes.button}
                                           onClick={event => {
                                             event.preventDefault();
-                                            console.log("SearchResult.buttonhandelick spot", spot)
+                                            console.log(
+                                              "SearchResult.buttonhandelick spot",
+                                              spot
+                                            );
                                             this.handleDialogOpen();
                                           }}
                                         >
@@ -598,7 +581,7 @@ class SearchResult extends Component {
                                       variant="outlined"
                                       color="secondary"
                                     >
-                                     Close
+                                      Close
                                     </Button>
                                   </DialogActions>
                                 </Dialog>
@@ -637,5 +620,3 @@ function loadScript(url) {
   index.parentNode.insertBefore(script, index);
 }
 export default withStyles(styles)(SearchResult);
-
-

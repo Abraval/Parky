@@ -1,0 +1,11 @@
+@import url("https://fonts.googleapis.com/css?family=Galada|Roboto&display=swap");
+.DayPicker {
+  margin: 0 auto;
+}
+
+ul {
+  list-style: none;
+  font-family: Roboto;
+  font-weight: bold;
+  margin: 2px;
+}
