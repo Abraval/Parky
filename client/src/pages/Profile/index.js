@@ -200,11 +200,11 @@ class Profile extends Component {
             fontSize: "18px"
           }}
         >
-          <img
-            src="https://cdn0.iconfinder.com/data/icons/user-collection-4/512/user-512.png"
-            width="200"
+          <img width = "200"
+            src={!this.state.photo ?  ("https://cdn0.iconfinder.com/data/icons/user-collection-4/512/user-512.png"): (this.state.photo)
+            } 
           />
-          <h3>Welcome back, !</h3>
+  <h3>Welcome back, {this.state.firstname}!</h3>
           {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>
