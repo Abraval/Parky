@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
 const passport = require('../client/src/utils/passport')
+const listingController = require('../controllers/listingController')
 
 router.post('/', (req, res) => {
     console.log('user signup');
@@ -52,17 +53,21 @@ router.post(
     }
 )
 
-router.get('/', (req, res, next) => {
-    console.log(req.user)
-    if (req.user) {
-        res.json({ 
-            user: req.user,
-        userId: req.user._id    
-        })
-    } else {
-        res.json({ user: null })
-    }
-})
+router.route("/").get(listingController.findUser)
+
+// router.get('/', (req, res) => {
+    
+//     console.log(req.user)
+//     if (req.user) {
+        // res.json({ 
+        //     user: req.user,
+        //     userId: req.user._id,
+        //     firstname: req.user.firstname,
+        // })
+//     } else {
+//         res.json({ user: null })
+//     }
+// })
 
 router.post('/logout', (req, res) => {
     if (req.user) {

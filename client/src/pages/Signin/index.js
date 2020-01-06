@@ -214,6 +214,7 @@ class LoginForm extends Component {
           if (!response.data.errmsg) {
             console.log("successful signup");
             this.setState({ open: false });
+
           } else {
             console.log("username already taken");
           }

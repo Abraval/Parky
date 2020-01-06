@@ -89,6 +89,9 @@ class Profile extends Component {
     user: {},
     userId: "",
     userName: "",
+    firstname: "",
+    lastname: "",
+    photo: "",
     // For tabs
     value: 0,
     mobileOpen: false
@@ -107,6 +110,9 @@ class Profile extends Component {
         console.log("=======");
         this.setState({ user: res.data });
         this.setState({ userId: res.data.user._id });
+        this.setState({ firstname: res.data.user.firstname});
+        this.setState({ lastname: res.data.user.firstname});
+        this.setState({ photo: res.data.user.photo});
         this.loadListings();
         this.loadReserved();
       })
@@ -192,11 +198,11 @@ class Profile extends Component {
             fontSize: "18px"
           }}
         >
-          <img
-            src="https://cdn0.iconfinder.com/data/icons/user-collection-4/512/user-512.png"
-            width="200"
+          <img width = "200"
+            src={!this.state.photo ?  ("https://cdn0.iconfinder.com/data/icons/user-collection-4/512/user-512.png"): (this.state.photo)
+            } 
           />
-          <h3>Welcome back, !</h3>
+  <h3>Welcome back, {this.state.firstname}!</h3>
           {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>
