@@ -350,11 +350,14 @@ class SearchResult extends Component {
       i;
     // We will need to change this
     var contentString = this.state.address;
+
     for (i = 0; i < this.state.markerData.length; i++) {
       var position = new window.google.maps.LatLng(
         this.state.markerData[i][1],
         this.state.markerData[i][2]
       );
+
+      console.log(this.state.markerData[i]); 
       // bounds.extend(position);
       // console.log("position", position);
       marker = new window.google.maps.Marker({
@@ -366,9 +369,10 @@ class SearchResult extends Component {
       window.google.maps.event.addListener(
         marker,
         "click",
-        (function(marker, i) {
-          return function() {
-            // infoWindow.setContent(infoWindow[i][0]);
+        ((marker, i) => {
+          return () => {
+            console.log(this.state.markerData[i][6]); 
+            infoWindow.setContent("<img src=" + this.state.markerData[i][6] + " />");
             infoWindow.open(map, marker);
           };
         })(marker, i)
