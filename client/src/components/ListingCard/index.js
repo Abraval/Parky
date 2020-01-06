@@ -197,6 +197,7 @@ class ListingCard extends React.Component {
       this.props.loadListings()
     })
       .catch(err => console.log(err));
+    
   };
 
   processEarnings = earnings => {

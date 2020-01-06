@@ -48,6 +48,7 @@ export default {
     return axios.post("api/availability", availabilityData);
   },
   deleteAvailability: function(id) {
+    console.log("ksmdkamsd", id)
     return axios.delete(`/api/availability/${id}`);
   },
   getAvailableListings: function(dates) {

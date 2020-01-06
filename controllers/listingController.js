@@ -219,6 +219,7 @@ module.exports = {
     .catch(err => res.status(422).json(err));
   },
   deleteAvailability: function(req, res) {
+    console.log("req.params deleteAvailability", req.params)
     const {id} = req.params
     db.Availability.deleteOne({_id: id})
     .then(dbModel => res.json(dbModel))
