@@ -360,8 +360,10 @@ class SearchResult extends Component {
       console.log(this.state.markerData[i]); 
       // bounds.extend(position);
       // console.log("position", position);
+      let iconBase = "https://developers.google.com/maps/documentation/javascript/examples/full/images/"; 
       marker = new window.google.maps.Marker({
         position: position,
+        icon: "https://img.icons8.com/color/40/000000/car.png",
         map: map,
         title: this.state.markerData[i][0]
       });
@@ -371,14 +373,13 @@ class SearchResult extends Component {
         "click",
         ((marker, i) => {
           return () => {
-            console.log(this.state.markerData[i][6]); 
-            infoWindow.setContent("<img src=" + this.state.markerData[i][6] + " />");
+            console.log(this.state.markerData[i]); 
+            infoWindow.setContent("<img width='100px' src=" + this.state.markerData[i][6] + " />" + "</br>" + "<p>" + this.state.markerData[i][0] + "</p>" + "<p> Type: " + this.state.markerData[i][12] + "</p>" );
             infoWindow.open(map, marker);
           };
         })(marker, i)
       );
     }
-
 
     var circle = new window.google.maps.Circle({
       map: map,
