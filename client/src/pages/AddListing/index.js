@@ -395,7 +395,8 @@ class AddListing extends Component {
                               // .map over all selected dates in array and create a new row in the avail collection for each date and include the the the id of listing
                             });
                           });
-                          this.handleClickOpen();
+                          // this.handleClickOpen();
+                          this.handleClose();
                         })
                         .catch(err => console.log(err));
                     }
@@ -434,16 +435,7 @@ class AddListing extends Component {
               </Stepper>
               <React.Fragment>
                 {this.state.activeStep === steps.length ? (
-                  <React.Fragment>
-                    <Typography variant="h5" gutterBottom>
-                      Thank you for your order.
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      Your order number is #2001539. We have emailed your order
-                      confirmation, and will send you an update when your order
-                      has shipped.
-                    </Typography>
-                  </React.Fragment>
+                  <React.Fragment></React.Fragment>
                 ) : (
                   <React.Fragment>
                     {console.log(this.state.activeStep)}
