@@ -621,7 +621,8 @@ class SearchResult extends Component {
                                   <DialogTitle id="form-dialog-title">
                                     Your Booking Information
                                   </DialogTitle>
-                                  <DialogContent>
+                                  <DialogContent
+                                   >
                                     <p>Title: {spot[0].title}</p>
                                     <p>Address: {spot[0].address}</p>
                                     <p>City: {spot[0].city}</p>
