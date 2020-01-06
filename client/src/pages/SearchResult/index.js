@@ -290,7 +290,6 @@ class SearchResult extends Component {
             }
 
           });
-        
 
           const data = listing.data[0];
 
@@ -315,17 +314,12 @@ class SearchResult extends Component {
             ]
           });
 
-
-
           })
 
         })
 
 /******************************************End******************************************/
 
-  
-
-    
       });
     });
   };
@@ -337,6 +331,9 @@ class SearchResult extends Component {
     window.initMap = this.initMap;
     // console.log(this.state.markerData);
   };
+
+  
+
   initMap = () => {
 
     console.log(this.state.latitude); 
@@ -375,7 +372,17 @@ class SearchResult extends Component {
         })(marker, i)
       );
     }
+
+
+    var circle = new window.google.maps.Circle({
+      map: map,
+      radius: 500,    // 10 miles in metres
+      fillColor: '#FFF4B8'
+    });
+    circle.bindTo('center', marker, 'position');
+
   };
+
   getAddress = async () => {
     let location = this.state.addressQuery;
     axios
@@ -393,6 +400,7 @@ class SearchResult extends Component {
         // this.renderMap();
       });
   };
+
   render() {
     const { classes } = this.props;
     const { spacing } = this.state;
