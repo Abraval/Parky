@@ -29,6 +29,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 const drawerWidth = 240;
 
@@ -59,7 +60,7 @@ const styles = theme => ({
     margin: "auto",
     textAlign: "center",
     color: theme.palette.text.secondary,
-    height: "100%"
+    height: "75vh"
   },
   cardContainer: {
     display: "flex",
@@ -71,7 +72,8 @@ const styles = theme => ({
   },
   drawer: {
     width: drawerWidth,
-    flexShrink: 0
+    flexShrink: 0,
+    textAlign: "center"
   },
   drawerPaper: {
     width: drawerWidth
@@ -184,17 +186,29 @@ class Profile extends Component {
       <div>
         <div className={classes.toolbar} />
         <Divider />
-        <List>
+
+        <List
+          style={{
+            fontFamily: "Roboto",
+            color: "#545454",
+            fontSize: "18px"
+          }}
+        >
+          <img
+            src="https://cdn0.iconfinder.com/data/icons/user-collection-4/512/user-512.png"
+            width="200"
+          />
+          <h3>Welcome back, !</h3>
           {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                <ExitToAppIcon />
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
           ))}
         </List>
-        <Divider />
+        {/* <Divider />
         <List>
           {["All mail", "Trash", "Spam"].map((text, index) => (
             <ListItem button key={text}>
@@ -204,7 +218,7 @@ class Profile extends Component {
               <ListItemText primary={text} />
             </ListItem>
           ))}
-        </List>
+        </List> */}
       </div>
     );
 
@@ -338,70 +352,6 @@ class Profile extends Component {
     );
   }
 }
-
-//   render() {
-//     console.log("##################");
-//     console.log(this.state.listing.length);
-//     console.log(
-//       this.state.listing.filter(item =>
-//         console.log(item.user === this.state.userId)
-//       )
-//     );
-//     console.log(this.state.userId);
-//     return (
-//       <div>
-//         {console.log(this.state.listing)}
-//         <Nav />
-//         {/* <h2>Welcome back, {this.state.userName}!</h2> */}
-
-//         {this.state.listing
-//           // .filter(listing => listing.user._id === this.state.user.user._id)
-//           .map(listing => {
-//             if (listing.user === this.state.userId) {
-//               return (
-//                 <div>
-//                   <h1>LISTINGS</h1>
-//                   <ListingCard
-//                     key={listing._id}
-//                     id={listing._id}
-//                     title={listing.title}
-//                     photo={listing.photo}
-//                     address={listing.address}
-//                     city={listing.city}
-//                     state={listing.state}
-//                     zipcode={listing.zipcode}
-//                     handleEditListing={this.handleEditListing}
-//                     handleAvailListing={this.handleAvailListing}
-//                   />
-//                 </div>
-//               );
-//             }
-//           })}
-
-//         {this.state.reserved.map(reserved => {
-//           if (reserved.renter === this.state.userId)
-//             // {this.state.listings.map(listing) => {
-//             //   if(listing._id === reserved.listing)
-
-//             return (
-//               <div>
-//                 <h1>RESERVATIONS</h1>
-
-//                 <ReservCard
-
-//                   date = {moment(reserved.date).format('LL')}
-//                   address={reserved.address}
-//                   title={reserved.title}
-//                   photo={reserved.photo}
-//                 />
-//               </div>
-//             );
-//         })}
-//         {/* })} */}
-//       </div>
-//     );
-//   }
-// }
 
 Profile.propTypes = {
   classes: PropTypes.object.isRequired
