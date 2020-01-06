@@ -156,14 +156,9 @@ class SearchResult extends Component {
       // this.renderCards();
     }
   }
-<<<<<<< HEAD
-  handleBookClick = (id, address, title, href, city, state, zipcode) => {
-    // console.log(address);
-=======
 
   handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
     console.log("SearchResults.handleBookClick price", price, "SearchResults.handleBookClick id", id, "SearchResults.handleBookClick address", address, "SearchResults.handleBookClick title", title, "SearchResults.handleBookClick HREF", href);
->>>>>>> 5ec4c8ee75bdc0b7550691bf9bf4565a991b9f08
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
         date: this.state.selectedDays[i],
@@ -439,15 +434,10 @@ class SearchResult extends Component {
                     <h1 className="text-center">No Spots to Display</h1>
                   ) : (
                     <div>
-<<<<<<< HEAD
                       {this.state.cardsArray.map(spot => {
                         // console.log(spot[0].title); 
                         // console.log(this.state.markerData); 
                         // console.log(this.state.cardsArray); 
-=======
-                      {this.state.markerData.map(spot => {
-                        console.log(spot, this.handleBookClick);
->>>>>>> 5ec4c8ee75bdc0b7550691bf9bf4565a991b9f08
                         return (
                           <div>
                             <div className={classes.root}>
@@ -550,11 +540,7 @@ class SearchResult extends Component {
                                     </Grid>
                                     <Grid item>
                                       <Typography variant="subtitle1">
-<<<<<<< HEAD
                                         ${spot[0].price}
-=======
-                                        {/* {spot[11]} */}
->>>>>>> 5ec4c8ee75bdc0b7550691bf9bf4565a991b9f08
                                       </Typography>
                                     </Grid>
                                   </Grid>
@@ -567,7 +553,6 @@ class SearchResult extends Component {
                                     Your Booking Information
                                   </DialogTitle>
                                   <DialogContent>
-<<<<<<< HEAD
                                     <p>Title: {spot[0].title}</p>
                                     <p>Address: {spot[0].address}</p>
                                     <p>City: {spot[0].city}</p>
@@ -575,19 +560,6 @@ class SearchResult extends Component {
                                     <p>Zipcode: {spot[0].zipcode}</p>
                                     <p>Parking Type: {spot[0].parkingtype}</p>
                                     <p>Price: ${spot[0].price}</p>
-=======
-                                    {console.log(spot)}
-                                    <p>Title: {spot[3]}</p>
-                                    {/* WRONG INFO */}
-                                    {/* <p>Title: {spot[3]}</p>
-                                    <p>Address: {spot[0]}</p>
-                                    <p>City: {spot[8]}</p>
-                                    <p>State: {spot[9]}</p>
-                                    <p>Zipcode: {spot[10]}</p>
-                                    <p>Parking Type: {spot[12]}</p>
-                                    <p>Price: ${spot[11]  * this.state.selectedDays.length}</p>
-                                    <p>Price: ${spot[11]}</p> */}
->>>>>>> 5ec4c8ee75bdc0b7550691bf9bf4565a991b9f08
                                     {/* <p>Dates: {this.state.selectedDays}</p> */}
                                   </DialogContent>
                                   <DialogActions>
@@ -598,24 +570,13 @@ class SearchResult extends Component {
                                       onClick={event => {
                                         event.preventDefault();
                                         this.handleBookClick(
-<<<<<<< HEAD
                                           spot[0]._id,
                                           spot[0].address,
                                           spot[0].title,
                                           spot[0].photo,
                                           spot[0].city,
                                           spot[0].state,
-                                          spot[10].zipcode
-=======
-                                          spot[7],
-                                          spot[0],
-                                          spot[3],
-                                          spot[6],
-                                          spot[8],
-                                          spot[9],
-                                          spot[10],
-                                          spot[11]
->>>>>>> 5ec4c8ee75bdc0b7550691bf9bf4565a991b9f08
+                                          spot[0].zipcode
                                         );
                                       }}
                                     >

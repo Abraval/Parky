@@ -67,6 +67,7 @@ class ReservCard extends React.Component {
     photo: this.props.photo
   };
 
+
   render() {
     const { classes } = this.props;
     return (
