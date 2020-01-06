@@ -342,6 +342,8 @@ class SearchResult extends Component {
       center: { lat: this.state.latitude, lng: this.state.longitude },
       zoom: 15
     });
+
+
     // Create An InfoWindow
     var infoWindow = new window.google.maps.InfoWindow(),
       marker,
@@ -377,9 +379,14 @@ class SearchResult extends Component {
     var circle = new window.google.maps.Circle({
       map: map,
       radius: 500,    // 10 miles in metres
-      fillColor: '#FFF4B8'
+      fillColor: '#FFF4B8',
+      strokeColor: "#FF0000",
+      strokeWeight: 0.5,
+      center: {lat: this.state.latitude, lng: this.state.longitude}
     });
-    circle.bindTo('center', marker, 'position');
+    console.log(marker); 
+
+    // circle.bindTo('center', marker, 'position');
 
   };
 
