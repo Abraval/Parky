@@ -64,11 +64,27 @@ class ReservCard extends React.Component {
     date: this.props.date,
     address: this.props.address,
     title: this.props.title,
-    photo: this.props.photo
+    photo: this.props.photo,
+    currentModalId: this.props.id
   };
+
+
+  handleDelete = id => {
+    console.log("id", id);
+    API.deleteAvailability(id)
+    .then(res => {
+      console.log(res)
+      // this.props.loadReserved2()
+      console.log(this); 
+    
+    })
+      .catch(err => console.log(err));
+  };
+
 
   render() {
     const { classes } = this.props;
+    
     return (
       // <Card className={classes.card}>
       //   <CardMedia
@@ -88,8 +104,10 @@ class ReservCard extends React.Component {
       //       <CancelIcon /> Cancel
       //     </IconButton>
       //   </CardActions>
+      
 
       <Card className={classes.card}>
+        {console.log("kajsdkla", this.state.currentModalId)}
         <CardMedia
           className={classes.media}
           image={this.props.photo}
@@ -103,7 +121,7 @@ class ReservCard extends React.Component {
           <Button
             variant="contained"
             className={classes.button}
-            onClick={() => this.handleClickOpen()}
+            onClick={() => this.handleDelete(this.state.currentModalId)}
           >
             Cancel Reservation
           </Button>
