@@ -105,32 +105,7 @@ class Profile extends Component {
       .catch(err => console.log(err));
   };
 
-  loadReserved = () => {
-    API.getReservForProf(this.state.userId)
-      .then(res => {
-        this.setState({ reserved:  res.data });
-        console.log("RESERVATIONS");
-        console.log(res.data);
-        // let reservListId =
-        // console.log("RESERVATIONS");
-        // console.log(res.data);
-      })
-
-      .catch(err => console.log(err));
-  };
-  loadReserved2 = () => {
-    API.getReservForProf()
-      .then(res => {
-        this.setState({ reserved:  res.data });
-        console.log("RESERVATIONS");
-        console.log(res.data);
-        // let reservListId =
-        // console.log("RESERVATIONS");
-        // console.log(res.data);
-      })
-
-      .catch(err => console.log(err));
-  };
+  
   
   
 
@@ -228,7 +203,7 @@ class Profile extends Component {
                                   address={reserved.address}
                                   title={reserved.title}
                                   photo={reserved.photo}
-                                  loadReserved={this.loadReserved2}
+                                  loadReserved={this.loadReserved}
                                 />
                               </div>
                             );
