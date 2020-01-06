@@ -79,7 +79,6 @@ class Nav extends Component {
 
   render() {
     const { classes } = this.props;
-
     return (
       <div className={classes.root}>
         <AppBar

@@ -2,7 +2,7 @@ import axios from "axios";
 
 export default {
   saveListing: function(listingData) {
-    console.log(listingData);
+    // console.log(listingData);
     return axios.post("/api/listing", listingData);
   },
   getUser: function() {
@@ -15,7 +15,7 @@ export default {
     return axios.get("/api/listing/profile");
   },
   getReservForProf: function(id) {
-    console.log(id);
+    // console.log(id);
     return axios.get("/api/listing/reserved/");
   },
   getReservById: function(id) {
@@ -33,7 +33,7 @@ export default {
     });
   },
   getListingByIdAndProximity: function(data) {
-    console.log("line 35 data is", data);
+    // console.log("line 35 data is", data);
     return axios.get("api/listing/near", {
       params: {
         data
@@ -48,6 +48,7 @@ export default {
     return axios.post("api/availability", availabilityData);
   },
   deleteAvailability: function(id) {
+    console.log("ksmdkamsd", id)
     return axios.delete(`/api/availability/${id}`);
   },
   getAvailableListings: function(dates) {
@@ -58,7 +59,7 @@ export default {
     });
   },
   editListing: function(listing) {
-    console.log("API.editListing listing", listing);
+    // console.log("API.editListing listing", listing);
     return axios.put("api/listing/profile", { listing });
   },
   deleteListing: function(id) {
