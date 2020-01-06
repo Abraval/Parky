@@ -48,19 +48,17 @@ TabContainer.propTypes = {
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    // paddingTop: "6px",
     display: "flex"
   },
   tabs: {
     flexGrow: 1
-    // paddingTop: "6px"
   },
   paper: {
     padding: theme.spacing.unit * 1,
     margin: "auto",
     textAlign: "center",
     color: theme.palette.text.secondary,
-    height: "75vh"
+    height: "100%"
   },
   cardContainer: {
     display: "flex",

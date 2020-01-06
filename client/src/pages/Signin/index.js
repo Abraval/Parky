@@ -333,7 +333,7 @@ class LoginForm extends Component {
                   >
                     <TextField
                       autoFocus
-                      label="Name"
+                      label="zz"
                       variant="outlined"
                       margin="normal"
                       required

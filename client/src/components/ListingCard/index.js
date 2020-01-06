@@ -428,11 +428,8 @@ class ListingCard extends React.Component {
             <h4>Last 30 Days: {this.state.lastMonthEarnings} </h4>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => console.log("Submitting")} color="primary">
-              Submit
-            </Button>
             <Button onClick={() => this.hideEarning()} color="secondary">
-              Cancel
+              Close
             </Button>
           </DialogActions>
         </Dialog>
