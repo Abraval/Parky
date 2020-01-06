@@ -153,9 +153,11 @@ class SearchResult extends Component {
   }
   componentDidUpdate(prevProps, props) {
 
-    console.log(prevProps); 
-    console.log(props); 
+    // console.log(prevProps); 
+    // console.log(props); 
     if (this.state.markerData !== props.markerData) {
+
+      console.log("componentDidUpdate called"); 
       this.renderMap();
       // this.renderCards();
     }
@@ -237,9 +239,24 @@ class SearchResult extends Component {
 
   };
 
+  // functionA = () => {
+  //   var listingsPromise = new Promise((resolve, reject) => {
+  //     console.log("listing Promise called"); 
+  //     resolve(this.findRelevantListings()); 
+  //   }) 
+
+  //   listingsPromise.then(res => {
+
+  //     console.log(".then of listing Promise called"); 
+  //     this.renderMap(); 
+
+  //   })
+
+  // }
+
+
 
   findRelevantListings = () => {
-
 
 
       console.log("addres.then(data => is called")
@@ -438,6 +455,7 @@ class SearchResult extends Component {
           console.log("inside the callback for this.setState latitude and longitude"); 
           // this.renderMap();
           this.findRelevantListings(); 
+          // this.functionA(); 
         });
         // this.renderMap();
       });
