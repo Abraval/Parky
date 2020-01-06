@@ -317,15 +317,6 @@ class ListingCard extends React.Component {
           >
             <DateRangeIcon />
           </IconButton>
-<<<<<<< HEAD
-          <IconButton
-            aria-label="Delete Listing"
-            onClick={() => this.handleDelete(this.state.currentModalId)}
-          >
-            <DeleteIcon />
-          </IconButton>
-=======
->>>>>>> 7cab21f8645acb19ca884af7a17e4cfc86417d38
           <IconButton
             aria-label="Show Earnings"
             title="Earnings"
@@ -341,35 +332,12 @@ class ListingCard extends React.Component {
             <DeleteIcon />
           </IconButton>
         </CardActions>
-<<<<<<< HEAD
-        <Dialog
-          open={this.state.openEarnings}
-          handleClickOpen={this.showEarning}
-        >
-          <DialogTitle id="form-dialog-title">Earnings</DialogTitle>
-          <DialogContent>
-            <span>Total Earnings: {this.props.earning} </span>
-            <span>Last 7 Days: {this.state.lastWeekEarnings} </span>
-            <span>Last 30 Days: {this.state.lastMonthEarnings} </span>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => console.log("Submitting")} color="primary">
-              Submit
-            </Button>
-            <Button onClick={() => this.handleDelete(this.state.currentModalId)} color="secondary">
-              Cancel
-            </Button>
-          </DialogActions>
-        </Dialog>
-        <Dialog open={this.state.open} handleClickOpen={this.handleClickOpen}>
-=======
 
         <Dialog
           open={this.state.open}
           style={{ fontFamily: "Roboto" }}
           handleClickOpen={this.handleClickOpen}
         >
->>>>>>> 7cab21f8645acb19ca884af7a17e4cfc86417d38
           <DialogTitle id="form-dialog-title">Edit Listing</DialogTitle>
           <DialogContent>
             <form className={classes.container} noValidate autoComplete="off">
@@ -449,31 +417,20 @@ class ListingCard extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
-<<<<<<< HEAD
-        <Dialog
-=======
 
         {/* This is a new dialog */}
 
         <Dialog
           style={{ fontFamily: "Roboto" }}
->>>>>>> 7cab21f8645acb19ca884af7a17e4cfc86417d38
           open={this.state.openEarnings}
           handleClickOpen={this.showEarning}
         >
           <DialogTitle id="form-dialog-title">Earnings</DialogTitle>
-<<<<<<< HEAD
-          <DialogContent>
-            <span>Total Earnings: {this.props.earning} </span>
-            <span>Last 7 Days: {this.state.lastWeekEarnings} </span>
-            <span>Last 30 Days: {this.state.lastMonthEarnings} </span>
-=======
           <DialogContent className={classes.dialog}>
             <h4>Total Earnings: {this.props.earning} </h4>
             <h6>Total earnings to date, incluing future bookings</h6>
             <h4>Last 7 Days: {this.state.lastWeekEarnings} </h4>
             <h4>Last 30 Days: {this.state.lastMonthEarnings} </h4>
->>>>>>> 7cab21f8645acb19ca884af7a17e4cfc86417d38
           </DialogContent>
           <DialogActions>
             <Button onClick={() => console.log("Submitting")} color="primary">
@@ -484,10 +441,6 @@ class ListingCard extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
-<<<<<<< HEAD
-        <Dialog open={this.state.open2} handleClickOpen={this.handleClickOpen2}>
-          <DialogActions>
-=======
 
         {/* This is a new dialog */}
         <Dialog
@@ -498,7 +451,6 @@ class ListingCard extends React.Component {
           <DialogTitle id="form-dialog-title">Edit Availability</DialogTitle>
 
           <DialogContent className={classes.dialog}>
->>>>>>> 7cab21f8645acb19ca884af7a17e4cfc86417d38
             {/* <Button onClick={() => this.handleListingUpdate()} color="primary">
       Submit
     </Button> */}
@@ -508,11 +460,8 @@ class ListingCard extends React.Component {
                 onDayClick={this.handleDayClick}
               />
             </div>
-<<<<<<< HEAD
-=======
           </DialogContent>
           <DialogActions>
->>>>>>> 7cab21f8645acb19ca884af7a17e4cfc86417d38
             <Button onClick={() => this.handleDateSubmit()} color="primary">
               Submit
             </Button>

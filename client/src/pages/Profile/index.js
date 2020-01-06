@@ -143,13 +143,6 @@ class Profile extends Component {
       .catch(err => console.log(err));
   };
 
-<<<<<<< HEAD
-  
-  
-  
-
-
-=======
   loadReserved = () => {
     API.getReservForProf(this.state.userId)
       .then(res => {
@@ -176,7 +169,6 @@ class Profile extends Component {
 
       .catch(err => console.log(err));
   };
->>>>>>> 7cab21f8645acb19ca884af7a17e4cfc86417d38
 
   handleChange = (event, value) => {
     this.setState({ value });
@@ -268,61 +260,6 @@ class Profile extends Component {
         <main className={classes.content}>
           <div className={classes.toolbar} />
 
-<<<<<<< HEAD
-                  
-                          if (listing.user === this.state.userId) {
-                            return (
-                              <div>
-                                <ListingCard
-                                  loadListings={this.loadListings}
-                                  key={listing._id}
-                                  id={listing._id}
-                                  title={listing.title}
-                                  photo={listing.photo}
-                                  address={listing.address}
-                                  earning={listing.earning}
-                                  earnings={listing.earnings}
-                                  city={listing.city}
-                                  state={listing.state}
-                                  zipcode={listing.zipcode}
-                                  handleEditListing={this.handleEditListing}
-                                  handleAvailListing={this.handleAvailListing}
-                                />
-                              </div>
-                            );
-                          }
-                        })}
-                      </div>
-                    </div>
-                  </Paper>
-                </TabContainer>
-              )}
-              {value === 1 && (
-                <TabContainer>
-                  <Paper className={classes.paper} elevation={0}>
-                    <div>
-                      <h1>RESERVATIONS</h1>
-                      <div className={classes.cardContainer}>
-                        {this.state.reserved.map(reserved => {
-                          console.log("jknasjdnasjnd", reserved)
-                          if (reserved.renter === this.state.userId)
-                          return (
-                      
-                              <div>
-                                <ReservCard
-                                  date={moment(reserved.date).format("LL")}
-                                  id={reserved._id}
-                                  address={reserved.address}
-                                  title={reserved.title}
-                                  photo={reserved.photo}
-                                  loadReserved={this.loadReserved}
-                                />
-                              </div>
-                            );
-                        })}
-                      </div>
-                    </div>
-=======
           <div>
             <div className={classes.root}>
               <Grid container spacing={0}>
@@ -340,7 +277,6 @@ class Profile extends Component {
                       <Tab label="Listings" />
                       <Tab label="Reservations" />
                     </Tabs>
->>>>>>> 7cab21f8645acb19ca884af7a17e4cfc86417d38
                   </Paper>
                   {/* End Tabs Menu// */}
                   {console.log(this.value)}
