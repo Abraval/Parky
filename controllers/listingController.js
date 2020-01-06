@@ -230,4 +230,15 @@ module.exports = {
     .then(dbModel => res.json(dbModel))
     .catch(err => res.status(422).json(err));
   },
+
+  findUser: function(req, res) {
+    db.User.findOne({ _id: req.user._id })
+      .then(dbModel => res.json({
+          user: dbModel,
+          userId: dbModel._id
+      }))
+      .catch(err => res.json(err));
+  }
+
 };
+
