@@ -123,14 +123,12 @@ module.exports = {
     console.log("END: ---------------");
     db.Listing.syncIndexes().then((index) => {
       console.log("indexes:" , index); 
-      
     }); 
-
 
     db.Listing.find(
       {location:
         {$near: 
-          {$maxDistance: 1000,
+          {$maxDistance: 500,
             $geometry: {
               type: "Point",
               coordinates: [floatLong, floatLat]

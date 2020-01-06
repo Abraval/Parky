@@ -298,6 +298,7 @@ class SearchResult extends Component {
                 ]
               ]
             });
+            
           });
         });
 
@@ -313,6 +314,9 @@ class SearchResult extends Component {
     window.initMap = this.initMap;
     // console.log(this.state.markerData);
   };
+
+  
+
   initMap = () => {
     console.log(this.state.latitude);
     console.log(this.state.longitude);
@@ -320,21 +324,28 @@ class SearchResult extends Component {
       center: { lat: this.state.latitude, lng: this.state.longitude },
       zoom: 15
     });
+
+
     // Create An InfoWindow
     var infoWindow = new window.google.maps.InfoWindow(),
       marker,
       i;
     // We will need to change this
     var contentString = this.state.address;
+
     for (i = 0; i < this.state.markerData.length; i++) {
       var position = new window.google.maps.LatLng(
         this.state.markerData[i][1],
         this.state.markerData[i][2]
       );
+
+      console.log(this.state.markerData[i]); 
       // bounds.extend(position);
       // console.log("position", position);
+      let iconBase = "https://developers.google.com/maps/documentation/javascript/examples/full/images/"; 
       marker = new window.google.maps.Marker({
         position: position,
+        icon: "https://img.icons8.com/color/40/000000/car.png",
         map: map,
         title: this.state.markerData[i][0]
       });
@@ -342,15 +353,30 @@ class SearchResult extends Component {
       window.google.maps.event.addListener(
         marker,
         "click",
-        (function(marker, i) {
-          return function() {
-            // infoWindow.setContent(infoWindow[i][0]);
+        ((marker, i) => {
+          return () => {
+            console.log(this.state.markerData[i]); 
+            infoWindow.setContent("<img width='100px' src=" + this.state.markerData[i][6] + " />" + "</br>" + "<p>" + this.state.markerData[i][0] + "</p>" + "<p> Type: " + this.state.markerData[i][12] + "</p>" );
             infoWindow.open(map, marker);
           };
         })(marker, i)
       );
     }
+
+    var circle = new window.google.maps.Circle({
+      map: map,
+      radius: 500,    // 10 miles in metres
+      fillColor: '#FFF4B8',
+      strokeColor: "#FF0000",
+      strokeWeight: 0.5,
+      center: {lat: this.state.latitude, lng: this.state.longitude}
+    });
+    console.log(marker); 
+
+    // circle.bindTo('center', marker, 'position');
+
   };
+
   getAddress = async () => {
     let location = this.state.addressQuery;
     axios
@@ -370,6 +396,7 @@ class SearchResult extends Component {
         // this.renderMap();
       });
   };
+
   render() {
     const { classes } = this.props;
     const { spacing } = this.state;
