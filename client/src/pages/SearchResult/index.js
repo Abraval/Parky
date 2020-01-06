@@ -152,8 +152,11 @@ class SearchResult extends Component {
     return axios.get("/user/");
   }
   componentDidUpdate(prevProps, props) {
+
+    console.log(prevProps); 
+    console.log(props); 
     if (this.state.markerData !== props.markerData) {
-      // this.renderMap();
+      this.renderMap();
       // this.renderCards();
     }
   }
@@ -217,15 +220,30 @@ class SearchResult extends Component {
     });
   };
   handleSubmitSearch = e => {
+
+    console.log("handleSubmitSearch is called"); 
+
     e.preventDefault();
 
-    const address = this.getAddress();
-    let a = this.state.selectedDays.map(i => {
-      // console.log(i);
-      // console.log(b);
-    });
-    // console.log(a);
-    address.then(data => {
+    this.getAddress();
+
+    /********************** Start of Address Function ********************/
+
+
+
+  
+
+    /********************** End of Address Function ********************/
+
+  };
+
+
+  findRelevantListings = () => {
+
+
+
+      console.log("addres.then(data => is called")
+
       const formattedDates = this.state.selectedDays.map(date =>
         date.toISOString()
       );
@@ -233,6 +251,7 @@ class SearchResult extends Component {
       this.setState({ cardsArray: [] });
       this.setState({ markerData: [] });
       this.setState({ listings: [] });
+
       API.getAvailableListings(formattedDates).then(res => {
         // console.log("here", res);
 
@@ -259,12 +278,24 @@ class SearchResult extends Component {
 
         /******************************************Start******************************************/
 
+        console.log("API.getAvailableListings Called"); 
+
         emptyArr.map(item => {
           API.getListingById(item.listing).then(listing => {
+
+            console.log("API.getListingByID Called"); 
+
             var longLatArray = [this.state.longitude, this.state.latitude];
 
+            console.log(longLatArray); 
+
             API.getListingByIdAndProximity(longLatArray).then(item => {
-              console.log("line 250 is: ", item);
+
+              console.log("API.getListingByIdAndProximity") 
+
+              console.log("this.state.cardsArray: ", this.state.cardsArray); 
+              
+              // console.log("line 250 is: ", item);
 
               for (let i = 0; i < item.data.length; i++) {
                 // console.log(listing.data[0]._id === item.data[i]._id);
@@ -274,6 +305,9 @@ class SearchResult extends Component {
                   });
                 }
               }
+
+              console.log("this.state.cardsArray after the for loop ", this.state.cardsArray); 
+
             });
 
             const data = listing.data[0];
@@ -298,14 +332,18 @@ class SearchResult extends Component {
                 ]
               ]
             });
-            
+
           });
         });
 
         /******************************************End******************************************/
       });
-    });
-  };
+    
+      // this.renderMap(); 
+  }
+
+
+
 
   renderMap = () => {
     loadScript(
@@ -318,8 +356,10 @@ class SearchResult extends Component {
   
 
   initMap = () => {
-    console.log(this.state.latitude);
-    console.log(this.state.longitude);
+    console.log("initMap is called"); 
+
+    // console.log(this.state.latitude);
+    // console.log(this.state.longitude);
     var map = new window.google.maps.Map(document.getElementById("map"), {
       center: { lat: this.state.latitude, lng: this.state.longitude },
       zoom: 15
@@ -342,6 +382,8 @@ class SearchResult extends Component {
       console.log(this.state.markerData[i]); 
       // bounds.extend(position);
       // console.log("position", position);
+
+
       let iconBase = "https://developers.google.com/maps/documentation/javascript/examples/full/images/"; 
       marker = new window.google.maps.Marker({
         position: position,
@@ -371,13 +413,14 @@ class SearchResult extends Component {
       strokeWeight: 0.5,
       center: {lat: this.state.latitude, lng: this.state.longitude}
     });
-    console.log(marker); 
+    // console.log(marker); 
 
     // circle.bindTo('center', marker, 'position');
 
   };
 
   getAddress = async () => {
+    console.log("getAddress async is called"); 
     let location = this.state.addressQuery;
     axios
       .get("https://maps.googleapis.com/maps/api/geocode/json", {
@@ -387,11 +430,14 @@ class SearchResult extends Component {
         }
       })
       .then(response => {
-        // console.log(response);
+
+        console.log("Axios.get.then is called, setting state of latitude and longitude for the map");
         var latitude = response.data.results[0].geometry.location.lat;
         var longitude = response.data.results[0].geometry.location.lng;
         this.setState({ latitude, longitude }, () => {
-          this.renderMap();
+          console.log("inside the callback for this.setState latitude and longitude"); 
+          // this.renderMap();
+          this.findRelevantListings(); 
         });
         // this.renderMap();
       });
@@ -405,7 +451,7 @@ class SearchResult extends Component {
     // console.log(this.state);
     return (
       <div>
-        {console.log(this.state.cardsArray)}
+        {/* {console.log(this.state.cardsArray)} */}
         <Nav />
         <div className={classes.root}>
           <Grid className={classes.container} container spacing={8}>
