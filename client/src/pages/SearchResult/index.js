@@ -118,9 +118,11 @@ class SearchResult extends Component {
     user: {},
     address: "",
     photo: "",
-    title: ""
+    title: "",
+    infoWindowId: ""
     // availId: ""
   };
+
   handleChange = key => (event, value) => {
     this.setState({
       [key]: value
@@ -134,6 +136,7 @@ class SearchResult extends Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+
   componentDidMount() {
     this.renderMap();
     this.userInfo().then(response =>
@@ -145,40 +148,32 @@ class SearchResult extends Component {
       )
     );
   }
+
   tester() {
+
     console.log(this.state.user);
+
   }
+
   userInfo() {
+
     return axios.get("/user/");
+
   }
+
   componentDidUpdate(prevProps, props) {
 
-    // console.log(prevProps); 
-    // console.log(props); 
     if (this.state.markerData !== props.markerData) {
 
       console.log("componentDidUpdate called"); 
       this.renderMap();
-      // this.renderCards();
+    
     }
   }
+
   handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
-    // console.log(address);
+ 
 
-    console.log("---------------------");
-
-    console.log("selectedDaysLength: ", this.state.selectedDays.length);
-    console.log("id: ", id);
-    console.log("user id: ", this.state.user._id);
-    console.log("address: ", address);
-    console.log("city: ", city);
-    console.log("state: ", state);
-    console.log("zipcode: ", zipcode);
-    console.log("title: ", title);
-    console.log("price: ", price);
-    console.log("href: ", href);
-
-    console.log("---------------------");
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
         date: this.state.selectedDays[i],
@@ -202,6 +197,7 @@ class SearchResult extends Component {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
   }
+
   handleDayClick(day, { selected }) {
     const { selectedDays } = this.state;
     if (selected) {
@@ -214,6 +210,7 @@ class SearchResult extends Component {
     }
     this.setState({ selectedDays });
   }
+
   handleInputChange = event => {
     const { name, value } = event.target;
 
@@ -221,6 +218,7 @@ class SearchResult extends Component {
       [name]: value
     });
   };
+
   handleSubmitSearch = e => {
 
     console.log("handleSubmitSearch is called"); 
@@ -229,32 +227,7 @@ class SearchResult extends Component {
 
     this.getAddress();
 
-    /********************** Start of Address Function ********************/
-
-
-
-  
-
-    /********************** End of Address Function ********************/
-
   };
-
-  // functionA = () => {
-  //   var listingsPromise = new Promise((resolve, reject) => {
-  //     console.log("listing Promise called"); 
-  //     resolve(this.findRelevantListings()); 
-  //   }) 
-
-  //   listingsPromise.then(res => {
-
-  //     console.log(".then of listing Promise called"); 
-  //     this.renderMap(); 
-
-  //   })
-
-  // }
-
-
 
   findRelevantListings = () => {
 
@@ -293,8 +266,6 @@ class SearchResult extends Component {
           }
         }
 
-        /******************************************Start******************************************/
-
         console.log("API.getAvailableListings Called"); 
 
         emptyArr.map(item => {
@@ -329,6 +300,8 @@ class SearchResult extends Component {
 
             const data = listing.data[0];
 
+            console.log(data); 
+
             this.setState({
               markerData: [
                 ...this.state.markerData,
@@ -353,14 +326,18 @@ class SearchResult extends Component {
           });
         });
 
-        /******************************************End******************************************/
       });
     
       // this.renderMap(); 
   }
 
+  highlightCorrespondingCard = (id) => {
+    console.log("listing id in function is: ", id); 
+    console.log("Highlight Corresponding Card"); 
 
-
+    console.log(this.state.cardsArray); 
+    
+  }
 
   renderMap = () => {
     loadScript(
@@ -400,8 +377,6 @@ class SearchResult extends Component {
       // bounds.extend(position);
       // console.log("position", position);
 
-
-      let iconBase = "https://developers.google.com/maps/documentation/javascript/examples/full/images/"; 
       marker = new window.google.maps.Marker({
         position: position,
         icon: "https://img.icons8.com/color/40/000000/car.png",
@@ -414,7 +389,12 @@ class SearchResult extends Component {
         "click",
         ((marker, i) => {
           return () => {
-            console.log(this.state.markerData[i]); 
+            console.log(this.state.markerData[i][7]); 
+
+            let listingId = this.state.markerData[i][7]; 
+
+            this.highlightCorrespondingCard(listingId); 
+
             infoWindow.setContent("<img width='100px' src=" + this.state.markerData[i][6] + " />" + "</br>" + "<p>" + this.state.markerData[i][0] + "</p>" + "<p> Type: " + this.state.markerData[i][12] + "</p>" );
             infoWindow.open(map, marker);
           };
