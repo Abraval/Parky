@@ -370,8 +370,6 @@ class SearchResult extends Component {
     // console.log(this.state.markerData);
   };
 
-  
-
   initMap = () => {
     console.log("initMap is called"); 
 
@@ -381,7 +379,6 @@ class SearchResult extends Component {
       center: { lat: this.state.latitude, lng: this.state.longitude },
       zoom: 15
     });
-
 
     // Create An InfoWindow
     var infoWindow = new window.google.maps.InfoWindow(),
@@ -396,12 +393,11 @@ class SearchResult extends Component {
         this.state.markerData[i][2]
       );
 
-      console.log(this.state.markerData[i]); 
+      console.log(this.state.markerData[i]);
       // bounds.extend(position);
       // console.log("position", position);
-
-
-      let iconBase = "https://developers.google.com/maps/documentation/javascript/examples/full/images/"; 
+      let iconBase =
+        "https://developers.google.com/maps/documentation/javascript/examples/full/images/";
       marker = new window.google.maps.Marker({
         position: position,
         icon: "https://img.icons8.com/color/40/000000/car.png",
@@ -414,8 +410,19 @@ class SearchResult extends Component {
         "click",
         ((marker, i) => {
           return () => {
-            console.log(this.state.markerData[i]); 
-            infoWindow.setContent("<img width='100px' src=" + this.state.markerData[i][6] + " />" + "</br>" + "<p>" + this.state.markerData[i][0] + "</p>" + "<p> Type: " + this.state.markerData[i][12] + "</p>" );
+            console.log(this.state.markerData[i]);
+            infoWindow.setContent(
+              "<img width='100px' src=" +
+                this.state.markerData[i][6] +
+                " />" +
+                "</br>" +
+                "<p>" +
+                this.state.markerData[i][0] +
+                "</p>" +
+                "<p> Type: " +
+                this.state.markerData[i][12] +
+                "</p>"
+            );
             infoWindow.open(map, marker);
           };
         })(marker, i)
@@ -424,16 +431,16 @@ class SearchResult extends Component {
 
     var circle = new window.google.maps.Circle({
       map: map,
-      radius: 500,    // 10 miles in metres
-      fillColor: '#FFF4B8',
+      radius: 500, // 10 miles in metres
+      fillColor: "#FFF4B8",
       strokeColor: "#FF0000",
       strokeWeight: 0.5,
-      center: {lat: this.state.latitude, lng: this.state.longitude}
+      center: { lat: this.state.latitude, lng: this.state.longitude }
     });
+    console.log(marker);
     // console.log(marker); 
 
     // circle.bindTo('center', marker, 'position');
-
   };
 
   getAddress = async () => {
@@ -584,11 +591,16 @@ class SearchResult extends Component {
                                           className={classes.button}
                                           onClick={event => {
                                             event.preventDefault();
-                                            console.log(
-                                              "SearchResult.buttonhandelick spot",
-                                              spot
+                                            this.handleBookClick(
+                                              spot[0]._id,
+                                              spot[0].address,
+                                              spot[0].title,
+                                              spot[0].photo,
+                                              spot[0].city,
+                                              spot[0].state,
+                                              spot[0].zipcode,
+                                              spot[0].price
                                             );
-                                            this.handleDialogOpen();
                                           }}
                                         >
                                           Book Now
@@ -609,7 +621,8 @@ class SearchResult extends Component {
                                   <DialogTitle id="form-dialog-title">
                                     Your Booking Information
                                   </DialogTitle>
-                                  <DialogContent>
+                                  <DialogContent
+                                   >
                                     <p>Title: {spot[0].title}</p>
                                     <p>Address: {spot[0].address}</p>
                                     <p>City: {spot[0].city}</p>
@@ -621,31 +634,11 @@ class SearchResult extends Component {
                                   </DialogContent>
                                   <DialogActions>
                                     <Button
-                                      variant="outlined"
-                                      color="primary"
-                                      className={classes.button}
-                                      onClick={event => {
-                                        event.preventDefault();
-                                        this.handleBookClick(
-                                          spot[0]._id,
-                                          spot[0].address,
-                                          spot[0].title,
-                                          spot[0].photo,
-                                          spot[0].city,
-                                          spot[0].state,
-                                          spot[0].zipcode,
-                                          spot[0].price
-                                        );
-                                      }}
-                                    >
-                                      Confirm Booking
-                                    </Button>
-                                    <Button
                                       onClick={() => this.handleClose()}
                                       variant="outlined"
                                       color="secondary"
                                     >
-                                      Close
+                                      Confirm Booking
                                     </Button>
                                   </DialogActions>
                                 </Dialog>

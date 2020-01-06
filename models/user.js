@@ -12,7 +12,8 @@ const userSchema = new Schema({
     lastname: { type: String, unique: false, required: false },
     email: { type: String, unique: false, required: false },
     dob: { type: Date, unique: false, required: false },
-    license: { type: Number, unique: false, required: false }
+	license: { type: Number, unique: false, required: false },
+	photo: { type: String, unique: false, required: false }
 
 })
 
