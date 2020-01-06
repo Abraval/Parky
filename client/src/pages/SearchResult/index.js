@@ -41,7 +41,8 @@ import SearchIcon from "@material-ui/icons/Search";
 
 const styles = theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    margin: "6px 0"
   },
   searchBar: {
     padding: "2px 4px",
@@ -57,7 +58,8 @@ const styles = theme => ({
     height: "100%"
   },
   card: {
-    width: "100%"
+    width: "100%",
+    margin: "8px"
   },
   container: {
     paddingTop: "8px",

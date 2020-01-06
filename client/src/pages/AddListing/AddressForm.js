@@ -48,7 +48,11 @@ function AddressForm(props) {
           onChange={props.handleInputChange}
           name="title"
         />
-        <div style={{ color: "red" }}>{props.titleError}</div>
+        <div
+          style={{ fontFamily: "Roboto", color: "#DB5461", fontSize: "12px" }}
+        >
+          {props.titleError}
+        </div>
 
         {/* // PARKING Type */}
         <TextField
@@ -76,13 +80,17 @@ function AddressForm(props) {
             </MenuItem>
           ))}
         </TextField>
-        <div style={{ color: "red" }}>{props.parkingtypeError}</div>
+        <div
+          style={{ fontFamily: "Roboto", color: "#DB5461", fontSize: "12px" }}
+        >
+          {props.parkingtypeError}
+        </div>
 
         {/* // PRICE */}
         <TextField
           id="price"
           label="Daily Price"
-          value={props.price}
+          value={props.price !== 0 && props.price}
           onChange={props.handleInputChange}
           type="number"
           fullWidth={true}
@@ -96,7 +104,11 @@ function AddressForm(props) {
           placeholder="$"
           name="price"
         />
-        <div style={{ color: "red" }}>{props.priceError}</div>
+        <div
+          style={{ fontFamily: "Roboto", color: "#DB5461", fontSize: "12px" }}
+        >
+          {props.priceError}
+        </div>
 
         {/* //ADDRESS */}
         <TextField
@@ -111,7 +123,11 @@ function AddressForm(props) {
           onChange={props.handleInputChange}
           name="address"
         />
-        <div style={{ color: "red" }}>{props.addressError}</div>
+        <div
+          style={{ fontFamily: "Roboto", color: "#DB5461", fontSize: "12px" }}
+        >
+          {props.addressError}
+        </div>
 
         {/* //City */}
         <TextField
@@ -126,7 +142,11 @@ function AddressForm(props) {
           onChange={props.handleInputChange}
           name="city"
         />
-        <div style={{ color: "red" }}>{props.cityError}</div>
+        <div
+          style={{ fontFamily: "Roboto", color: "#DB5461", fontSize: "12px" }}
+        >
+          {props.cityError}
+        </div>
 
         {/* //State */}
         <TextField
@@ -141,7 +161,11 @@ function AddressForm(props) {
           onChange={props.handleInputChange}
           name="state"
         />
-        <div style={{ color: "red" }}>{props.stateError}</div>
+        <div
+          style={{ fontFamily: "Roboto", color: "#DB5461", fontSize: "12px" }}
+        >
+          {props.stateError}
+        </div>
 
         {/* //Zip */}
         <TextField
@@ -156,7 +180,9 @@ function AddressForm(props) {
           name="zipcode"
           fullWidth={true}
         />
-        <div style={{ color: "red", fontFamily: "Roboto" }}>
+        <div
+          style={{ fontFamily: "Roboto", color: "#DB5461", fontSize: "12px" }}
+        >
           {props.zipcodeError}
         </div>
       </form>

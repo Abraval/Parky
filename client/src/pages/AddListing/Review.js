@@ -46,20 +46,25 @@ const styles = theme => ({
   }
 });
 
+function formatDate(date) {
+  const newDate = new Date(date);
+  return (
+    newDate.getMonth() +
+    1 +
+    "/" +
+    newDate.getDate() +
+    "/" +
+    newDate.getFullYear()
+  );
+}
+
 function Review(props) {
   const { classes } = props;
+
+  const dates = props.selectedDays.map(date => formatDate(date));
+
   return (
     <React.Fragment>
-      {/* <Button
-        variant="contained"
-        color="secondary"
-        // className={classes.button}
-        onClick={props.handleFormSubmit}
-        id="addListing"
-        fullWidth={true}
-      >
-        Add Listing
-      </Button> */}
       <Typography variant="h4" gutterBottom>
         Listing summary
       </Typography>
@@ -81,7 +86,13 @@ function Review(props) {
           <Typography variant="h5" gutterBottom className={classes.title}>
             Dates
           </Typography>
-          <Grid container>{props.selectedDays.join(", ")}</Grid>
+          <Grid container>
+            <ul>
+              {dates.map(date => (
+                <li>{date}</li>
+              ))}
+            </ul>
+          </Grid>
         </Grid>
       </Grid>
     </React.Fragment>

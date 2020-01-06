@@ -7,6 +7,7 @@ import StepLabel from "@material-ui/core/StepLabel";
 import AddressForm from "./AddressForm";
 import PaymentForm from "./PaymentForm";
 import Review from "./Review";
+import "./style.css";
 //
 import Nav from "../../components/Nav";
 import API from "../../utils/API";
@@ -150,9 +151,13 @@ class AddListing extends Component {
   };
 
   handleNext = () => {
-    this.setState({
-      activeStep: this.state.activeStep + 1
-    });
+    if (!this.validate()) {
+      return;
+    } else {
+      this.setState({
+        activeStep: this.state.activeStep + 1
+      });
+    }
   };
 
   handleBack = () => {
@@ -179,24 +184,29 @@ class AddListing extends Component {
   };
 
   handleClose = () => {
-    this.setState({
-      open: false,
-      title: "",
-      parkingtype: "",
-      photo: "",
-      price: 0.0,
-      address: "",
-      city: "",
-      state: "",
-      zipcode: "",
-      titleError: "",
-      parkingtypeError: "",
-      priceError: "",
-      addressError: "",
-      cityError: "",
-      stateError: "",
-      zipcodeError: ""
-    });
+    this.setState(
+      {
+        open: false,
+        title: "",
+        parkingtype: "",
+        photo: "",
+        price: 0.0,
+        address: "",
+        city: "",
+        state: "",
+        zipcode: "",
+        titleError: "",
+        parkingtypeError: "",
+        priceError: "",
+        addressError: "",
+        cityError: "",
+        stateError: "",
+        zipcodeError: ""
+      },
+      () => {
+        this.props.history.push("/profile");
+      }
+    );
   };
 
   //Validation function
@@ -210,25 +220,25 @@ class AddListing extends Component {
     let zipcodeError = "";
 
     if (!this.state.title) {
-      titleError = "can not be blank";
+      titleError = "title cannot be empty";
     }
     if (!this.state.parkingtype) {
-      parkingtypeError = "pick a parking type";
+      parkingtypeError = "please select a type";
     }
     if (isNaN(this.state.price) || !this.state.price) {
-      priceError = "input a number";
+      priceError = "price cannot be empty";
     }
     if (!this.state.address) {
-      addressError = "no password provided";
+      addressError = "password cannot be empty";
     }
     if (!this.state.city) {
-      cityError = "can not be blank";
+      cityError = "city cannot be empty";
     }
     if (!this.state.state) {
-      stateError = "can not be blank";
+      stateError = "state cannot be empty";
     }
     if (isNaN(this.state.zipcode) || !this.state.zipcode) {
-      zipcodeError = "invalid zip";
+      zipcodeError = "zip cannot be empty";
     }
     if (
       titleError ||
@@ -450,26 +460,43 @@ class AddListing extends Component {
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={this.handleNext}
+                        onClick={
+                          this.state.activeStep === 2
+                            ? this.handleFormSubmit
+                            : this.handleNext
+                        }
                         className={classes.button}
                       >
                         {this.state.activeStep === steps.length - 1
                           ? "Confirm Listing"
                           : "Next"}
                       </Button>
-                      {this.state.activeStep === 2 && (
-                        <Button
-                          onClick={this.handleFormSubmit}
-                          className={classes.button}
-                        >
-                          Confirm Listing (THIS ONE WORKS)
-                        </Button>
-                      )}
                     </div>
                   </React.Fragment>
                 )}
               </React.Fragment>
             </Paper>
+
+            <Dialog
+              open={this.state.open}
+              handleClickOpen={this.handleClickOpen}
+            >
+              <DialogTitle id="form-dialog-title">Listing Summary</DialogTitle>
+              <DialogContent>
+                {" "}
+                <Typography>Listing is created successfully!</Typography>
+              </DialogContent>
+
+              <DialogActions>
+                <Button
+                  onClick={() => this.handleClose()}
+                  color="secondary"
+                  variant="outlined"
+                >
+                  Close
+                </Button>
+              </DialogActions>
+            </Dialog>
           </main>
         </React.Fragment>
       </div>

@@ -9,10 +9,12 @@ import DayPicker, { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
+import "./style.css";
 
 const styles = theme => ({
   paper: {
-    margin: "0"
+    margin: "0",
+    display: "flex"
   },
   title: {
     marginTop: theme.spacing.unit * 2
