@@ -1,1 +1,13 @@
 @import url("https://fonts.googleapis.com/css?family=Galada|Roboto&display=swap");
+
+body {
+  /* background-image: url("https://images.unsplash.com/photo-1470224114660-3f6686c562eb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"); */
+  background-size: cover; /* Resize the background image to cover the entire container */
+  height: 500px; /* You must set a specified height */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+}
+
+#id {
+  background-color: #f1f1f1;
+}

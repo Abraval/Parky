@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
+import "./style.css";
+
 //
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -28,7 +30,8 @@ const styles = theme => ({
   paper: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: "#f1f1f1"
   },
   form: {
     width: "100%" // Fix IE 11 issue.
@@ -238,6 +241,16 @@ class LoginForm extends Component {
           justify="center"
           style={{ minHeight: "100vh" }}
         >
+          <h1
+            style={{
+              fontFamily: "Galada",
+              color: "white",
+              fontSize: "75px",
+              margin: "0"
+            }}
+          >
+            Parky
+          </h1>
           <Grid
             item
             xs={3}
@@ -245,7 +258,7 @@ class LoginForm extends Component {
               minWidth: "250px"
             }}
           >
-            <Paper className={classes.root} elevation={1} mx="auto">
+            <Paper id="signin" className={classes.root} elevation={1} mx="auto">
               <Avatar className={classes.avatar} color="primary">
                 <LockOutlinedIcon />
               </Avatar>

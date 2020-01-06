@@ -109,10 +109,15 @@ class Nav extends Component {
             </Button>
 
             {this.renderRedirect()}
-            <Button color="secondary" href="/profile">
+            <Button color="secondary" title="Account" href="/profile">
               <AccountCircleIcon />
             </Button>
-            <Button color="secondary" onClick={this.logout} href="/signin">
+            <Button
+              color="secondary"
+              title="Logout"
+              onClick={this.logout}
+              href="/signin"
+            >
               <ExitToAppIcon />
             </Button>
           </Toolbar>

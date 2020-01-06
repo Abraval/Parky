@@ -9,3 +9,7 @@ ul {
   font-weight: bold;
   margin: 2px;
 }
+
+body {
+  background-image: unset;
+}
