@@ -128,7 +128,7 @@ module.exports = {
     db.Listing.find(
       {location:
         {$near: 
-          {$maxDistance: 500,
+          {$maxDistance: 800,
             $geometry: {
               type: "Point",
               coordinates: [floatLong, floatLat]

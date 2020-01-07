@@ -134,6 +134,7 @@ class SearchResult extends Component {
     buttonClicked: false
     // availId: ""
   };
+
   handleChange = key => (event, value) => {
     this.setState({
       [key]: value
@@ -157,7 +158,11 @@ class SearchResult extends Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+
   componentDidMount() {
+
+    // window.highlightCorrespondingCard = this.highlightCorrespondingCard; 
+
     this.renderMap();
     this.userInfo().then(response =>
       this.setState(
@@ -168,21 +173,33 @@ class SearchResult extends Component {
       )
     );
   }
+
+  componentWillUnmount() {
+    // window.highlightCorrespondingCard = null; 
+  }
+
   tester() {
+
     console.log(this.state.user);
+
   }
+
   userInfo() {
+
     return axios.get("/user/");
+
   }
+
   componentDidUpdate(prevProps, props) {
     // console.log(prevProps);
     // console.log(props);
     if (this.state.markerData !== props.markerData) {
-      console.log("componentDidUpdate called");
+      // console.log("componentDidUpdate called");
       this.renderMap();
-      // this.renderCards();
+    
     }
   }
+
   handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
     this.setState({
       title: title,
@@ -196,20 +213,20 @@ class SearchResult extends Component {
     });
     // console.log(address);
 
-    console.log("---------------------");
+    // console.log("---------------------");
 
-    console.log("selectedDaysLength: ", this.state.selectedDays.length);
-    console.log("id: ", id);
-    console.log("user id: ", this.state.user._id);
-    console.log("address: ", address);
-    console.log("city: ", city);
-    console.log("state: ", state);
-    console.log("zipcode: ", zipcode);
-    console.log("title: ", title);
-    console.log("price: ", price);
-    console.log("href: ", href);
+    // console.log("selectedDaysLength: ", this.state.selectedDays.length);
+    // console.log("id: ", id);
+    // console.log("user id: ", this.state.user._id);
+    // console.log("address: ", address);
+    // console.log("city: ", city);
+    // console.log("state: ", state);
+    // console.log("zipcode: ", zipcode);
+    // console.log("title: ", title);
+    // console.log("price: ", price);
+    // console.log("href: ", href);
 
-    console.log("---------------------");
+    // console.log("---------------------");
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
         date: this.state.selectedDays[i],
@@ -232,7 +249,9 @@ class SearchResult extends Component {
   constructor(props) {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
+    // this.highlightCorrespondingCard = this.highlightCorrespondingCard.bind(this); 
   }
+
   handleDayClick(day, { selected }) {
     const { selectedDays } = this.state;
     if (selected) {
@@ -247,6 +266,7 @@ class SearchResult extends Component {
     this.setState({ selectedDays });
     this.setState({ buttonClicked: false });
   }
+
   handleInputChange = event => {
     const { name, value } = event.target;
 
@@ -255,7 +275,7 @@ class SearchResult extends Component {
     });
   };
   handleSubmitSearch = e => {
-    console.log("handleSubmitSearch is called");
+    // console.log("handleSubmitSearch is called");
 
     e.preventDefault();
 
@@ -263,7 +283,7 @@ class SearchResult extends Component {
 
     this.setState({ buttonClicked: true });
 
-    console.log(this.state.selectedDays.length);
+    // console.log(this.state.selectedDays.length);
 
     /********************** Start of Address Function ********************/
 
@@ -321,20 +341,22 @@ class SearchResult extends Component {
 
       /******************************************Start******************************************/
 
-      console.log("API.getAvailableListings Called");
+      // console.log("API.getAvailableListings Called");
 
       emptyArr.map(item => {
         API.getListingById(item.listing).then(listing => {
-          console.log("API.getListingByID Called");
+
+          // console.log("API.getListingByID Called");
 
           var longLatArray = [this.state.longitude, this.state.latitude];
 
           console.log(longLatArray);
 
           API.getListingByIdAndProximity(longLatArray).then(item => {
-            console.log("API.getListingByIdAndProximity");
 
-            console.log("this.state.cardsArray: ", this.state.cardsArray);
+            // console.log("API.getListingByIdAndProximity");
+
+            // console.log("this.state.cardsArray: ", this.state.cardsArray);
 
             // console.log("line 250 is: ", item);
 
@@ -343,14 +365,10 @@ class SearchResult extends Component {
               if (listing.data[0]._id === item.data[i]._id) {
                 this.setState({
                   cardsArray: [...this.state.cardsArray, [item.data[i]]]
-                });
+                }, () => this.initMap());
               }
             }
 
-            console.log(
-              "this.state.cardsArray after the for loop ",
-              this.state.cardsArray
-            );
           });
 
           const data = listing.data[0];
@@ -375,6 +393,7 @@ class SearchResult extends Component {
               ]
             ]
           });
+          
         });
       });
 
@@ -393,10 +412,7 @@ class SearchResult extends Component {
   };
 
   initMap = () => {
-    console.log("initMap is called");
 
-    // console.log(this.state.latitude);
-    // console.log(this.state.longitude);
     var map = new window.google.maps.Map(document.getElementById("map"), {
       center: { lat: this.state.latitude, lng: this.state.longitude },
       zoom: 15
@@ -409,51 +425,79 @@ class SearchResult extends Component {
     // We will need to change this
     var contentString = this.state.address;
 
-    for (i = 0; i < this.state.markerData.length; i++) {
-      var position = new window.google.maps.LatLng(
-        this.state.markerData[i][1],
-        this.state.markerData[i][2]
-      );
 
-      console.log(this.state.markerData[i]);
-      // bounds.extend(position);
-      // console.log("position", position);
-      let iconBase =
-        "https://developers.google.com/maps/documentation/javascript/examples/full/images/";
-      marker = new window.google.maps.Marker({
-        position: position,
-        icon: "https://img.icons8.com/color/40/000000/car.png",
-        map: map,
-        title: this.state.markerData[i][0]
-      });
-      // Allow each marker to have an info window
-      window.google.maps.event.addListener(
-        marker,
-        "click",
-        ((marker, i) => {
-          return () => {
-            console.log(this.state.markerData[i]);
-            infoWindow.setContent(
-              "<img width='100px' src=" +
-                this.state.markerData[i][6] +
-                " />" +
-                "</br>" +
-                "<p>" +
-                this.state.markerData[i][0] +
-                "</p>" +
-                "<p> Type: " +
-                this.state.markerData[i][12] +
-                "</p>"
-            );
-            infoWindow.open(map, marker);
-          };
-        })(marker, i)
-      );
-    }
+
+/***********************************START ******************************************/
+
+for (let i = 0; i < this.state.cardsArray.length; i++) {
+
+  // console.log(this.state.cardsArray); 
+  // console.log(this.state.cardsArray[i][0].location.coordinates[1])
+  // console.log(this.state.cardsArray[i][0].location.coordinates[0])
+
+  let latitude = this.state.cardsArray[i][0].location.coordinates[1]; 
+  let longitude = this.state.cardsArray[i][0].location.coordinates[0]; 
+
+  // Find equivalent
+  console.log(this.state.markerData[i]); 
+  console.log(this.state.cardsArray[i][0].title); 
+  console.log(this.state.cardsArray[i][0]);
+
+  // image source 
+  console.log(this.state.cardsArray[i][0].photo); 
+
+  // listing title 
+  console.log(this.state.cardsArray[i][0].title); 
+
+  // parking type 
+  console.log(this.state.cardsArray[i][0].parkingtype); 
+
+
+  var position = new window.google.maps.LatLng(
+    latitude,
+    longitude
+  );
+
+  // "<button " + "onclick=window.highlightCorrespondingCard()" + ">Book Now</button>
+
+  // Title below in marker was originally address
+
+  marker = new window.google.maps.Marker({
+    position: position,
+    icon: "https://img.icons8.com/color/40/000000/car.png",
+    map: map,
+    title: this.state.cardsArray[i][0].title
+  });
+
+  // Allow each marker to have an info window
+  window.google.maps.event.addListener(
+    marker,
+    "click",
+    ((marker, i) => {
+      return () => {
+        console.log(this.state.markerData[i][7]); 
+
+        // let listingId = this.state.markerData[i][7]; 
+
+        // this is how I was passing through the id of the corresponding marker 
+        // this.highlightCorrespondingCard(listingId); 
+
+        infoWindow.setContent("<img width='100px' src=" + this.state.cardsArray[i][0].photo + " />" + "</br>" + "<span style='margin-top:10px;color:black;font-weight:bold;font-size:14px;'>"+ (i + 1) + ". " +"<span/>" + "<span>" + this.state.cardsArray[i][0].title + "</span>" + "</br>" + "<p style='font-weight:normal;font-size:12px;'> Price: $" + this.state.cardsArray[i][0].price + "</p>" + "<p style='margin-bottom:0px;font-weight:normal;font-size:12px;'> Type: " + this.state.cardsArray[i][0].parkingtype + "</p>");
+        infoWindow.open(map, marker);
+      };
+    })(marker, i)
+  );
+
+
+}
+
+/***********************************START ******************************************/
+
+
 
     var circle = new window.google.maps.Circle({
       map: map,
-      radius: 500, // 10 miles in metres
+      radius: 800, // 10 miles in metres
       fillColor: "#FFF4B8",
       strokeColor: "#FF0000",
       strokeWeight: 0.5,
@@ -475,15 +519,15 @@ class SearchResult extends Component {
         }
       })
       .then(response => {
-        console.log(
-          "Axios.get.then is called, setting state of latitude and longitude for the map"
-        );
+        // console.log(
+        //   "Axios.get.then is called, setting state of latitude and longitude for the map"
+        // );
         var latitude = response.data.results[0].geometry.location.lat;
         var longitude = response.data.results[0].geometry.location.lng;
         this.setState({ latitude, longitude }, () => {
-          console.log(
-            "inside the callback for this.setState latitude and longitude"
-          );
+          // console.log(
+          //   "inside the callback for this.setState latitude and longitude"
+          // );
           // this.renderMap();
           this.findRelevantListings();
           // this.functionA();
@@ -564,9 +608,9 @@ class SearchResult extends Component {
                     <h1 className="text-center">No Spots to Display</h1>
                   ) : (
                     <div>
-                      {this.state.cardsArray.map(spot => {
-                        console.log("SPOT ARRAY ++++++++++++++");
-                        console.log(spot);
+                      {this.state.cardsArray.map( (spot, i ) => {
+                        // console.log("SPOT ARRAY ++++++++++++++");
+                        // console.log(spot);
                         // console.log(this.state.markerData);
                         // console.log(this.state.cardsArray);
                         return (
@@ -600,8 +644,14 @@ class SearchResult extends Component {
                                     </ButtonBase>
                                   </Grid>
                                   <Grid item xs={12} sm container>
-                                    <Grid item xs spacing={16}>
-                                      <Grid item xs>
+                                    <Grid  item xs spacing={16}>
+                                      <Grid  item xs>
+                                      <Typography
+                                          gutterBottom
+                                          variant="subtitle1"
+                                        >
+                                          {i + 1}
+                                        </Typography>
                                         <Typography
                                           gutterBottom
                                           variant="subtitle1"
