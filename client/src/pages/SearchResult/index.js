@@ -39,6 +39,9 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
+//Material UI Grid List
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
 
 const styles = theme => ({
   root: {
@@ -52,7 +55,7 @@ const styles = theme => ({
     alignItems: "center"
   },
   paper: {
-    padding: theme.spacing.unit * 1,
+    padding: "8px 10px",
     margin: "auto",
     textAlign: "center",
     color: theme.palette.text.secondary,
@@ -99,9 +102,6 @@ const styles = theme => ({
   iconButton: {
     padding: 10
   }
-  // input: {
-  //   display: "none"
-  // }
 });
 class SearchResult extends Component {
   state = {
@@ -555,156 +555,162 @@ class SearchResult extends Component {
                 style={{ fontFamily: "Roboto" }}
               >
                 <div>
-                  {!this.state.markerData.length ? (
-                    <h1 className="text-center">No Spots to Display</h1>
-                  ) : (
-                    <div>
-                      {this.state.cardsArray.map(spot => {
-                        console.log("SPOT ARRAY ++++++++++++++");
-                        console.log(spot);
-                        // console.log(this.state.markerData);
-                        // console.log(this.state.cardsArray);
-                        return (
-                          <div>
-                            <div className={classes.root}>
-                              <Paper className={classes.paper}>
-                                <Grid container spacing={16}>
-                                  <Grid item>
-                                    <ButtonBase
-                                      className={classes.image}
-                                      key={spot[0]._id}
-                                      title={spot[0].title}
-                                      href={spot[0].photo}
-                                      street={spot[0].streetName}
-                                      neighborhood={spot[0].neighborhood}
-                                      id={spot[0]._id}
-                                      city={spot[0].city}
-                                      state={spot[0].state}
-                                      zipcode={spot[0].zipcode}
-                                      address={spot[0].address}
-                                      price={spot[0].price}
-                                      parkingtype={spot[0].parkingtype}
-                                      handleBookClick={this.handleBookClick}
-                                      // handleDialogOpen={this.handleDialogOpen}
-                                    >
-                                      <img
-                                        className={classes.img}
-                                        alt="complex"
-                                        src={spot[0].photo}
-                                      />
-                                    </ButtonBase>
-                                  </Grid>
-                                  <Grid item xs={12} sm container>
-                                    <Grid item xs spacing={16}>
-                                      <Grid item xs>
-                                        <Typography
-                                          gutterBottom
-                                          variant="subtitle1"
-                                        >
-                                          {spot[0].title}
-                                        </Typography>
-                                        <Typography gutterBottom>
-                                          {spot[0].streetName}
-                                        </Typography>
-                                        <Typography color="textSecondary">
-                                          {spot[0].neighborhood}
-                                        </Typography>
-                                        <Typography color="textSecondary">
-                                          {spot[0].parkingtype}
-                                        </Typography>
+                  <GridList cellHeight={600} className={classes.gridList}>
+                    {!this.state.markerData.length ? (
+                      <h1 className="text-center" style={{ width: "100%" }}>
+                        No Spots to Display
+                      </h1>
+                    ) : (
+                      <div id="testing" style={{ width: "100%" }}>
+                        {this.state.cardsArray.map(spot => {
+                          return (
+                            <div>
+                              <div className={classes.root}>
+                                <Paper className={classes.paper}>
+                                  <Grid container spacing={16}>
+                                    <Grid item>
+                                      <ButtonBase
+                                        className={classes.image}
+                                        key={spot[0]._id}
+                                        title={spot[0].title}
+                                        href={spot[0].photo}
+                                        street={spot[0].streetName}
+                                        neighborhood={spot[0].neighborhood}
+                                        id={spot[0]._id}
+                                        city={spot[0].city}
+                                        state={spot[0].state}
+                                        zipcode={spot[0].zipcode}
+                                        address={spot[0].address}
+                                        price={spot[0].price}
+                                        parkingtype={spot[0].parkingtype}
+                                        handleBookClick={this.handleBookClick}
+                                        // handleDialogOpen={this.handleDialogOpen}
+                                      >
+                                        <img
+                                          className={classes.img}
+                                          alt="complex"
+                                          src={spot[0].photo}
+                                        />
+                                      </ButtonBase>
+                                    </Grid>
+                                    <Grid item xs={12} sm container>
+                                      <Grid item xs spacing={16}>
+                                        <Grid item xs>
+                                          <Typography
+                                            gutterBottom
+                                            variant="subtitle1"
+                                          >
+                                            {spot[0].title}
+                                          </Typography>
+                                          <Typography gutterBottom>
+                                            {spot[0].streetName}
+                                          </Typography>
+                                          <Typography color="textSecondary">
+                                            {spot[0].neighborhood}
+                                          </Typography>
+                                          <Typography color="textSecondary">
+                                            {spot[0].parkingtype}
+                                          </Typography>
+                                        </Grid>
+                                        <Grid item>
+                                          <Button
+                                            variant="outlined"
+                                            color="primary"
+                                            aria-label="Booking Summary"
+                                            className={classes.button}
+                                            onClick={event => {
+                                              event.preventDefault();
+                                              this.handleClickOpen(
+                                                spot[0]._id,
+                                                spot[0].address,
+                                                spot[0].title,
+                                                spot[0].photo,
+                                                spot[0].city,
+                                                spot[0].state,
+                                                spot[0].zipcode,
+                                                spot[0].price *
+                                                  this.state.selectedDays.length
+                                              );
+                                            }}
+                                          >
+                                            Book Now
+                                          </Button>
+                                        </Grid>
                                       </Grid>
                                       <Grid item>
-                                        <Button
-                                          variant="outlined"
-                                          color="primary"
-                                          aria-label="Booking Summary"
-                                          className={classes.button}
-                                          onClick={ event => {
-                                            event.preventDefault()
-                                            this.handleClickOpen(
-                                              spot[0]._id,
-                                              spot[0].address,
-                                              spot[0].title,
-                                              spot[0].photo,
-                                              spot[0].city,
-                                              spot[0].state,
-                                              spot[0].zipcode,
-                                              spot[0].price * this.state.selectedDays.length
-                                            );
-                                          }}
-                                        >
-                                          Book Now
-                                        </Button>
+                                        <Typography variant="subtitle1">
+                                          ${spot[0].price}
+                                        </Typography>
                                       </Grid>
                                     </Grid>
-                                    <Grid item>
-                                      <Typography variant="subtitle1">
-                                        ${spot[0].price}
-                                      </Typography>
-                                    </Grid>
                                   </Grid>
-                                </Grid>
-                                <Dialog
-                                  open={this.state.open}
-                                  handleClickOpen={this.handleClickOpen}
-                                >
-                                  <DialogTitle id="form-dialog-title">
-                                    Your Booking Information
-                                  </DialogTitle>
-                                  <DialogContent>
-                                    <p>Title: {this.state.title}</p>
-                                    <p>Address: {this.state.address}</p>
-                                    <p>City: {this.state.city}</p>
-                                    <p>State: {this.state.state}</p>
-                                    <p>Zipcode: {this.state.zipcode}</p>
-                                    <p>
-                                      Dates Booked:{" "}
-                                      {this.state.selectedDays.map(date => " " +
-                                        moment(date).format("L") + " "
-                                      )}
-                                    </p>
-                                    <p>Price: ${this.state.price * this.state.selectedDays.length}</p>
-                                    {/* <p>Dates: {this.state.selectedDays}</p> */}
-                                  </DialogContent>
-                                  <DialogActions>
-                                    <Button
-                                      onClick={event => {
-                                        event.preventDefault();
-                                        this.handleBookClick(
-                                          this.state.id,
-                                          this.state.address,
-                                          this.state.title,
-                                          this.state.href,
-                                          this.state.city,
-                                          this.state.state,
-                                          this.state.zipcode,
-                                          this.state.price
-                                        );
-                                      }}
-                                      variant="outlined"
-                                      color="secondary"
-                                    >
-                                      Confirm Booking
-                                    </Button>
-                                    <Button
-                                      onClick={event => {
-                                        event.preventDefault();
-                                        this.handleClose();
-                                      }}
-                                      variant="outlined"
-                                      color="primary"
-                                    >
-                                      Cancel
-                                    </Button>
-                                  </DialogActions>
-                                </Dialog>
-                              </Paper>
+                                  <Dialog
+                                    open={this.state.open}
+                                    handleClickOpen={this.handleClickOpen}
+                                  >
+                                    <DialogTitle id="form-dialog-title">
+                                      Your Booking Information
+                                    </DialogTitle>
+                                    <DialogContent>
+                                      <p>Title: {this.state.title}</p>
+                                      <p>Address: {this.state.address}</p>
+                                      <p>City: {this.state.city}</p>
+                                      <p>State: {this.state.state}</p>
+                                      <p>Zipcode: {this.state.zipcode}</p>
+                                      <p>
+                                        Dates Booked:{" "}
+                                        {this.state.selectedDays.map(
+                                          date =>
+                                            " " + moment(date).format("L") + " "
+                                        )}
+                                      </p>
+                                      <p>
+                                        Price: $
+                                        {this.state.price *
+                                          this.state.selectedDays.length}
+                                      </p>
+                                      {/* <p>Dates: {this.state.selectedDays}</p> */}
+                                    </DialogContent>
+                                    <DialogActions>
+                                      <Button
+                                        onClick={event => {
+                                          event.preventDefault();
+                                          this.handleBookClick(
+                                            this.state.id,
+                                            this.state.address,
+                                            this.state.title,
+                                            this.state.href,
+                                            this.state.city,
+                                            this.state.state,
+                                            this.state.zipcode,
+                                            this.state.price
+                                          );
+                                        }}
+                                        variant="outlined"
+                                        color="secondary"
+                                      >
+                                        Confirm Booking
+                                      </Button>
+                                      <Button
+                                        onClick={event => {
+                                          event.preventDefault();
+                                          this.handleClose();
+                                        }}
+                                        variant="outlined"
+                                        color="primary"
+                                      >
+                                        Cancel
+                                      </Button>
+                                    </DialogActions>
+                                  </Dialog>
+                                </Paper>
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
+                          );
+                        })}
+                      </div>
+                    )}
+                  </GridList>
                 </div>
               </Paper>
             </Grid>

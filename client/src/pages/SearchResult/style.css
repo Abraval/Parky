@@ -50,3 +50,7 @@ body {
 .DayPicker-Month {
   margin: 1.2em 0 !important;
 }
+
+::-webkit-scrollbar {
+  display: none;
+}

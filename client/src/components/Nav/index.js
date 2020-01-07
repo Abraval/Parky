@@ -99,7 +99,7 @@ class Nav extends Component {
               className={classes.grow}
               style={{ fontFamily: "Galada", fontSize: "34px" }}
             >
-              Parky
+              <a href="/searchresult">Parky</a>
             </Typography>
             <Button color="secondary" href="/searchresult">
               Search

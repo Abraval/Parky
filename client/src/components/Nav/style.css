@@ -1,1 +1,9 @@
 @import url("https://fonts.googleapis.com/css?family=Galada&display=swap");
+
+a:hover,
+a:visited,
+a:link,
+a:active {
+  text-decoration: none;
+  color: #84817a;
+}
