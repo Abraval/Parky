@@ -119,7 +119,9 @@ class SearchResult extends Component {
     address: "",
     photo: "",
     title: "",
-    infoWindowId: ""
+    infoWindowId: "",
+    cardBorder: "",
+    clickedMarkerColor: ""
     // availId: ""
   };
 
@@ -138,6 +140,7 @@ class SearchResult extends Component {
   };
 
   componentDidMount() {
+    window.highlightCorrespondingCard = this.highlightCorrespondingCard; 
     this.renderMap();
     this.userInfo().then(response =>
       this.setState(
@@ -147,6 +150,10 @@ class SearchResult extends Component {
         () => this.tester()
       )
     );
+  }
+
+  componentWillUnmount() {
+    window.highlightCorrespondingCard = null; 
   }
 
   tester() {
@@ -172,7 +179,6 @@ class SearchResult extends Component {
   }
 
   handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
- 
 
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
@@ -196,6 +202,7 @@ class SearchResult extends Component {
   constructor(props) {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
+    this.highlightCorrespondingCard = this.highlightCorrespondingCard.bind(this); 
   }
 
   handleDayClick(day, { selected }) {
@@ -331,11 +338,27 @@ class SearchResult extends Component {
       // this.renderMap(); 
   }
 
-  highlightCorrespondingCard = (id) => {
-    console.log("listing id in function is: ", id); 
+  highlightCorrespondingCard = () => {
+    console.log("listing id in function is: "); 
     console.log("Highlight Corresponding Card"); 
 
     console.log(this.state.cardsArray); 
+
+    // for (let i = 0; i < this.state.cardsArray.length; i++) {
+
+    //   console.log("entered for loop");
+
+    //   console.log(this.state.cardsArray[i]);
+
+    //   console.log(this.state.cardsArray[i][0]._id === id);
+      
+    //   if (this.state.cardsArray[i][0]._id === id) {
+    //     // update the state with that id 
+    //     this.setState({infoWindow: id});         
+
+    //   }
+
+    // }
     
   }
 
@@ -391,7 +414,7 @@ class SearchResult extends Component {
 
             this.highlightCorrespondingCard(listingId); 
 
-            infoWindow.setContent("<img width='100px' src=" + this.state.markerData[i][6] + " />" + "</br>" + "<p>" + this.state.markerData[i][0] + "</p>" + "<p> Type: " + this.state.markerData[i][12] + "</p>" );
+            infoWindow.setContent("<img width='100px' src=" + this.state.markerData[i][6] + " />" + "</br>" + "<p>" + this.state.markerData[i][0] + "</p>" + "<p> Type: " + this.state.markerData[i][12] + "</p>" + "<button " + "onclick=window.highlightCorrespondingCard()" + ">Book Now</button>");
             infoWindow.open(map, marker);
           };
         })(marker, i)
@@ -534,8 +557,8 @@ class SearchResult extends Component {
                                     </ButtonBase>
                                   </Grid>
                                   <Grid item xs={12} sm container>
-                                    <Grid item xs spacing={16}>
-                                      <Grid item xs>
+                                    <Grid  item xs spacing={16}>
+                                      <Grid  item xs>
                                         <Typography
                                           gutterBottom
                                           variant="subtitle1"
@@ -592,6 +615,7 @@ class SearchResult extends Component {
                                   </DialogTitle>
                                   <DialogContent
                                    >
+      
                                     <p>Title: {spot[0].title}</p>
                                     <p>Address: {spot[0].address}</p>
                                     <p>City: {spot[0].city}</p>
