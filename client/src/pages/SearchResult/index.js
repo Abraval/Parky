@@ -125,7 +125,8 @@ class SearchResult extends Component {
     state: "",
     zipcode: "",
     price: "",
-    id: ""
+    id: "",
+    buttonClicked: false
     // availId: ""
   };
   handleChange = key => (event, value) => {
@@ -237,7 +238,9 @@ class SearchResult extends Component {
     } else {
       selectedDays.push(day);
     }
+
     this.setState({ selectedDays });
+    this.setState({ buttonClicked: false });
   }
   handleInputChange = event => {
     const { name, value } = event.target;
@@ -252,6 +255,10 @@ class SearchResult extends Component {
     e.preventDefault();
 
     this.getAddress();
+
+    this.setState({ buttonClicked: true });
+
+    console.log(this.state.selectedDays.length);
 
     /********************** Start of Address Function ********************/
 
@@ -448,7 +455,6 @@ class SearchResult extends Component {
       center: { lat: this.state.latitude, lng: this.state.longitude }
     });
     console.log(marker);
-    // console.log(marker);
 
     // circle.bindTo('center', marker, 'position');
   };
@@ -516,6 +522,16 @@ class SearchResult extends Component {
                     </IconButton>
                   </Paper>
                 </form>
+
+                {this.state.selectedDays.length === 0 &&
+                this.state.addressQuery.length > 0 &&
+                this.state.buttonClicked === true ? (
+                  <span style={{ color: "red", fontFamily: "Roboto" }}>
+                    Please select date(s)
+                  </span>
+                ) : (
+                  " "
+                )}
 
                 <Paper
                   className={classes.calendar}

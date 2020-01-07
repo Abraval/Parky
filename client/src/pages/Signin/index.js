@@ -216,7 +216,6 @@ class LoginForm extends Component {
           if (!response.data.errmsg) {
             console.log("successful signup");
             this.setState({ open: false });
-
           } else {
             console.log("username already taken");
           }
@@ -242,14 +241,22 @@ class LoginForm extends Component {
           direction="column"
           alignItems="center"
           justify="center"
-          style={{ minHeight: "100vh" }}
+          style={{
+            minHeight: "100vh",
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1470224114660-3f6686c562eb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat"
+          }}
         >
           <h1
             style={{
               fontFamily: "Galada",
               color: "white",
               fontSize: "75px",
-              margin: "0"
+              margin: "0",
+              zIndex: 99
             }}
           >
             Parky
@@ -258,7 +265,8 @@ class LoginForm extends Component {
             item
             xs={3}
             style={{
-              minWidth: "250px"
+              minWidth: "250px",
+              zIndex: 99
             }}
           >
             <Paper id="signin" className={classes.root} elevation={1} mx="auto">
@@ -336,7 +344,7 @@ class LoginForm extends Component {
                   >
                     <TextField
                       autoFocus
-                      label="Name"
+                      label="Username"
                       variant="outlined"
                       margin="normal"
                       required
@@ -396,7 +404,7 @@ class LoginForm extends Component {
                       variant="outlined"
                       margin="normal"
                       required
-                      type="text"
+                      type="email"
                       id="email"
                       name="email"
                       placeholder="email@email.com"
@@ -407,17 +415,19 @@ class LoginForm extends Component {
 
                     <TextField
                       label="Date of Birth"
-                      autoFocus
                       variant="outlined"
                       margin="normal"
                       required
-                      type="text"
+                      type="date"
+                      defaultValue="01-01-1990"
                       id="dob"
                       name="dob"
-                      placeholder="dd/mm/yy"
                       value={this.state.dob}
                       onChange={this.handleChange}
                       fullWidth
+                      InputLabelProps={{
+                        shrink: true
+                      }}
                     />
 
                     <TextField
@@ -455,6 +465,7 @@ class LoginForm extends Component {
               </Dialog>
             </Paper>
           </Grid>
+          <div className="overlay" />
         </Grid>
       );
     }

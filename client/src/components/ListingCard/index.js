@@ -137,22 +137,22 @@ class ListingCard extends React.Component {
   showDeleteListing = () => {
     this.setState({
       deleteListingPopuUpShown: true
-    })
-  }
+    });
+  };
 
   hideDeleteListing = () => {
     this.setState({
       deleteListingPopuUpShown: false
-    })
-  }
+    });
+  };
 
-  deleteListing = (id) => {
+  deleteListing = id => {
     API.deleteListing(id)
       .then(res => {
         this.props.loadListings();
       })
       .catch(err => console.log(err));
-  }
+  };
 
   handleInputChange = event => {
     let value = event.target.value;
@@ -243,13 +243,13 @@ class ListingCard extends React.Component {
     //Define temporary variable to hold computtion
     let lastWeekEarnings = 0;
     let lastMonthEarnings = 0;
-    let totalEarnings = 0
+    let totalEarnings = 0;
 
     // For each earning, check what date bracket it falls into
     earnings.forEach(earning => {
       // Compare the earnings date to the date today
       let today = new Date();
-      totalEarnings += earning.amount
+      totalEarnings += earning.amount;
       let earningDate = new Date(earning.date);
       const diffTime = Math.abs(today - earningDate);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -260,7 +260,13 @@ class ListingCard extends React.Component {
         lastMonthEarnings += earning.amount;
       }
     });
-    console.log("earnings....", "Total", totalEarnings, lastWeekEarnings, lastMonthEarnings);
+    console.log(
+      "earnings....",
+      "Total",
+      totalEarnings,
+      lastWeekEarnings,
+      lastMonthEarnings
+    );
     this.setState({
       lastWeekEarnings,
       lastMonthEarnings,
@@ -460,7 +466,7 @@ class ListingCard extends React.Component {
           </DialogActions>
         </Dialog>
 
-        { /* Delete Popup */ }
+        {/* Delete Popup */}
 
         <Dialog
           style={{ fontFamily: "Roboto" }}
@@ -472,7 +478,10 @@ class ListingCard extends React.Component {
             <h4>Do you want to delete this listing </h4>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => this.deleteListing(this.state.currentModalId)} color="primary">
+            <Button
+              onClick={() => this.deleteListing(this.state.currentModalId)}
+              color="primary"
+            >
               Delete
             </Button>
             <Button onClick={() => this.hideDeleteListing()} color="secondary">
