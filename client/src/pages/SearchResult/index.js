@@ -598,7 +598,7 @@ class SearchResult extends Component {
                                               spot[0].city,
                                               spot[0].state,
                                               spot[0].zipcode,
-                                              spot[0].price
+                                              spot[0].price * this.state.selectedDays.length
                                             );
                                           }}
                                         >
@@ -628,7 +628,7 @@ class SearchResult extends Component {
                                     <p>State: {spot[0].state}</p>
                                     <p>Zipcode: {spot[0].zipcode}</p>
                                     <p>Parking Type: {spot[0].parkingtype}</p>
-                                    <p>Price: ${spot[0].price}</p>
+                                    <p>Price: ${spot[0].price * this.state.selectedDays.length}</p>
                                     {/* <p>Dates: {this.state.selectedDays}</p> */}
                                   </DialogContent>
                                   <DialogActions>
