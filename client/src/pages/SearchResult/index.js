@@ -120,10 +120,6 @@ class SearchResult extends Component {
     address: "",
     photo: "",
     title: "",
-    infoWindowId: "",
-    cardBorder: "",
-    clickedMarkerColor: "",
-    
     href: "",
     city: "",
     state: "",
@@ -159,7 +155,9 @@ class SearchResult extends Component {
   };
 
   componentDidMount() {
-    window.highlightCorrespondingCard = this.highlightCorrespondingCard; 
+
+    // window.highlightCorrespondingCard = this.highlightCorrespondingCard; 
+
     this.renderMap();
     this.userInfo().then(response =>
       this.setState(
@@ -172,7 +170,7 @@ class SearchResult extends Component {
   }
 
   componentWillUnmount() {
-    window.highlightCorrespondingCard = null; 
+    // window.highlightCorrespondingCard = null; 
   }
 
   tester() {
@@ -188,7 +186,6 @@ class SearchResult extends Component {
   }
 
   componentDidUpdate(prevProps, props) {
-
     // console.log(prevProps);
     // console.log(props);
     if (this.state.markerData !== props.markerData) {
@@ -199,6 +196,32 @@ class SearchResult extends Component {
   }
 
   handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
+    this.setState({
+      title: title,
+      address: address,
+      href: href,
+      city: city,
+      state: state,
+      zipcode: zipcode,
+      price: price,
+      id: id
+    });
+    // console.log(address);
+
+    console.log("---------------------");
+
+    console.log("selectedDaysLength: ", this.state.selectedDays.length);
+    console.log("id: ", id);
+    console.log("user id: ", this.state.user._id);
+    console.log("address: ", address);
+    console.log("city: ", city);
+    console.log("state: ", state);
+    console.log("zipcode: ", zipcode);
+    console.log("title: ", title);
+    console.log("price: ", price);
+    console.log("href: ", href);
+
+    console.log("---------------------");
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
         date: this.state.selectedDays[i],
@@ -221,7 +244,7 @@ class SearchResult extends Component {
   constructor(props) {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
-    this.highlightCorrespondingCard = this.highlightCorrespondingCard.bind(this); 
+    // this.highlightCorrespondingCard = this.highlightCorrespondingCard.bind(this); 
   }
 
   handleDayClick(day, { selected }) {
@@ -246,7 +269,6 @@ class SearchResult extends Component {
       [name]: value
     });
   };
-
   handleSubmitSearch = e => {
     console.log("handleSubmitSearch is called");
 
@@ -435,7 +457,7 @@ class SearchResult extends Component {
             let listingId = this.state.markerData[i][7]; 
 
             // this is how I was passing through the id of the corresponding marker 
-            this.highlightCorrespondingCard(listingId); 
+            // this.highlightCorrespondingCard(listingId); 
 
             infoWindow.setContent("<img width='100px' src=" + this.state.markerData[i][6] + " />" + "</br>" + "<p>" + this.state.markerData[i][0] + "</p>" + "<p> Type: " + this.state.markerData[i][12] + "</p>" + "<button " + "onclick=window.highlightCorrespondingCard()" + ">Book Now</button>");
             infoWindow.open(map, marker);
