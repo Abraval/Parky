@@ -65,21 +65,45 @@ const styles = theme => ({
     flexWrap: "wrap",
     justifyContent: "center"
   },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-    textAlign: "center"
-  },
+  // appBar: {
+  //   zIndex: theme.zIndex.drawer + 1
+  // },
   drawerPaper: {
     width: drawerWidth
   },
+  // content: {
+  //   flexGrow: 1
+  // },
+  drawer: {
+    [theme.breakpoints.up("sm")]: {
+      width: drawerWidth,
+      flexShrink: 0
+    }
+  },
+  drawerList: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  appBar: {
+    // marginLeft: drawerWidth,
+    zIndex: theme.zIndex.drawer + 1
+    // [theme.breakpoints.up("sm")]: {
+    //   width: `calc(100% - ${drawerWidth}px)`
+    // }
+  },
+  menuButton: {
+    marginRight: 20,
+    [theme.breakpoints.up("sm")]: {
+      display: "none"
+    }
+  },
+  toolbar: theme.mixins.toolbar,
   content: {
     flexGrow: 1
-  },
-  toolbar: theme.mixins.toolbar
+    // padding: theme.spacing.unit * 3
+  }
 });
 
 class Profile extends Component {
@@ -110,9 +134,9 @@ class Profile extends Component {
         console.log("=======");
         this.setState({ user: res.data });
         this.setState({ userId: res.data.user._id });
-        this.setState({ firstname: res.data.user.firstname});
-        this.setState({ lastname: res.data.user.firstname});
-        this.setState({ photo: res.data.user.photo});
+        this.setState({ firstname: res.data.user.firstname });
+        this.setState({ lastname: res.data.user.firstname });
+        this.setState({ photo: res.data.user.photo });
         this.loadListings();
         this.loadReserved();
       })
@@ -192,17 +216,22 @@ class Profile extends Component {
         <Divider />
 
         <List
+          className={classes.drawerList}
           style={{
             fontFamily: "Roboto",
             color: "#545454",
             fontSize: "18px"
           }}
         >
-          <img width = "200"
-            src={!this.state.photo ?  ("https://cdn0.iconfinder.com/data/icons/user-collection-4/512/user-512.png"): (this.state.photo)
-            } 
+          <img
+            width="200"
+            src={
+              !this.state.photo
+                ? "https://cdn0.iconfinder.com/data/icons/user-collection-4/512/user-512.png"
+                : this.state.photo
+            }
           />
-  <h3>Welcome back, {this.state.firstname}!</h3>
+          <h3>Welcome back, {this.state.firstname}!</h3>
           {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>

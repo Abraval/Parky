@@ -118,7 +118,8 @@ class SearchResult extends Component {
     user: {},
     address: "",
     photo: "",
-    title: ""
+    title: "",
+    buttonClicked: false
     // availId: ""
   };
   handleChange = key => (event, value) => {
@@ -152,12 +153,10 @@ class SearchResult extends Component {
     return axios.get("/user/");
   }
   componentDidUpdate(prevProps, props) {
-
-    // console.log(prevProps); 
-    // console.log(props); 
+    // console.log(prevProps);
+    // console.log(props);
     if (this.state.markerData !== props.markerData) {
-
-      console.log("componentDidUpdate called"); 
+      console.log("componentDidUpdate called");
       this.renderMap();
       // this.renderCards();
     }
@@ -212,7 +211,9 @@ class SearchResult extends Component {
     } else {
       selectedDays.push(day);
     }
+
     this.setState({ selectedDays });
+    this.setState({ buttonClicked: false });
   }
   handleInputChange = event => {
     const { name, value } = event.target;
@@ -222,145 +223,134 @@ class SearchResult extends Component {
     });
   };
   handleSubmitSearch = e => {
-
-    console.log("handleSubmitSearch is called"); 
+    console.log("handleSubmitSearch is called");
 
     e.preventDefault();
 
     this.getAddress();
 
+    this.setState({ buttonClicked: true });
+
+    console.log(this.state.selectedDays.length);
+
     /********************** Start of Address Function ********************/
 
-
-
-  
-
     /********************** End of Address Function ********************/
-
   };
 
   // functionA = () => {
   //   var listingsPromise = new Promise((resolve, reject) => {
-  //     console.log("listing Promise called"); 
-  //     resolve(this.findRelevantListings()); 
-  //   }) 
+  //     console.log("listing Promise called");
+  //     resolve(this.findRelevantListings());
+  //   })
 
   //   listingsPromise.then(res => {
 
-  //     console.log(".then of listing Promise called"); 
-  //     this.renderMap(); 
+  //     console.log(".then of listing Promise called");
+  //     this.renderMap();
 
   //   })
 
   // }
 
-
-
   findRelevantListings = () => {
+    console.log("addres.then(data => is called");
 
+    const formattedDates = this.state.selectedDays.map(date =>
+      date.toISOString()
+    );
 
-      console.log("addres.then(data => is called")
+    this.setState({ cardsArray: [] });
+    this.setState({ markerData: [] });
+    this.setState({ listings: [] });
 
-      const formattedDates = this.state.selectedDays.map(date =>
-        date.toISOString()
-      );
+    API.getAvailableListings(formattedDates).then(res => {
+      // console.log("here", res);
 
-      this.setState({ cardsArray: [] });
-      this.setState({ markerData: [] });
-      this.setState({ listings: [] });
-
-      API.getAvailableListings(formattedDates).then(res => {
-        // console.log("here", res);
-
-        let emptyArr = []; // these are the items that we are displaying
-        const datesLength = formattedDates.length;
-        for (let i = 0; i < res.data.length; i++) {
-          let count = 0;
-          for (let j = 0; j < res.data.length; j++) {
-            // console.log(res.data[i].listing === res.data[j].listing);
-            if (res.data[i].listing === res.data[j].listing) {
-              count++;
-              // console.log(count);
-              // console.log(emptyArr.findIndex(x => x.listing === res.data[i].listing) === -1);
-              if (
-                count == datesLength &&
-                emptyArr.findIndex(x => x.listing === res.data[i].listing) ===
-                  -1
-              ) {
-                emptyArr.push(res.data[i]);
-              }
+      let emptyArr = []; // these are the items that we are displaying
+      const datesLength = formattedDates.length;
+      for (let i = 0; i < res.data.length; i++) {
+        let count = 0;
+        for (let j = 0; j < res.data.length; j++) {
+          // console.log(res.data[i].listing === res.data[j].listing);
+          if (res.data[i].listing === res.data[j].listing) {
+            count++;
+            // console.log(count);
+            // console.log(emptyArr.findIndex(x => x.listing === res.data[i].listing) === -1);
+            if (
+              count == datesLength &&
+              emptyArr.findIndex(x => x.listing === res.data[i].listing) === -1
+            ) {
+              emptyArr.push(res.data[i]);
             }
           }
         }
+      }
 
-        /******************************************Start******************************************/
+      /******************************************Start******************************************/
 
-        console.log("API.getAvailableListings Called"); 
+      console.log("API.getAvailableListings Called");
 
-        emptyArr.map(item => {
-          API.getListingById(item.listing).then(listing => {
+      emptyArr.map(item => {
+        API.getListingById(item.listing).then(listing => {
+          console.log("API.getListingByID Called");
 
-            console.log("API.getListingByID Called"); 
+          var longLatArray = [this.state.longitude, this.state.latitude];
 
-            var longLatArray = [this.state.longitude, this.state.latitude];
+          console.log(longLatArray);
 
-            console.log(longLatArray); 
+          API.getListingByIdAndProximity(longLatArray).then(item => {
+            console.log("API.getListingByIdAndProximity");
 
-            API.getListingByIdAndProximity(longLatArray).then(item => {
+            console.log("this.state.cardsArray: ", this.state.cardsArray);
 
-              console.log("API.getListingByIdAndProximity") 
+            // console.log("line 250 is: ", item);
 
-              console.log("this.state.cardsArray: ", this.state.cardsArray); 
-              
-              // console.log("line 250 is: ", item);
-
-              for (let i = 0; i < item.data.length; i++) {
-                // console.log(listing.data[0]._id === item.data[i]._id);
-                if (listing.data[0]._id === item.data[i]._id) {
-                  this.setState({
-                    cardsArray: [...this.state.cardsArray, [item.data[i]]]
-                  });
-                }
+            for (let i = 0; i < item.data.length; i++) {
+              // console.log(listing.data[0]._id === item.data[i]._id);
+              if (listing.data[0]._id === item.data[i]._id) {
+                this.setState({
+                  cardsArray: [...this.state.cardsArray, [item.data[i]]]
+                });
               }
+            }
 
-              console.log("this.state.cardsArray after the for loop ", this.state.cardsArray); 
+            console.log(
+              "this.state.cardsArray after the for loop ",
+              this.state.cardsArray
+            );
+          });
 
-            });
+          const data = listing.data[0];
 
-            const data = listing.data[0];
-
-            this.setState({
-              markerData: [
-                ...this.state.markerData,
-                [
-                  data.address,
-                  data.location.coordinates[1],
-                  data.location.coordinates[0],
-                  data.title,
-                  data.streetName,
-                  data.neighborhood,
-                  data.photo,
-                  data._id,
-                  data.city,
-                  data.state,
-                  data.zipcode,
-                  data.price,
-                  data.parkingtype
-                ]
+          this.setState({
+            markerData: [
+              ...this.state.markerData,
+              [
+                data.address,
+                data.location.coordinates[1],
+                data.location.coordinates[0],
+                data.title,
+                data.streetName,
+                data.neighborhood,
+                data.photo,
+                data._id,
+                data.city,
+                data.state,
+                data.zipcode,
+                data.price,
+                data.parkingtype
               ]
-            });
-
+            ]
           });
         });
-
-        /******************************************End******************************************/
       });
-    
-      // this.renderMap(); 
-  }
 
+      /******************************************End******************************************/
+    });
 
-
+    // this.renderMap();
+  };
 
   renderMap = () => {
     loadScript(
@@ -371,7 +361,7 @@ class SearchResult extends Component {
   };
 
   initMap = () => {
-    console.log("initMap is called"); 
+    console.log("initMap is called");
 
     // console.log(this.state.latitude);
     // console.log(this.state.longitude);
@@ -438,13 +428,12 @@ class SearchResult extends Component {
       center: { lat: this.state.latitude, lng: this.state.longitude }
     });
     console.log(marker);
-    // console.log(marker); 
 
     // circle.bindTo('center', marker, 'position');
   };
 
   getAddress = async () => {
-    console.log("getAddress async is called"); 
+    console.log("getAddress async is called");
     let location = this.state.addressQuery;
     axios
       .get("https://maps.googleapis.com/maps/api/geocode/json", {
@@ -454,15 +443,18 @@ class SearchResult extends Component {
         }
       })
       .then(response => {
-
-        console.log("Axios.get.then is called, setting state of latitude and longitude for the map");
+        console.log(
+          "Axios.get.then is called, setting state of latitude and longitude for the map"
+        );
         var latitude = response.data.results[0].geometry.location.lat;
         var longitude = response.data.results[0].geometry.location.lng;
         this.setState({ latitude, longitude }, () => {
-          console.log("inside the callback for this.setState latitude and longitude"); 
+          console.log(
+            "inside the callback for this.setState latitude and longitude"
+          );
           // this.renderMap();
-          this.findRelevantListings(); 
-          // this.functionA(); 
+          this.findRelevantListings();
+          // this.functionA();
         });
         // this.renderMap();
       });
@@ -503,6 +495,16 @@ class SearchResult extends Component {
                     </IconButton>
                   </Paper>
                 </form>
+
+                {this.state.selectedDays.length === 0 &&
+                this.state.addressQuery.length > 0 &&
+                this.state.buttonClicked === true ? (
+                  <span style={{ color: "red", fontFamily: "Roboto" }}>
+                    Please select date(s)
+                  </span>
+                ) : (
+                  " "
+                )}
 
                 <Paper
                   className={classes.calendar}
@@ -621,8 +623,7 @@ class SearchResult extends Component {
                                   <DialogTitle id="form-dialog-title">
                                     Your Booking Information
                                   </DialogTitle>
-                                  <DialogContent
-                                   >
+                                  <DialogContent>
                                     <p>Title: {spot[0].title}</p>
                                     <p>Address: {spot[0].address}</p>
                                     <p>City: {spot[0].city}</p>
