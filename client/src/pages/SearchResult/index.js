@@ -482,7 +482,7 @@ for (let i = 0; i < this.state.cardsArray.length; i++) {
         // this is how I was passing through the id of the corresponding marker 
         // this.highlightCorrespondingCard(listingId); 
 
-        infoWindow.setContent(   "<p>"+ (i + 1) +"<p/>" + "<img width='100px' src=" + this.state.cardsArray[i][0].photo + " />" + "</br>" + "<p>" + this.state.cardsArray[i][0].title + "</p>" + "<p> Type: " + this.state.cardsArray[i][0].parkingtype + "</p>");
+        infoWindow.setContent("<img width='100px' src=" + this.state.cardsArray[i][0].photo + " />" + "</br>" + "<span style='margin-top:10px;color:black;font-weight:bold;font-size:14px;'>"+ (i + 1) + ". " +"<span/>" + "<span>" + this.state.cardsArray[i][0].title + "</span>" + "</br>" + "<p style='font-weight:normal;font-size:12px;'> Price: $" + this.state.cardsArray[i][0].price + "</p>" + "<p style='margin-bottom:0px;font-weight:normal;font-size:12px;'> Type: " + this.state.cardsArray[i][0].parkingtype + "</p>");
         infoWindow.open(map, marker);
       };
     })(marker, i)
