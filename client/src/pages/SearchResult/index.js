@@ -133,8 +133,8 @@ class SearchResult extends Component {
     });
   };
 
-  handleClickOpen = () => {
-    this.setState({ open: true });
+  handleClickOpen = (id, address, title, href, city, state, zipcode, price) => {
+    this.setState({ open: true, title: title , address: address, href: href, city: city, state: state, zipcode: zipcode, price: price, id: id });
   };
 
   handleClose = () => {
@@ -167,7 +167,7 @@ class SearchResult extends Component {
     }
   }
   handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
-    this.setState({ title: title , address: address, href: href, city: city, state: state, zipcode: zipcode, price: price 
+    this.setState({ title: title , address: address, href: href, city: city, state: state, zipcode: zipcode, price: price, id: id 
     })
     // console.log(address);
 
@@ -196,8 +196,8 @@ class SearchResult extends Component {
         photo: href
       }).then(res => console.log(res));
     }
-
-    this.handleClickOpen();
+    this.getAddress();
+    this.handleClose();
   };
 
   handleDialogOpen = event => {
@@ -525,7 +525,8 @@ class SearchResult extends Component {
                   ) : (
                     <div>
                       {this.state.cardsArray.map(spot => {
-                        // console.log(spot[0].title);
+                        console.log("SPOT ARRAY ++++++++++++++");
+                        console.log(spot);
                         // console.log(this.state.markerData);
                         // console.log(this.state.cardsArray);
                         return (
@@ -583,19 +584,19 @@ class SearchResult extends Component {
                                           color="primary"
                                           aria-label="Booking Summary"
                                           className={classes.button}
-                                          onClick={event => {
-                                            event.preventDefault();
-                                            this.handleBookClick(
-                                              spot[0]._id,
-                                              spot[0].address,
-                                              spot[0].title,
-                                              spot[0].photo,
-                                              spot[0].city,
-                                              spot[0].state,
-                                              spot[0].zipcode,
-                                              spot[0].price
-                                            );
-                                          }}
+                                          onClick={ 
+                                       () =>  this.handleClickOpen( 
+                                        spot[0]._id,
+                                        spot[0].address,
+                                        spot[0].title,
+                                        spot[0].photo,
+                                        spot[0].city,
+                                        spot[0].state,
+                                        spot[0].zipcode,
+                                        spot[0].price
+                                        )
+                                          }
+                                          
                                         >
                                           Book Now
                                         </Button>
@@ -627,7 +628,19 @@ class SearchResult extends Component {
                                   </DialogContent>
                                   <DialogActions>
                                     <Button
-                                      onClick={() => this.handleClose()}
+                                      onClick={event => {
+                                        event.preventDefault();
+                                        this.handleBookClick(
+                                          this.state.id,
+                                          this.state.address,
+                                          this.state.title,
+                                          this.state.href,
+                                          this.state.city,
+                                          this.state.state,
+                                          this.state.zipcode,
+                                          this.state.price
+                                        );
+                                      }}
                                       variant="outlined"
                                       color="secondary"
                                     >
