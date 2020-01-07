@@ -49,12 +49,13 @@ const styles = theme => ({
 function formatDate(date) {
   const newDate = new Date(date);
   return (
-    newDate.getMonth() +
-    1 +
-    "/" +
-    newDate.getDate() +
-    "/" +
-    newDate.getFullYear()
+    moment(date).format("LL")
+    // newDate.getMonth() +
+    // 1 +
+    // "/" +
+    // newDate.getDate() +
+    // "/" +
+    // newDate.getFullYear()
   );
 }
 

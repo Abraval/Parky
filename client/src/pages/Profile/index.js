@@ -31,6 +31,8 @@ import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
+import Avatar from "@material-ui/core/Avatar";
+
 const drawerWidth = 240;
 
 function TabContainer(props) {
@@ -103,6 +105,11 @@ const styles = theme => ({
   content: {
     flexGrow: 1
     // padding: theme.spacing.unit * 3
+  },
+  large: {
+    width: 150,
+    height: 150,
+    marginTop: "20px"
   }
 });
 
@@ -159,26 +166,30 @@ class Profile extends Component {
       .catch(err => console.log(err));
   };
 
-
-  processReserved = (reserved) => {
+  processReserved = reserved => {
     // The default data model (array) isn't suitable for grouping the listings by dates. An object is more appropriate.
-    let reservationsObject =  {}
+    let reservationsObject = {};
     reserved.forEach(reservation => {
-      reservationsObject[reservation.listing] = reservationsObject[reservation.listing] || reservation // Initialize the listing key with the reservation
-      reservationsObject[reservation.listing].reservations = reservationsObject[reservation.listing].reservations || [] // Create an empty array if no previous reservations were added to this listing
-      reservationsObject[reservation.listing].reservations = [...reservationsObject[reservation.listing].reservations, {date: reservation.date, reservationId: reservation._id}] // Add a new reservation to the listing
-    })
+      reservationsObject[reservation.listing] =
+        reservationsObject[reservation.listing] || reservation; // Initialize the listing key with the reservation
+      reservationsObject[reservation.listing].reservations =
+        reservationsObject[reservation.listing].reservations || []; // Create an empty array if no previous reservations were added to this listing
+      reservationsObject[reservation.listing].reservations = [
+        ...reservationsObject[reservation.listing].reservations,
+        { date: reservation.date, reservationId: reservation._id }
+      ]; // Add a new reservation to the listing
+    });
 
-    console.log("Reservation Obj", reservationsObject)
+    console.log("Reservation Obj", reservationsObject);
     this.setState({
       reservationsObject
-    })
-  }
+    });
+  };
 
   loadReserved = () => {
     API.getReservForProf(this.state.userId)
       .then(res => {
-        this.processReserved(res.data)
+        this.processReserved(res.data);
         this.setState({ reserved: res.data });
         console.log("RESERVATIONS");
         console.log(res.data);
@@ -242,23 +253,26 @@ class Profile extends Component {
             fontSize: "18px"
           }}
         >
-          <img
+          <Avatar
             width="200"
             src={
               !this.state.photo
                 ? "https://cdn0.iconfinder.com/data/icons/user-collection-4/512/user-512.png"
                 : this.state.photo
             }
+            className={classes.large}
           />
-          <h3>Welcome back, {this.state.firstname}!</h3>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+          <h3 style={{ textAlign: "center" }}>
+            Welcome back, {this.state.firstname}!
+          </h3>
+          {/* {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>
                 <ExitToAppIcon />
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
-          ))}
+          ))} */}
         </List>
         {/* <Divider />
         <List>
@@ -374,23 +388,34 @@ class Profile extends Component {
                         <div>
                           <h1>RESERVATIONS</h1>
                           <div className={classes.cardContainer}>
-                            {Object.keys(this.state.reservationsObject).map((key) => {
-                              console.log("jknasjdnasjnd", key);
-                              if (reservationsObject[key].renter === this.state.userId)
-                                return (
-                                  <div>
-                                    <ReservCard
-                                      date={moment(reservationsObject[key].date).format("LL")}
-                                      reservations={reservationsObject[key].reservations}
-                                      id={reservationsObject[key]._id}
-                                      address={reservationsObject[key].address}
-                                      title={reservationsObject[key].title}
-                                      photo={reservationsObject[key].photo}
-                                      loadReserved={this.loadReserved}
-                                    />
-                                  </div>
-                                );
-                            })}
+                            {Object.keys(this.state.reservationsObject).map(
+                              key => {
+                                console.log("jknasjdnasjnd", key);
+                                if (
+                                  reservationsObject[key].renter ===
+                                  this.state.userId
+                                )
+                                  return (
+                                    <div>
+                                      <ReservCard
+                                        date={moment(
+                                          reservationsObject[key].date
+                                        ).format("LL")}
+                                        reservations={
+                                          reservationsObject[key].reservations
+                                        }
+                                        id={reservationsObject[key]._id}
+                                        address={
+                                          reservationsObject[key].address
+                                        }
+                                        title={reservationsObject[key].title}
+                                        photo={reservationsObject[key].photo}
+                                        loadReserved={this.loadReserved}
+                                      />
+                                    </div>
+                                  );
+                              }
+                            )}
                           </div>
                         </div>
                       </Paper>
