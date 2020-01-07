@@ -79,6 +79,7 @@ class ListingCard extends React.Component {
     zipcode: this.props.zipcode,
     currentModalId: this.props.id,
     //Material UI card
+    openDeleteConfirm: false,
     expanded: false,
     selectedDays: [],
     lastWeekEarnings: 0,
@@ -113,6 +114,10 @@ class ListingCard extends React.Component {
 
   handleClickOpen2 = () => {
     this.setState({ open2: true });
+  };
+
+  handleDeleteConfirm = () => {
+    this.setState({ openDeleteConfirm: true });
   };
 
   handleClose = () => {
