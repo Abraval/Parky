@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import "./style.css";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
@@ -56,6 +57,10 @@ const styles = theme => ({
   },
   avatar: {
     backgroundColor: red[500]
+  },
+  bookings: {
+    overflowY: "scroll",
+    height: "80px"
   }
 });
 
@@ -65,19 +70,36 @@ class ReservCard extends React.Component {
     address: this.props.address,
     title: this.props.title,
     photo: this.props.photo,
-    currentModalId: this.props.id
+    currentReservedId: this.props.id,
+    cancelReservationShown: false,
+    reservationToCancel: ''
   };
 
-  handleDelete = id => {
-    console.log("id", id);
-    API.deleteAvailability(id)
-      .then(res => {
-        console.log(res);
-        // this.props.loadReserved2()
-        console.log(this);
+  cancelReservation = () => {
+    API.deleteAvailability(this.state.reservationToCancel)
+    .then(res => {
+      console.log(res)
+      this.props.loadReserved()
+      console.log(this); 
+      this.setState({
+        cancelReservationShown: false
       })
+    })
       .catch(err => console.log(err));
   };
+
+  hideCancelReservation = () => {
+    this.setState({
+      cancelReservationShown: false
+    })
+  }
+
+  showCancelReservation = (id) => {
+    this.setState({
+      cancelReservationShown: true,
+      reservationToCancel: id
+    })
+  }
 
   render() {
     const { classes } = this.props;
@@ -103,26 +125,61 @@ class ReservCard extends React.Component {
       //   </CardActions>
 
       <Card className={classes.card}>
-        {console.log("kajsdkla", this.state.currentModalId)}
+        {console.log("kajsdkla", this.state.currentReservedId)}
         <CardMedia
           className={classes.media}
           image={this.props.photo}
           title={this.props.title}
         />
         <CardHeader title={this.props.title} subheader={this.props.address} />
-        <CardContent>
-          <Typography component="p">{this.props.date}</Typography>
-        </CardContent>
+        <div className={classes.bookings}>
+          
+          {
+          this.props.reservations.map((reservation) => {
+            return (
+          <p key={reservation.reservationId}>
+            {moment(reservation.date).format('LL')}
+            <Button onClick={() => this.showCancelReservation(reservation.reservationId)} color="warning">
+             x
+           </Button>
+            </p>
+             
+            )
+          })
+        }
+        </div>
         <CardActions className={classes.actions} disableActionSpacing>
-          <Button
+          {/* <Button
             variant="contained"
             className={classes.button}
-            onClick={() => this.handleDelete(this.state.currentModalId)}
+            onClick={() => this.showCancelReservation()}
           >
             Cancel Reservation
-          </Button>
+          </Button> */}
         </CardActions>
+
+        { /* Cancel Reservation */ }
+
+        <Dialog
+          style={{ fontFamily: "Roboto" }}
+          open={this.state.cancelReservationShown}
+          handleClickOpen={this.showCancelReservation}
+        >
+          <DialogTitle id="form-dialog-title">Earnings</DialogTitle>
+          <DialogContent className={classes.dialog}>
+            <h4>Are you sure you want to cancel this Reservation?</h4>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => this.cancelReservation()} color="warning">
+              Cancel Reservation
+            </Button>
+            <Button onClick={() => this.hideCancelReservation()} color="secondary">
+              Exit
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Card>
+      
 
       // <div className="card" {...this.props} tabIndex="0">
       //   <div className="card-header">

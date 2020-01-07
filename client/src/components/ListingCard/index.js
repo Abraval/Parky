@@ -79,10 +79,13 @@ class ListingCard extends React.Component {
     zipcode: this.props.zipcode,
     currentModalId: this.props.id,
     //Material UI card
+    openDeleteConfirm: false,
     expanded: false,
     selectedDays: [],
     lastWeekEarnings: 0,
     lastMonthEarnings: 0,
+    totalEarnings: 0,
+    deleteListingPopuUpShown: false,
     initialAvailabilities: [] //used to figure out which availablities to create and to delete
   };
 
@@ -129,6 +132,26 @@ class ListingCard extends React.Component {
 
   handleClose2 = () => {
     this.setState({ open2: false });
+  };
+
+  showDeleteListing = () => {
+    this.setState({
+      deleteListingPopuUpShown: true
+    });
+  };
+
+  hideDeleteListing = () => {
+    this.setState({
+      deleteListingPopuUpShown: false
+    });
+  };
+
+  deleteListing = id => {
+    API.deleteListing(id)
+      .then(res => {
+        this.props.loadListings();
+      })
+      .catch(err => console.log(err));
   };
 
   handleInputChange = event => {
@@ -220,11 +243,13 @@ class ListingCard extends React.Component {
     //Define temporary variable to hold computtion
     let lastWeekEarnings = 0;
     let lastMonthEarnings = 0;
+    let totalEarnings = 0;
 
     // For each earning, check what date bracket it falls into
     earnings.forEach(earning => {
       // Compare the earnings date to the date today
       let today = new Date();
+      totalEarnings += earning.amount;
       let earningDate = new Date(earning.date);
       const diffTime = Math.abs(today - earningDate);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -235,10 +260,17 @@ class ListingCard extends React.Component {
         lastMonthEarnings += earning.amount;
       }
     });
-    console.log("earnings....", lastWeekEarnings, lastMonthEarnings);
-    this.setState({
+    console.log(
+      "earnings....",
+      "Total",
+      totalEarnings,
       lastWeekEarnings,
       lastMonthEarnings
+    );
+    this.setState({
+      lastWeekEarnings,
+      lastMonthEarnings,
+      totalEarnings
     });
   };
 
@@ -322,7 +354,7 @@ class ListingCard extends React.Component {
           <IconButton
             aria-label="Delete Listing"
             title="Delete"
-            onClick={() => this.handleDelete(this.state.currentModalId)}
+            onClick={() => this.showDeleteListing()}
           >
             <DeleteIcon />
           </IconButton>
@@ -422,16 +454,37 @@ class ListingCard extends React.Component {
         >
           <DialogTitle id="form-dialog-title">Earnings</DialogTitle>
           <DialogContent className={classes.dialog}>
-            <h4>Total Earnings: {this.props.earning} </h4>
+            <h4>Total Earnings: {this.state.totalEarnings} </h4>
             <h6>Total earnings to date, incluing future bookings</h6>
             <h4>Last 7 Days: {this.state.lastWeekEarnings} </h4>
             <h4>Last 30 Days: {this.state.lastMonthEarnings} </h4>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => console.log("Submitting")} color="primary">
-              Submit
-            </Button>
             <Button onClick={() => this.hideEarning()} color="secondary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Delete Popup */}
+
+        <Dialog
+          style={{ fontFamily: "Roboto" }}
+          open={this.state.deleteListingPopuUpShown}
+          handleClickOpen={this.showDeleteListing}
+        >
+          <DialogTitle id="form-dialog-title">Earnings</DialogTitle>
+          <DialogContent className={classes.dialog}>
+            <h4>Do you want to delete this listing </h4>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => this.deleteListing(this.state.currentModalId)}
+              color="primary"
+            >
+              Delete
+            </Button>
+            <Button onClick={() => this.hideDeleteListing()} color="secondary">
               Cancel
             </Button>
           </DialogActions>
