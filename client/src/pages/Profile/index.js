@@ -31,6 +31,8 @@ import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
+import Avatar from '@material-ui/core/Avatar';
+
 const drawerWidth = 240;
 
 function TabContainer(props) {
@@ -103,6 +105,11 @@ const styles = theme => ({
   content: {
     flexGrow: 1
     // padding: theme.spacing.unit * 3
+  },
+  large: {
+    width: 150,
+    height: 150,
+    marginTop: "20px"
   }
 });
 
@@ -242,13 +249,14 @@ class Profile extends Component {
             fontSize: "18px"
           }}
         >
-          <img
+          <Avatar
             width="200"
             src={
               !this.state.photo
                 ? "https://cdn0.iconfinder.com/data/icons/user-collection-4/512/user-512.png"
                 : this.state.photo
             }
+            className={classes.large}
           />
           <h3>Welcome back, {this.state.firstname}!</h3>
           {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
