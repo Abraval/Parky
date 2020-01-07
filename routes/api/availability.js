@@ -18,6 +18,7 @@ router
 router
 .route("/:id")
 .get(listingController.getAvailabilityByListingId)
+// .put(listingController.cancelReservation)
 .delete(listingController.deleteAvailability)
 
 

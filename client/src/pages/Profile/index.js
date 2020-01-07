@@ -116,6 +116,7 @@ class Profile extends Component {
     firstname: "",
     lastname: "",
     photo: "",
+    reservationsObject: {},
     // For tabs
     value: 0,
     mobileOpen: false
@@ -150,6 +151,7 @@ class Profile extends Component {
 
   loadListings = () => {
     API.getListingsForProf()
+
       .then(res => {
         console.log("Profile.loadListing res.date", res.data);
         this.setState({ listing: res.data });
@@ -157,9 +159,26 @@ class Profile extends Component {
       .catch(err => console.log(err));
   };
 
+
+  processReserved = (reserved) => {
+    // The default data model (array) isn't suitable for grouping the listings by dates. An object is more appropriate.
+    let reservationsObject =  {}
+    reserved.forEach(reservation => {
+      reservationsObject[reservation.listing] = reservationsObject[reservation.listing] || reservation // Initialize the listing key with the reservation
+      reservationsObject[reservation.listing].reservations = reservationsObject[reservation.listing].reservations || [] // Create an empty array if no previous reservations were added to this listing
+      reservationsObject[reservation.listing].reservations = [...reservationsObject[reservation.listing].reservations, {date: reservation.date, reservationId: reservation._id}] // Add a new reservation to the listing
+    })
+
+    console.log("Reservation Obj", reservationsObject)
+    this.setState({
+      reservationsObject
+    })
+  }
+
   loadReserved = () => {
     API.getReservForProf(this.state.userId)
       .then(res => {
+        this.processReserved(res.data)
         this.setState({ reserved: res.data });
         console.log("RESERVATIONS");
         console.log(res.data);
@@ -171,7 +190,7 @@ class Profile extends Component {
       .catch(err => console.log(err));
   };
 
-  loadReserved = () => {
+  loadReserved3 = () => {
     API.getReservForProf(this.state.userId)
       .then(res => {
         this.setState({ reserved: res.data });
@@ -208,7 +227,7 @@ class Profile extends Component {
 
   render() {
     const { classes } = this.props;
-    const { value } = this.state;
+    const { value, reservationsObject } = this.state;
 
     const drawer = (
       <div>
@@ -355,18 +374,19 @@ class Profile extends Component {
                         <div>
                           <h1>RESERVATIONS</h1>
                           <div className={classes.cardContainer}>
-                            {this.state.reserved.map(reserved => {
-                              console.log("jknasjdnasjnd", reserved);
-                              if (reserved.renter === this.state.userId)
+                            {Object.keys(this.state.reservationsObject).map((key) => {
+                              console.log("jknasjdnasjnd", key);
+                              if (reservationsObject[key].renter === this.state.userId)
                                 return (
                                   <div>
                                     <ReservCard
-                                      date={moment(reserved.date).format("LL")}
-                                      id={reserved._id}
-                                      address={reserved.address}
-                                      title={reserved.title}
-                                      photo={reserved.photo}
-                                      loadReserved={this.loadReserved2}
+                                      date={moment(reservationsObject[key].date).format("LL")}
+                                      reservations={reservationsObject[key].reservations}
+                                      id={reservationsObject[key]._id}
+                                      address={reservationsObject[key].address}
+                                      title={reservationsObject[key].title}
+                                      photo={reservationsObject[key].photo}
+                                      loadReserved={this.loadReserved}
                                     />
                                   </div>
                                 );

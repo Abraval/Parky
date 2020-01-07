@@ -216,10 +216,17 @@ module.exports = {
     .then(dbModel => res.json(dbModel))
     .catch(err => res.status(422).json(err));
   },
+  // deleteAvailability: function(req, res) {
+  //   console.log("req.params deleteAvailability", req.params)
+  //   const {id} = req.params
+  //   db.Availability.deleteOne({_id: id})
+  //   .then(dbModel => res.json(dbModel))
+  //   .catch(err => res.status(422).json(err));
+  // },
   deleteAvailability: function(req, res) {
     console.log("req.params deleteAvailability", req.params)
     const {id} = req.params
-    db.Availability.deleteOne({_id: id})
+    db.Availability.findOneAndUpdate({_id: id}, { $set: {renter: null, price: 0}})
     .then(dbModel => res.json(dbModel))
     .catch(err => res.status(422).json(err));
   },

@@ -129,6 +129,7 @@ class SearchResult extends Component {
   };
 
   handleClickOpen = (id, address, title, href, city, state, zipcode) => {
+    
     this.setState({ open: true });
   };
 
@@ -162,10 +163,8 @@ class SearchResult extends Component {
     }
   }
   handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
-    // console.log(address);
-
-    console.log("---------------------");
-
+    // console.log(address);]
+   
     console.log("selectedDaysLength: ", this.state.selectedDays.length);
     console.log("id: ", id);
     console.log("user id: ", this.state.user._id);
@@ -601,7 +600,7 @@ class SearchResult extends Component {
                                               spot[0].city,
                                               spot[0].state,
                                               spot[0].zipcode,
-                                              spot[0].price
+                                              spot[0].price * this.state.selectedDays.length
                                             );
                                           }}
                                         >
@@ -630,7 +629,7 @@ class SearchResult extends Component {
                                     <p>State: {spot[0].state}</p>
                                     <p>Zipcode: {spot[0].zipcode}</p>
                                     <p>Parking Type: {spot[0].parkingtype}</p>
-                                    <p>Price: ${spot[0].price}</p>
+                                    <p>Price: ${spot[0].price * this.state.selectedDays.length}</p>
                                     {/* <p>Dates: {this.state.selectedDays}</p> */}
                                   </DialogContent>
                                   <DialogActions>
