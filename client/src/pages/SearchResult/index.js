@@ -340,8 +340,8 @@ class SearchResult extends Component {
 
   highlightCorrespondingCard = () => {
     console.log("listing id in function is: "); 
-    console.log("Highlight Corresponding Card"); 
 
+    // this.handleDialogOpen();
     console.log(this.state.cardsArray); 
 
     // for (let i = 0; i < this.state.cardsArray.length; i++) {
@@ -396,12 +396,17 @@ class SearchResult extends Component {
       console.log(this.state.markerData[i]);
       // bounds.extend(position);
       // console.log("position", position);
+     
+
       marker = new window.google.maps.Marker({
         position: position,
         icon: "https://img.icons8.com/color/40/000000/car.png",
         map: map,
         title: this.state.markerData[i][0]
       });
+
+ 
+   
       // Allow each marker to have an info window
       window.google.maps.event.addListener(
         marker,
@@ -410,8 +415,11 @@ class SearchResult extends Component {
           return () => {
             console.log(this.state.markerData[i][7]); 
 
+         
+
             let listingId = this.state.markerData[i][7]; 
 
+            // this is how I was passing through the id of the corresponding marker 
             this.highlightCorrespondingCard(listingId); 
 
             infoWindow.setContent("<img width='100px' src=" + this.state.markerData[i][6] + " />" + "</br>" + "<p>" + this.state.markerData[i][0] + "</p>" + "<p> Type: " + this.state.markerData[i][12] + "</p>" + "<button " + "onclick=window.highlightCorrespondingCard()" + ">Book Now</button>");
@@ -419,6 +427,8 @@ class SearchResult extends Component {
           };
         })(marker, i)
       );
+
+
     }
 
     var circle = new window.google.maps.Circle({
