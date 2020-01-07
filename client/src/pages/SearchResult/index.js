@@ -6,6 +6,7 @@ import DayPicker, { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import API from "../../utils/API";
 import { ListingList, ListingListItem } from "../../components/ListingList";
+import moment from "moment";
 // Material UI Grid Layout imports
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
@@ -119,6 +120,12 @@ class SearchResult extends Component {
     address: "",
     photo: "",
     title: "",
+    href: "",
+    city: "",
+    state: "",
+    zipcode: "",
+    price: "",
+    id: "",
     buttonClicked: false
     // availId: ""
   };
@@ -128,9 +135,18 @@ class SearchResult extends Component {
     });
   };
 
-  handleClickOpen = (id, address, title, href, city, state, zipcode) => {
-    
-    this.setState({ open: true });
+  handleClickOpen = (id, address, title, href, city, state, zipcode, price) => {
+    this.setState({
+      open: true,
+      title: title,
+      address: address,
+      href: href,
+      city: city,
+      state: state,
+      zipcode: zipcode,
+      price: price,
+      id: id
+    });
   };
 
   handleClose = () => {
@@ -163,8 +179,20 @@ class SearchResult extends Component {
     }
   }
   handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
-    // console.log(address);]
-   
+    this.setState({
+      title: title,
+      address: address,
+      href: href,
+      city: city,
+      state: state,
+      zipcode: zipcode,
+      price: price,
+      id: id
+    });
+    // console.log(address);
+
+    console.log("---------------------");
+
     console.log("selectedDaysLength: ", this.state.selectedDays.length);
     console.log("id: ", id);
     console.log("user id: ", this.state.user._id);
@@ -188,8 +216,8 @@ class SearchResult extends Component {
         photo: href
       }).then(res => console.log(res));
     }
-
-    this.handleClickOpen();
+    this.getAddress();
+    this.handleClose();
   };
 
   handleDialogOpen = event => {
@@ -532,7 +560,8 @@ class SearchResult extends Component {
                   ) : (
                     <div>
                       {this.state.cardsArray.map(spot => {
-                        // console.log(spot[0].title);
+                        console.log("SPOT ARRAY ++++++++++++++");
+                        console.log(spot);
                         // console.log(this.state.markerData);
                         // console.log(this.state.cardsArray);
                         return (
@@ -556,7 +585,7 @@ class SearchResult extends Component {
                                       price={spot[0].price}
                                       parkingtype={spot[0].parkingtype}
                                       handleBookClick={this.handleBookClick}
-                                      handleDialogOpen={this.handleDialogOpen}
+                                      // handleDialogOpen={this.handleDialogOpen}
                                     >
                                       <img
                                         className={classes.img}
@@ -590,9 +619,9 @@ class SearchResult extends Component {
                                           color="primary"
                                           aria-label="Booking Summary"
                                           className={classes.button}
-                                          onClick={event => {
-                                            event.preventDefault();
-                                            this.handleBookClick(
+                                          onClick={ event => {
+                                            event.preventDefault()
+                                            this.handleClickOpen(
                                               spot[0]._id,
                                               spot[0].address,
                                               spot[0].title,
@@ -623,22 +652,49 @@ class SearchResult extends Component {
                                     Your Booking Information
                                   </DialogTitle>
                                   <DialogContent>
-                                    <p>Title: {spot[0].title}</p>
-                                    <p>Address: {spot[0].address}</p>
-                                    <p>City: {spot[0].city}</p>
-                                    <p>State: {spot[0].state}</p>
-                                    <p>Zipcode: {spot[0].zipcode}</p>
-                                    <p>Parking Type: {spot[0].parkingtype}</p>
-                                    <p>Price: ${spot[0].price * this.state.selectedDays.length}</p>
+                                    <p>Title: {this.state.title}</p>
+                                    <p>Address: {this.state.address}</p>
+                                    <p>City: {this.state.city}</p>
+                                    <p>State: {this.state.state}</p>
+                                    <p>Zipcode: {this.state.zipcode}</p>
+                                    <p>
+                                      Dates Booked:{" "}
+                                      {this.state.selectedDays.map(date => " " +
+                                        moment(date).format("L") + " "
+                                      )}
+                                    </p>
+                                    <p>Price: ${this.state.price * this.state.selectedDays.length}</p>
                                     {/* <p>Dates: {this.state.selectedDays}</p> */}
                                   </DialogContent>
                                   <DialogActions>
                                     <Button
-                                      onClick={() => this.handleClose()}
+                                      onClick={event => {
+                                        event.preventDefault();
+                                        this.handleBookClick(
+                                          this.state.id,
+                                          this.state.address,
+                                          this.state.title,
+                                          this.state.href,
+                                          this.state.city,
+                                          this.state.state,
+                                          this.state.zipcode,
+                                          this.state.price
+                                        );
+                                      }}
                                       variant="outlined"
                                       color="secondary"
                                     >
                                       Confirm Booking
+                                    </Button>
+                                    <Button
+                                      onClick={event => {
+                                        event.preventDefault();
+                                        this.handleClose();
+                                      }}
+                                      variant="outlined"
+                                      color="primary"
+                                    >
+                                      Cancel
                                     </Button>
                                   </DialogActions>
                                 </Dialog>

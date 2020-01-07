@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
 import "./style.css";
+import App from "../../App"
 
 //
 import Avatar from "@material-ui/core/Avatar";
@@ -69,7 +70,8 @@ class LoginForm extends Component {
       lastnameError: "",
       emailError: "",
       // dobError: "",
-      licenseError: ""
+      licenseError: "",
+      // updateUser: ""
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
