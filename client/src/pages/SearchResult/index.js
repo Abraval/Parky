@@ -39,6 +39,8 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+// import { unstable_Box as Box } from '@material-ui/core/Box';
 
 const styles = theme => ({
   root: {
@@ -99,6 +101,7 @@ const styles = theme => ({
   iconButton: {
     padding: 10
   }
+
   // input: {
   //   display: "none"
   // }
@@ -126,6 +129,8 @@ class SearchResult extends Component {
     zipcode: "",
     price: "",
     id: "",
+    fullWidth: true,
+    maxWidth: "sm",
     buttonClicked: false
     // availId: ""
   };
@@ -619,8 +624,8 @@ class SearchResult extends Component {
                                           color="primary"
                                           aria-label="Booking Summary"
                                           className={classes.button}
-                                          onClick={ event => {
-                                            event.preventDefault()
+                                          onClick={event => {
+                                            event.preventDefault();
                                             this.handleClickOpen(
                                               spot[0]._id,
                                               spot[0].address,
@@ -629,7 +634,8 @@ class SearchResult extends Component {
                                               spot[0].city,
                                               spot[0].state,
                                               spot[0].zipcode,
-                                              spot[0].price * this.state.selectedDays.length
+                                              spot[0].price *
+                                                this.state.selectedDays.length
                                             );
                                           }}
                                         >
@@ -647,24 +653,76 @@ class SearchResult extends Component {
                                 <Dialog
                                   open={this.state.open}
                                   handleClickOpen={this.handleClickOpen}
+                                  fullWidth={this.state.fullWidth}
+                                  maxWidth={this.state.maxWidth}
                                 >
-                                  <DialogTitle id="form-dialog-title">
-                                    Your Booking Information
+                                  <DialogTitle
+                                    id="form-dialog-title"
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      alignItems: "center",
+                                      color: "93b7be",
+                                      fontFamily: "Roboto"
+                                    }}
+                                  >
+                                    <CheckCircleIcon
+                                      style={{
+                                        color: "93b7be",
+                                        width: 75,
+                                        height: 75,
+                                        marginTop: 20
+                                      }}
+                                    />
                                   </DialogTitle>
-                                  <DialogContent>
-                                    <p>Title: {this.state.title}</p>
-                                    <p>Address: {this.state.address}</p>
-                                    <p>City: {this.state.city}</p>
-                                    <p>State: {this.state.state}</p>
-                                    <p>Zipcode: {this.state.zipcode}</p>
+                                  <DialogContent
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      alignItems: "center",
+                                      fontFamily: "Roboto"
+                                    }}
+                                  >
+                                    <Typography
+                                      style={{
+                                        color: "#93b7be",
+                                        fontSize: 20,
+                                        fontWeight: "bold"
+                                      }}
+                                    >
+                                      BOOKING CONFIRMATION
+                                      
+                                    </Typography>
+                                    <Card elevation={0} style={{ padding: "10px 60px", border: "1px solid  #93b7be", marginTop: 20}}>
+                                    <h3 style={{ color: "#545454" }}>
+                                      {this.state.title.toUpperCase()}
+                                    </h3>
+                                    <p>{this.state.address}</p>
                                     <p>
-                                      Dates Booked:{" "}
-                                      {this.state.selectedDays.map(date => " " +
-                                        moment(date).format("L") + " "
-                                      )}
+                                      {this.state.city + ", "}
+                                      <span>{this.state.state + ", "}</span>
+                                      <span>{this.state.zipcode}</span>
                                     </p>
-                                    <p>Price: ${this.state.price * this.state.selectedDays.length}</p>
-                                    {/* <p>Dates: {this.state.selectedDays}</p> */}
+                                    <h3 style={{ color: "#545454" }}>
+                                      Dates Booked:
+                                    </h3>
+                                    <p>
+                                      {this.state.selectedDays.map(date => {
+                                        return (
+                                          <p>{moment(date).format("LL")} </p>
+                                        );
+                                      })}
+                                    </p>
+                                    <h3 style={{ color: "#545454" }}>
+                                      Total:
+                                      <span>
+                                        {" "}
+                                        $
+                                        {this.state.price *
+                                          this.state.selectedDays.length}
+                                      </span>
+                                    </h3>
+                                    </Card>
                                   </DialogContent>
                                   <DialogActions>
                                     <Button
