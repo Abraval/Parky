@@ -6,6 +6,7 @@ import DayPicker, { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import API from "../../utils/API";
 import { ListingList, ListingListItem } from "../../components/ListingList";
+import moment from "moment";
 // Material UI Grid Layout imports
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
@@ -640,7 +641,10 @@ class SearchResult extends Component {
                                     <p>State: {this.state.state}</p>
                                     <p>Zipcode: {this.state.zipcode}</p>
                                     <p>
-                                      Parking Type: {this.state.parkingtype}
+                                      Dates Booked:{" "}
+                                      {this.state.selectedDays.map(date => " " +
+                                        moment(date).format("L") + " "
+                                      )}
                                     </p>
                                     <p>Price: ${this.state.price}</p>
                                     {/* <p>Dates: {this.state.selectedDays}</p> */}
