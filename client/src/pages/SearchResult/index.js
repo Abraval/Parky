@@ -470,7 +470,7 @@ class SearchResult extends Component {
 
     var circle = new window.google.maps.Circle({
       map: map,
-      radius: 500, // 10 miles in metres
+      radius: 800, // 10 miles in metres
       fillColor: "#FFF4B8",
       strokeColor: "#FF0000",
       strokeWeight: 0.5,
