@@ -118,7 +118,7 @@ class SearchResult extends Component {
     user: {},
     address: "",
     photo: "",
-    title: "", 
+    title: "",
     href: "",
     city: "",
     state: "",
@@ -134,7 +134,17 @@ class SearchResult extends Component {
   };
 
   handleClickOpen = (id, address, title, href, city, state, zipcode, price) => {
-    this.setState({ open: true, title: title , address: address, href: href, city: city, state: state, zipcode: zipcode, price: price, id: id });
+    this.setState({
+      open: true,
+      title: title,
+      address: address,
+      href: href,
+      city: city,
+      state: state,
+      zipcode: zipcode,
+      price: price,
+      id: id
+    });
   };
 
   handleClose = () => {
@@ -167,8 +177,16 @@ class SearchResult extends Component {
     }
   }
   handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
-    this.setState({ title: title , address: address, href: href, city: city, state: state, zipcode: zipcode, price: price, id: id 
-    })
+    this.setState({
+      title: title,
+      address: address,
+      href: href,
+      city: city,
+      state: state,
+      zipcode: zipcode,
+      price: price,
+      id: id
+    });
     // console.log(address);
 
     console.log("---------------------");
@@ -584,19 +602,18 @@ class SearchResult extends Component {
                                           color="primary"
                                           aria-label="Booking Summary"
                                           className={classes.button}
-                                          onClick={ 
-                                       () =>  this.handleClickOpen( 
-                                        spot[0]._id,
-                                        spot[0].address,
-                                        spot[0].title,
-                                        spot[0].photo,
-                                        spot[0].city,
-                                        spot[0].state,
-                                        spot[0].zipcode,
-                                        spot[0].price
-                                        )
+                                          onClick={() =>
+                                            this.handleClickOpen(
+                                              spot[0]._id,
+                                              spot[0].address,
+                                              spot[0].title,
+                                              spot[0].photo,
+                                              spot[0].city,
+                                              spot[0].state,
+                                              spot[0].zipcode,
+                                              spot[0].price
+                                            )
                                           }
-                                          
                                         >
                                           Book Now
                                         </Button>
@@ -622,7 +639,9 @@ class SearchResult extends Component {
                                     <p>City: {this.state.city}</p>
                                     <p>State: {this.state.state}</p>
                                     <p>Zipcode: {this.state.zipcode}</p>
-                                    <p>Parking Type: {this.state.parkingtype}</p>
+                                    <p>
+                                      Parking Type: {this.state.parkingtype}
+                                    </p>
                                     <p>Price: ${this.state.price}</p>
                                     {/* <p>Dates: {this.state.selectedDays}</p> */}
                                   </DialogContent>
@@ -645,6 +664,16 @@ class SearchResult extends Component {
                                       color="secondary"
                                     >
                                       Confirm Booking
+                                    </Button>
+                                    <Button
+                                      onClick={event => {
+                                        event.preventDefault();
+                                        this.handleClose();
+                                      }}
+                                      variant="outlined"
+                                      color="primary"
+                                    >
+                                      Cancel
                                     </Button>
                                   </DialogActions>
                                 </Dialog>
