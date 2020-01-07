@@ -603,7 +603,8 @@ class SearchResult extends Component {
                                           color="primary"
                                           aria-label="Booking Summary"
                                           className={classes.button}
-                                          onClick={() =>
+                                          onClick={ event => {
+                                            event.preventDefault()
                                             this.handleClickOpen(
                                               spot[0]._id,
                                               spot[0].address,
@@ -612,9 +613,9 @@ class SearchResult extends Component {
                                               spot[0].city,
                                               spot[0].state,
                                               spot[0].zipcode,
-                                              spot[0].price
-                                            )
-                                          }
+                                              spot[0].price * this.state.selectedDays.length
+                                            );
+                                          }}
                                         >
                                           Book Now
                                         </Button>
@@ -646,7 +647,7 @@ class SearchResult extends Component {
                                         moment(date).format("L") + " "
                                       )}
                                     </p>
-                                    <p>Price: ${this.state.price}</p>
+                                    <p>Price: ${this.state.price * this.state.selectedDays.length}</p>
                                     {/* <p>Dates: {this.state.selectedDays}</p> */}
                                   </DialogContent>
                                   <DialogActions>
