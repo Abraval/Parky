@@ -149,13 +149,13 @@ class ReservCard extends React.Component {
         }
         </div>
         <CardActions className={classes.actions} disableActionSpacing>
-          <Button
+          {/* <Button
             variant="contained"
             className={classes.button}
             onClick={() => this.showCancelReservation()}
           >
             Cancel Reservation
-          </Button>
+          </Button> */}
         </CardActions>
 
         { /* Cancel Reservation */ }
