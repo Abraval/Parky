@@ -388,6 +388,7 @@ class SearchResult extends Component {
               ]
             ]
           });
+          
         });
       });
 
@@ -476,7 +477,7 @@ for (let i = 0; i < this.state.cardsArray.length; i++) {
         // this is how I was passing through the id of the corresponding marker 
         // this.highlightCorrespondingCard(listingId); 
 
-        infoWindow.setContent("<img width='100px' src=" + this.state.cardsArray[i][0].photo + " />" + "</br>" + "<p>" + this.state.cardsArray[i][0].title + "</p>" + "<p> Type: " + this.state.cardsArray[i][0].parkingtype + "</p>");
+        infoWindow.setContent(   "<p>"+ (i + 1) +"<p/>" + "<img width='100px' src=" + this.state.cardsArray[i][0].photo + " />" + "</br>" + "<p>" + this.state.cardsArray[i][0].title + "</p>" + "<p> Type: " + this.state.cardsArray[i][0].parkingtype + "</p>");
         infoWindow.open(map, marker);
       };
     })(marker, i)
@@ -602,7 +603,7 @@ for (let i = 0; i < this.state.cardsArray.length; i++) {
                     <h1 className="text-center">No Spots to Display</h1>
                   ) : (
                     <div>
-                      {this.state.cardsArray.map(spot => {
+                      {this.state.cardsArray.map( (spot, i ) => {
                         // console.log("SPOT ARRAY ++++++++++++++");
                         // console.log(spot);
                         // console.log(this.state.markerData);
@@ -640,6 +641,12 @@ for (let i = 0; i < this.state.cardsArray.length; i++) {
                                   <Grid item xs={12} sm container>
                                     <Grid  item xs spacing={16}>
                                       <Grid  item xs>
+                                      <Typography
+                                          gutterBottom
+                                          variant="subtitle1"
+                                        >
+                                          {i + 1}
+                                        </Typography>
                                         <Typography
                                           gutterBottom
                                           variant="subtitle1"
