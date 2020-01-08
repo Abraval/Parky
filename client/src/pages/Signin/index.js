@@ -112,13 +112,13 @@ class LoginForm extends Component {
     let licenseError = "";
 
     if (!this.state.username) {
-      usernameError = "can not be blank";
+      usernameError = "username cannot be empty";
     }
     if (!this.state.firstname) {
-      firstnameError = "can not be blank";
+      firstnameError = "first name cannot be empty";
     }
     if (!this.state.lastname) {
-      lastnameError = "can not be blank";
+      lastnameError = "last name cannot be empty";
     }
     if (!this.state.password) {
       passwordError = "no password provided";
@@ -356,6 +356,15 @@ class LoginForm extends Component {
                       value={this.state.username}
                       onChange={this.handleChange}
                     />
+                    <div
+                      style={{
+                        fontFamily: "Roboto",
+                        color: "#DB5461",
+                        fontSize: "12px"
+                      }}
+                    >
+                      {this.state.usernameError}
+                    </div>
                     <TextField
                       label="Password"
                       autoFocus
@@ -369,6 +378,15 @@ class LoginForm extends Component {
                       value={this.state.password}
                       onChange={this.handleChange}
                     />
+                    <div
+                      style={{
+                        fontFamily: "Roboto",
+                        color: "#DB5461",
+                        fontSize: "12px"
+                      }}
+                    >
+                      {this.state.passwordError}
+                    </div>
                     <TextField
                       label="First Name"
                       autoFocus
@@ -382,7 +400,15 @@ class LoginForm extends Component {
                       value={this.state.firstname}
                       onChange={this.handleChange}
                     />
-
+                    <div
+                      style={{
+                        fontFamily: "Roboto",
+                        color: "#DB5461",
+                        fontSize: "12px"
+                      }}
+                    >
+                      {this.state.firstnameError}
+                    </div>
                     <TextField
                       label="Last Name"
                       autoFocus
@@ -397,6 +423,15 @@ class LoginForm extends Component {
                       value={this.state.lastname}
                       onChange={this.handleChange}
                     />
+                    <div
+                      style={{
+                        fontFamily: "Roboto",
+                        color: "#DB5461",
+                        fontSize: "12px"
+                      }}
+                    >
+                      {this.state.lastnameError}
+                    </div>
 
                     <TextField
                       label="Email Address"
@@ -412,6 +447,15 @@ class LoginForm extends Component {
                       value={this.state.email}
                       onChange={this.handleChange}
                     />
+                    <div
+                      style={{
+                        fontFamily: "Roboto",
+                        color: "#DB5461",
+                        fontSize: "12px"
+                      }}
+                    >
+                      {this.state.emailError}
+                    </div>
 
                     <TextField
                       label="Date of Birth"
@@ -444,6 +488,15 @@ class LoginForm extends Component {
                       value={this.state.license}
                       onChange={this.handleChange}
                     />
+                    <div
+                      style={{
+                        fontFamily: "Roboto",
+                        color: "#DB5461",
+                        fontSize: "12px"
+                      }}
+                    >
+                      {this.state.licenseError}
+                    </div>
                   </form>
                 </DialogContent>
                 <DialogActions>
