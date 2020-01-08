@@ -65,4 +65,5 @@ body {
 .gm-style .gm-style-iw-c {
   padding-bottom: 12px !important;
   padding-right: 12px !important;
+  max-width: 180px;
 }

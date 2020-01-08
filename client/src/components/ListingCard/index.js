@@ -531,16 +531,16 @@ class ListingCard extends React.Component {
               }}
             >
               <h4 style={{ color: "#545454" }}>
-                Total Earnings: {this.state.totalEarnings}{" "}
+                Total Earnings: ${this.state.totalEarnings}{" "}
               </h4>
               <h6 style={{ color: "#545454" }}>
                 Total earnings to date, incluing future bookings
               </h6>
               <h4 style={{ color: "#545454" }}>
-                Last 7 Days: {this.state.lastWeekEarnings}{" "}
+                Last 7 Days: ${this.state.lastWeekEarnings}{" "}
               </h4>
               <h4 style={{ color: "#545454" }}>
-                Last 30 Days: {this.state.lastMonthEarnings}{" "}
+                Last 30 Days: ${this.state.lastMonthEarnings}{" "}
               </h4>
             </Card>
           </DialogContent>
@@ -603,7 +603,9 @@ class ListingCard extends React.Component {
                 marginTop: 20
               }}
             >
-              <h4 style={{ color: "#545454" }}>Do you want to delete this listing? </h4>
+              <h4 style={{ color: "#545454" }}>
+                Do you want to delete this listing?{" "}
+              </h4>
             </Card>
           </DialogContent>
           <DialogActions>
@@ -643,7 +645,7 @@ class ListingCard extends React.Component {
             />
           </DialogTitle>
           <DialogContent className={classes.dialog}>
-          <Typography
+            <Typography
               style={{
                 color: "#93b7be",
                 fontSize: 20,
