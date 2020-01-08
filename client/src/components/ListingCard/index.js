@@ -365,8 +365,35 @@ class ListingCard extends React.Component {
           style={{ fontFamily: "Roboto" }}
           handleClickOpen={this.handleClickOpen}
         >
-          <DialogTitle id="form-dialog-title">Edit Listing</DialogTitle>
+          <DialogTitle
+            id="form-dialog-title"
+            style={{
+              fontFamily: "Roboto",
+              display: "flex",
+              justifyContent: "center"
+            }}
+          >
+            <EditIcon
+              style={{
+                color: "93b7be",
+                width: 75,
+                height: 75,
+                marginTop: 20
+              }}
+            />
+          </DialogTitle>
           <DialogContent>
+            <Typography
+              style={{
+                color: "#93b7be",
+                fontSize: 20,
+                fontWeight: "bold",
+                display: "flex",
+                justifyContent: "center"
+              }}
+            >
+              EDIT LISTING
+            </Typography>
             <form className={classes.container} noValidate autoComplete="off">
               <TextField
                 autoFocus
@@ -452,12 +479,64 @@ class ListingCard extends React.Component {
           open={this.state.openEarnings}
           handleClickOpen={this.showEarning}
         >
-          <DialogTitle id="form-dialog-title">Earnings</DialogTitle>
-          <DialogContent className={classes.dialog}>
-            <h4>Total Earnings: {this.state.totalEarnings} </h4>
-            <h6>Total earnings to date, incluing future bookings</h6>
-            <h4>Last 7 Days: {this.state.lastWeekEarnings} </h4>
-            <h4>Last 30 Days: {this.state.lastMonthEarnings} </h4>
+          <DialogTitle
+            id="form-dialog-title"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              color: "#93b7be",
+              fontFamily: "Roboto"
+            }}
+          >
+            <AttachMoneyIcon
+              style={{
+                color: "#93b7be",
+                width: 75,
+                height: 75,
+                marginTop: 20
+              }}
+            />
+          </DialogTitle>
+          <DialogContent
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              fontFamily: "Roboto"
+            }}
+            className={classes.dialog}
+          >
+            <Typography
+              style={{
+                color: "#93b7be",
+                fontSize: 20,
+                fontWeight: "bold"
+              }}
+            >
+              EARNINGS
+            </Typography>
+            <Card
+              elevation={0}
+              style={{
+                padding: "10px 60px",
+                border: "1px solid  #93b7be",
+                marginTop: 20
+              }}
+            >
+              <h4 style={{ color: "#545454" }}>
+                Total Earnings: {this.state.totalEarnings}{" "}
+              </h4>
+              <h6 style={{ color: "#545454" }}>
+                Total earnings to date, incluing future bookings
+              </h6>
+              <h4 style={{ color: "#545454" }}>
+                Last 7 Days: {this.state.lastWeekEarnings}{" "}
+              </h4>
+              <h4 style={{ color: "#545454" }}>
+                Last 30 Days: {this.state.lastMonthEarnings}{" "}
+              </h4>
+            </Card>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => this.hideEarning()} color="secondary">
@@ -473,9 +552,53 @@ class ListingCard extends React.Component {
           open={this.state.deleteListingPopuUpShown}
           handleClickOpen={this.showDeleteListing}
         >
-          <DialogTitle id="form-dialog-title">Earnings</DialogTitle>
-          <DialogContent className={classes.dialog}>
-            <h4>Do you want to delete this listing </h4>
+          <DialogTitle
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              color: "#93b7be",
+              fontFamily: "Roboto"
+            }}
+            id="form-dialog-title"
+          >
+            <DeleteIcon
+              style={{
+                color: "93b7be",
+                width: 75,
+                height: 75,
+                marginTop: 20
+              }}
+            />
+          </DialogTitle>
+          <DialogContent
+            className={classes.dialog}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              fontFamily: "Roboto"
+            }}
+          >
+            <Typography
+              style={{
+                color: "#93b7be",
+                fontSize: 20,
+                fontWeight: "bold"
+              }}
+            >
+              CONFIRMATION
+            </Typography>
+            <Card
+              elevation={0}
+              style={{
+                padding: "10px 60px",
+                border: "1px solid  #93b7be",
+                marginTop: 20
+              }}
+            >
+              <h4 style={{ color: "#545454" }}>Do you want to delete this listing? </h4>
+            </Card>
           </DialogContent>
           <DialogActions>
             <Button
@@ -496,9 +619,35 @@ class ListingCard extends React.Component {
           open={this.state.open2}
           handleClickOpen={this.handleClickOpen2}
         >
-          <DialogTitle id="form-dialog-title">Edit Availability</DialogTitle>
-
+          <DialogTitle
+            id="form-dialog-title"
+            style={{
+              fontFamily: "Roboto",
+              display: "flex",
+              justifyContent: "center"
+            }}
+          >
+            <DateRangeIcon
+              style={{
+                color: "93b7be",
+                width: 75,
+                height: 75,
+                marginTop: 20
+              }}
+            />
+          </DialogTitle>
           <DialogContent className={classes.dialog}>
+          <Typography
+              style={{
+                color: "#93b7be",
+                fontSize: 20,
+                fontWeight: "bold",
+                display: "flex",
+                justifyContent: "center"
+              }}
+            >
+              EDIT AVAILABILITY
+            </Typography>
             {/* <Button onClick={() => this.handleListingUpdate()} color="primary">
       Submit
     </Button> */}

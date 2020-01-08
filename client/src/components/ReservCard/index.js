@@ -72,34 +72,34 @@ class ReservCard extends React.Component {
     photo: this.props.photo,
     currentReservedId: this.props.id,
     cancelReservationShown: false,
-    reservationToCancel: ''
+    reservationToCancel: ""
   };
 
   cancelReservation = () => {
     API.deleteAvailability(this.state.reservationToCancel)
-    .then(res => {
-      console.log(res)
-      this.props.loadReserved()
-      console.log(this); 
-      this.setState({
-        cancelReservationShown: false
+      .then(res => {
+        console.log(res);
+        this.props.loadReserved();
+        console.log(this);
+        this.setState({
+          cancelReservationShown: false
+        });
       })
-    })
       .catch(err => console.log(err));
   };
 
   hideCancelReservation = () => {
     this.setState({
       cancelReservationShown: false
-    })
-  }
+    });
+  };
 
-  showCancelReservation = (id) => {
+  showCancelReservation = id => {
     this.setState({
       cancelReservationShown: true,
       reservationToCancel: id
-    })
-  }
+    });
+  };
 
   render() {
     const { classes } = this.props;
@@ -133,20 +133,21 @@ class ReservCard extends React.Component {
         />
         <CardHeader title={this.props.title} subheader={this.props.address} />
         <div className={classes.bookings}>
-          
-          {
-          this.props.reservations.map((reservation) => {
+          {this.props.reservations.map(reservation => {
             return (
-          <p key={reservation.reservationId}>
-            {moment(reservation.date).format('LL')}
-            <Button onClick={() => this.showCancelReservation(reservation.reservationId)} color="warning">
-             x
-           </Button>
-            </p>
-             
-            )
-          })
-        }
+              <p key={reservation.reservationId}>
+                {moment(reservation.date).format("LL")}
+                <Button
+                  onClick={() =>
+                    this.showCancelReservation(reservation.reservationId)
+                  }
+                  color="warning"
+                >
+                  x
+                </Button>
+              </p>
+            );
+          })}
         </div>
         <CardActions className={classes.actions} disableActionSpacing>
           {/* <Button
@@ -158,28 +159,76 @@ class ReservCard extends React.Component {
           </Button> */}
         </CardActions>
 
-        { /* Cancel Reservation */ }
+        {/* Cancel Reservation */}
 
         <Dialog
           style={{ fontFamily: "Roboto" }}
           open={this.state.cancelReservationShown}
           handleClickOpen={this.showCancelReservation}
         >
-          <DialogTitle id="form-dialog-title">Earnings</DialogTitle>
-          <DialogContent className={classes.dialog}>
-            <h4>Are you sure you want to cancel this Reservation?</h4>
+          <DialogTitle
+            id="form-dialog-title"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              color: "#93b7be",
+              fontFamily: "Roboto"
+            }}
+          >
+            <CancelIcon
+              style={{
+                color: "93b7be",
+                width: 75,
+                height: 75,
+                marginTop: 20
+              }}
+            />
+          </DialogTitle>
+          <DialogContent
+            className={classes.dialog}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              fontFamily: "Roboto"
+            }}
+          >
+            <Typography
+              style={{
+                color: "#93b7be",
+                fontSize: 20,
+                fontWeight: "bold"
+              }}
+            >
+              CONFIRM CANCELLATION
+            </Typography>
+            <Card
+              elevation={0}
+              style={{
+                padding: "10px 60px",
+                border: "1px solid  #93b7be",
+                marginTop: 20
+              }}
+            >
+              <h4 style={{ color: "#545454" }}>
+                Do you want to cancel this reservation?
+              </h4>
+            </Card>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => this.cancelReservation()} color="warning">
               Cancel Reservation
             </Button>
-            <Button onClick={() => this.hideCancelReservation()} color="secondary">
+            <Button
+              onClick={() => this.hideCancelReservation()}
+              color="secondary"
+            >
               Exit
             </Button>
           </DialogActions>
         </Dialog>
       </Card>
-      
 
       // <div className="card" {...this.props} tabIndex="0">
       //   <div className="card-header">
