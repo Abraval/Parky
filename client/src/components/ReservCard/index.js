@@ -149,9 +149,55 @@ class ReservCard extends React.Component {
           open={this.state.cancelReservationShown}
           handleClickOpen={this.showCancelReservation}
         >
-          <DialogTitle id="form-dialog-title">Confirm Cancellation</DialogTitle>
-          <DialogContent className={classes.dialog}>
-            <h4>Are you sure you want to cancel this Reservation?</h4>
+          <DialogTitle
+            id="form-dialog-title"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              color: "#93b7be",
+              fontFamily: "Roboto"
+            }}
+          >
+            <CancelIcon
+              style={{
+                color: "93b7be",
+                width: 75,
+                height: 75,
+                marginTop: 20
+              }}
+            />
+          </DialogTitle>
+          <DialogContent
+            className={classes.dialog}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              fontFamily: "Roboto"
+            }}
+          >
+            <Typography
+              style={{
+                color: "#93b7be",
+                fontSize: 20,
+                fontWeight: "bold"
+              }}
+            >
+              CONFIRM CANCELLATION
+            </Typography>
+            <Card
+              elevation={0}
+              style={{
+                padding: "10px 60px",
+                border: "1px solid  #93b7be",
+                marginTop: 20
+              }}
+            >
+              <h4 style={{ color: "#545454" }}>
+                Do you want to cancel this reservation?
+              </h4>
+            </Card>
           </DialogContent>
           <DialogActions>
             <Button
