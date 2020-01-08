@@ -698,7 +698,7 @@ class SearchResult extends Component {
                                         <Typography
                                           variant="subtitle1"
                                           style={{
-                                            color: "#E24E28",
+                                            color: "#DB5461",
                                             fontWeight: "bold",
                                             fontSize: "20px"
                                           }}

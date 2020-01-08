@@ -37,6 +37,8 @@ const styles = theme => ({
   card: {
     minWidth: 300,
     maxWidth: 300,
+    minHeight: 400,
+    maxHeight: 400,
     margin: "8px"
   },
   media: {
@@ -315,21 +317,25 @@ class ListingCard extends React.Component {
     console.log(this.props);
     const { classes } = this.props;
     return (
-      <Card className={classes.card}>
+      <Card className={classes.card} style={{ position: "relative" }}>
         <CardMedia
           className={classes.media}
           image={this.props.photo}
           title={this.props.title}
         />
         <CardHeader title={this.props.title} subheader={this.props.address} />
-        <CardContent>
-          {/* <Typography component="p">
-            This impressive paella is a perfect party dish and a fun meal to
-            cook together with your guests. Add 1 cup of frozen peas along with
-            the mussels, if you like.
-          </Typography> */}
-        </CardContent>
-        <CardActions className={classes.actions} disableActionSpacing>
+        <CardContent></CardContent>
+        <CardActions
+          className={classes.actions}
+          disableActionSpacing
+          style={{
+            position: "absolute",
+            bottom: "10px",
+            left: "0",
+            right: "0",
+            margin: "auto"
+          }}
+        >
           <IconButton
             aria-label="Edit Listing"
             title="Edit"
