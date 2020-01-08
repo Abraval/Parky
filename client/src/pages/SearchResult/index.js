@@ -192,7 +192,7 @@ class SearchResult extends Component {
     // console.log(props);
     if (this.state.markerData !== props.markerData) {
       // console.log("componentDidUpdate called");
-      this.renderMap();
+      // this.renderMap();
     }
   }
 
@@ -258,9 +258,6 @@ class SearchResult extends Component {
 
   checkForAddress = () => {
 
-    console.log(this.state.addressQuery); 
-
-
     this.setState({ isFetching: false });
 
     this.setState({ buttonClicked: true });
@@ -284,7 +281,6 @@ class SearchResult extends Component {
   };
 
   findRelevantListings = () => {
-    console.log("addres.then(data => is called");
 
     const formattedDates = this.state.selectedDays.map(date =>
       date.toISOString()
@@ -327,7 +323,7 @@ class SearchResult extends Component {
 
           var longLatArray = [this.state.longitude, this.state.latitude];
 
-          console.log(longLatArray);
+          // console.log(longLatArray);
 
           API.getListingByIdAndProximity(longLatArray).then(item => {
             // console.log("API.getListingByIdAndProximity");
@@ -382,6 +378,8 @@ class SearchResult extends Component {
   };
 
   renderMap = () => {
+
+    console.log("renderMap"); 
     loadScript(
       "https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo&callback=initMap"
     );
@@ -390,6 +388,9 @@ class SearchResult extends Component {
   };
 
   initMap = () => {
+
+    // console.log("initMap"); 
+
     var map = new window.google.maps.Map(document.getElementById("map"), {
       center: { lat: this.state.latitude, lng: this.state.longitude },
       zoom: 15
@@ -412,19 +413,19 @@ class SearchResult extends Component {
       let latitude = this.state.cardsArray[i][0].location.coordinates[1];
       let longitude = this.state.cardsArray[i][0].location.coordinates[0];
 
-      // Find equivalent
-      console.log(this.state.markerData[i]);
-      console.log(this.state.cardsArray[i][0].title);
-      console.log(this.state.cardsArray[i][0]);
+      // // Find equivalent
+      // console.log(this.state.markerData[i]);
+      // console.log(this.state.cardsArray[i][0].title);
+      // console.log(this.state.cardsArray[i][0]);
 
-      // image source
-      console.log(this.state.cardsArray[i][0].photo);
+      // // image source
+      // console.log(this.state.cardsArray[i][0].photo);
 
-      // listing title
-      console.log(this.state.cardsArray[i][0].title);
+      // // listing title
+      // console.log(this.state.cardsArray[i][0].title);
 
-      // parking type
-      console.log(this.state.cardsArray[i][0].parkingtype);
+      // // parking type
+      // console.log(this.state.cardsArray[i][0].parkingtype);
 
       var position = new window.google.maps.LatLng(latitude, longitude);
 
@@ -445,7 +446,7 @@ class SearchResult extends Component {
         "click",
         ((marker, i) => {
           return () => {
-            console.log(this.state.markerData[i][7]);
+            // console.log(this.state.markerData[i][7]);
 
             // let listingId = this.state.markerData[i][7];
 
@@ -489,7 +490,7 @@ class SearchResult extends Component {
       strokeWeight: 0.5,
       center: { lat: this.state.latitude, lng: this.state.longitude }
     });
-    console.log(marker);
+    // console.log(marker);
 
     // circle.bindTo('center', marker, 'position');
   };
@@ -683,6 +684,8 @@ class SearchResult extends Component {
                                                 spot[0].state,
                                                 spot[0].zipcode,
                                                 spot[0].price 
+
+                                            
                                               );
                                             }}
                                           >
