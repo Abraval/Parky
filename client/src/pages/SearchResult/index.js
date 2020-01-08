@@ -112,8 +112,8 @@ class SearchResult extends Component {
     currentModalId: this.props.id,
     //end Dialog
     addressQuery: "",
-    latitude: 0.0,
-    longitude: 0.0,
+    latitude: 39.952309,
+    longitude: -75.163856,
     selectedDays: [],
     markerData: [],
     cardsArray: [],
@@ -140,6 +140,8 @@ class SearchResult extends Component {
       [key]: value
     });
   };
+
+
 
   handleClickOpen = (id, address, title, href, city, state, zipcode, price) => {
     this.setState({
@@ -205,22 +207,7 @@ class SearchResult extends Component {
       price: price,
       id: id
     });
-    // console.log(address);
 
-    // console.log("---------------------");
-
-    // console.log("selectedDaysLength: ", this.state.selectedDays.length);
-    // console.log("id: ", id);
-    // console.log("user id: ", this.state.user._id);
-    // console.log("address: ", address);
-    // console.log("city: ", city);
-    // console.log("state: ", state);
-    // console.log("zipcode: ", zipcode);
-    // console.log("title: ", title);
-    // console.log("price: ", price);
-    // console.log("href: ", href);
-
-    // console.log("---------------------");
     for (var i = 0; i < this.state.selectedDays.length; i++) {
       API.updateAvailability({
         date: this.state.selectedDays[i],
@@ -262,43 +249,39 @@ class SearchResult extends Component {
   }
 
   handleInputChange = event => {
-    const { name, value } = event.target;
+    const { name, value } = event.target; 
 
     this.setState({
       [name]: value
     });
   };
+
+  checkForAddress = () => {
+
+    console.log(this.state.addressQuery); 
+
+
+    this.setState({ isFetching: false });
+
+    this.setState({ buttonClicked: true });
+
+    if (this.state.addressQuery) {
+
+      this.getAddress();
+
+      this.setState({ isFetching: true });
+
+    }
+
+  }
+
   handleSubmitSearch = e => {
-    // console.log("handleSubmitSearch is called");
 
     e.preventDefault();
 
-    this.getAddress();
+    this.checkForAddress(); 
 
-    this.setState({ buttonClicked: true });
-    this.setState({ isFetching: true });
-
-    // console.log(this.state.selectedDays.length);
-
-    /********************** Start of Address Function ********************/
-
-    /********************** End of Address Function ********************/
   };
-
-  // functionA = () => {
-  //   var listingsPromise = new Promise((resolve, reject) => {
-  //     console.log("listing Promise called");
-  //     resolve(this.findRelevantListings());
-  //   })
-
-  //   listingsPromise.then(res => {
-
-  //     console.log(".then of listing Promise called");
-  //     this.renderMap();
-
-  //   })
-
-  // }
 
   findRelevantListings = () => {
     console.log("addres.then(data => is called");
@@ -575,11 +558,16 @@ class SearchResult extends Component {
                   </Paper>
                 </form>
 
+                {this.state.addressQuery.length === 0 && this.state.buttonClicked === true ? ( <span style={{ color: "red", fontFamily: "Roboto" }}>
+                    Please provide a valid address 
+                  </span>) : (" ")}
+
+
                 {this.state.selectedDays.length === 0 &&
                 this.state.addressQuery.length > 0 &&
                 this.state.buttonClicked === true ? (
                   <span style={{ color: "red", fontFamily: "Roboto" }}>
-                    Please select date(s)
+                    Please select a date(s)
                   </span>
                 ) : (
                   " "
@@ -608,7 +596,16 @@ class SearchResult extends Component {
               >
                 <div>
                   <GridList cellHeight={600} className={classes.gridList}>
-                    {this.state.isFetching && <Loader />}
+
+
+                  {/* {this.state.isFetching && this.state.cardsArray.length ? (<Loader />) : ( <h1 className="text-center" style={{ width: "100%" }}>
+                        No Spots to Display
+                      </h1>) }   */}
+
+                      {this.state.isFetching && <Loader />}
+
+
+                
                     {!this.state.markerData.length && !this.state.isFetching ? (
                       <h1 className="text-center" style={{ width: "100%" }}>
                         No Spots to Display
