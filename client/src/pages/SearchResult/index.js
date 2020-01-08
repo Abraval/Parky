@@ -39,8 +39,11 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
+//Material UI Grid List
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-// import { unstable_Box as Box } from '@material-ui/core/Box';
+import Loader from "../../components/Loader";
 
 const styles = theme => ({
   root: {
@@ -54,7 +57,7 @@ const styles = theme => ({
     alignItems: "center"
   },
   paper: {
-    padding: theme.spacing.unit * 1,
+    padding: "8px 10px",
     margin: "auto",
     textAlign: "center",
     color: theme.palette.text.secondary,
@@ -101,10 +104,6 @@ const styles = theme => ({
   iconButton: {
     padding: 10
   }
-
-  // input: {
-  //   display: "none"
-  // }
 });
 class SearchResult extends Component {
   state = {
@@ -131,7 +130,8 @@ class SearchResult extends Component {
     id: "",
     fullWidth: true,
     maxWidth: "sm",
-    buttonClicked: false
+    buttonClicked: false,
+    isFetching: false
     // availId: ""
   };
 
@@ -160,8 +160,7 @@ class SearchResult extends Component {
   };
 
   componentDidMount() {
-
-    // window.highlightCorrespondingCard = this.highlightCorrespondingCard; 
+    // window.highlightCorrespondingCard = this.highlightCorrespondingCard;
 
     this.renderMap();
     this.userInfo().then(response =>
@@ -175,19 +174,15 @@ class SearchResult extends Component {
   }
 
   componentWillUnmount() {
-    // window.highlightCorrespondingCard = null; 
+    // window.highlightCorrespondingCard = null;
   }
 
   tester() {
-
     console.log(this.state.user);
-
   }
 
   userInfo() {
-
     return axios.get("/user/");
-
   }
 
   componentDidUpdate(prevProps, props) {
@@ -196,7 +191,6 @@ class SearchResult extends Component {
     if (this.state.markerData !== props.markerData) {
       // console.log("componentDidUpdate called");
       this.renderMap();
-    
     }
   }
 
@@ -249,7 +243,7 @@ class SearchResult extends Component {
   constructor(props) {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
-    // this.highlightCorrespondingCard = this.highlightCorrespondingCard.bind(this); 
+    // this.highlightCorrespondingCard = this.highlightCorrespondingCard.bind(this);
   }
 
   handleDayClick(day, { selected }) {
@@ -282,6 +276,7 @@ class SearchResult extends Component {
     this.getAddress();
 
     this.setState({ buttonClicked: true });
+    this.setState({ isFetching: true });
 
     // console.log(this.state.selectedDays.length);
 
@@ -345,7 +340,6 @@ class SearchResult extends Component {
 
       emptyArr.map(item => {
         API.getListingById(item.listing).then(listing => {
-
           // console.log("API.getListingByID Called");
 
           var longLatArray = [this.state.longitude, this.state.latitude];
@@ -353,7 +347,6 @@ class SearchResult extends Component {
           console.log(longLatArray);
 
           API.getListingByIdAndProximity(longLatArray).then(item => {
-
             // console.log("API.getListingByIdAndProximity");
 
             // console.log("this.state.cardsArray: ", this.state.cardsArray);
@@ -363,12 +356,15 @@ class SearchResult extends Component {
             for (let i = 0; i < item.data.length; i++) {
               // console.log(listing.data[0]._id === item.data[i]._id);
               if (listing.data[0]._id === item.data[i]._id) {
-                this.setState({
-                  cardsArray: [...this.state.cardsArray, [item.data[i]]]
-                }, () => this.initMap());
+                this.setState(
+                  {
+                    cardsArray: [...this.state.cardsArray, [item.data[i]]],
+                    isFetching: false
+                  },
+                  () => this.initMap()
+                );
               }
             }
-
           });
 
           const data = listing.data[0];
@@ -393,7 +389,6 @@ class SearchResult extends Component {
               ]
             ]
           });
-          
         });
       });
 
@@ -412,7 +407,6 @@ class SearchResult extends Component {
   };
 
   initMap = () => {
-
     var map = new window.google.maps.Map(document.getElementById("map"), {
       center: { lat: this.state.latitude, lng: this.state.longitude },
       zoom: 15
@@ -425,75 +419,84 @@ class SearchResult extends Component {
     // We will need to change this
     var contentString = this.state.address;
 
+    /***********************************START ******************************************/
 
+    for (let i = 0; i < this.state.cardsArray.length; i++) {
+      // console.log(this.state.cardsArray);
+      // console.log(this.state.cardsArray[i][0].location.coordinates[1])
+      // console.log(this.state.cardsArray[i][0].location.coordinates[0])
 
-/***********************************START ******************************************/
+      let latitude = this.state.cardsArray[i][0].location.coordinates[1];
+      let longitude = this.state.cardsArray[i][0].location.coordinates[0];
 
-for (let i = 0; i < this.state.cardsArray.length; i++) {
+      // Find equivalent
+      console.log(this.state.markerData[i]);
+      console.log(this.state.cardsArray[i][0].title);
+      console.log(this.state.cardsArray[i][0]);
 
-  // console.log(this.state.cardsArray); 
-  // console.log(this.state.cardsArray[i][0].location.coordinates[1])
-  // console.log(this.state.cardsArray[i][0].location.coordinates[0])
+      // image source
+      console.log(this.state.cardsArray[i][0].photo);
 
-  let latitude = this.state.cardsArray[i][0].location.coordinates[1]; 
-  let longitude = this.state.cardsArray[i][0].location.coordinates[0]; 
+      // listing title
+      console.log(this.state.cardsArray[i][0].title);
 
-  // Find equivalent
-  console.log(this.state.markerData[i]); 
-  console.log(this.state.cardsArray[i][0].title); 
-  console.log(this.state.cardsArray[i][0]);
+      // parking type
+      console.log(this.state.cardsArray[i][0].parkingtype);
 
-  // image source 
-  console.log(this.state.cardsArray[i][0].photo); 
+      var position = new window.google.maps.LatLng(latitude, longitude);
 
-  // listing title 
-  console.log(this.state.cardsArray[i][0].title); 
+      // "<button " + "onclick=window.highlightCorrespondingCard()" + ">Book Now</button>
 
-  // parking type 
-  console.log(this.state.cardsArray[i][0].parkingtype); 
+      // Title below in marker was originally address
 
+      marker = new window.google.maps.Marker({
+        position: position,
+        icon: "https://img.icons8.com/color/40/000000/car.png",
+        map: map,
+        title: this.state.cardsArray[i][0].title
+      });
 
-  var position = new window.google.maps.LatLng(
-    latitude,
-    longitude
-  );
+      // Allow each marker to have an info window
+      window.google.maps.event.addListener(
+        marker,
+        "click",
+        ((marker, i) => {
+          return () => {
+            console.log(this.state.markerData[i][7]);
 
-  // "<button " + "onclick=window.highlightCorrespondingCard()" + ">Book Now</button>
+            // let listingId = this.state.markerData[i][7];
 
-  // Title below in marker was originally address
+            // this is how I was passing through the id of the corresponding marker
+            // this.highlightCorrespondingCard(listingId);
 
-  marker = new window.google.maps.Marker({
-    position: position,
-    icon: "https://img.icons8.com/color/40/000000/car.png",
-    map: map,
-    title: this.state.cardsArray[i][0].title
-  });
+            infoWindow.setContent(
+              "<img width='100px' src=" +
+                this.state.cardsArray[i][0].photo +
+                " />" +
+                "</br>" +
+                "<span style='margin-top:10px;color:black;font-weight:bold;font-size:14px;'>" +
+                (i + 1) +
+                ". " +
+                "<span/>" +
+                "<span>" +
+                this.state.cardsArray[i][0].title +
+                "</span>" +
+                "</br>" +
+                "<p style='font-weight:normal;font-size:12px;'> $" +
+                this.state.cardsArray[i][0].price +
+                " / day" +
+                "</p>" +
+                "<p style='margin-bottom:0px;font-weight:normal;font-size:12px;'> Type: " +
+                this.state.cardsArray[i][0].parkingtype +
+                "</p>"
+            );
+            infoWindow.open(map, marker);
+          };
+        })(marker, i)
+      );
+    }
 
-  // Allow each marker to have an info window
-  window.google.maps.event.addListener(
-    marker,
-    "click",
-    ((marker, i) => {
-      return () => {
-        console.log(this.state.markerData[i][7]); 
-
-        // let listingId = this.state.markerData[i][7]; 
-
-        // this is how I was passing through the id of the corresponding marker 
-        // this.highlightCorrespondingCard(listingId); 
-
-        infoWindow.setContent("<img width='100px' src=" + this.state.cardsArray[i][0].photo + " />" + "</br>" + "<span style='margin-top:10px;color:black;font-weight:bold;font-size:14px;'>"+ (i + 1) + ". " +"<span/>" + "<span>" + this.state.cardsArray[i][0].title + "</span>" + "</br>" + "<p style='font-weight:normal;font-size:12px;'> Price: $" + this.state.cardsArray[i][0].price + "</p>" + "<p style='margin-bottom:0px;font-weight:normal;font-size:12px;'> Type: " + this.state.cardsArray[i][0].parkingtype + "</p>");
-        infoWindow.open(map, marker);
-      };
-    })(marker, i)
-  );
-
-
-}
-
-/***********************************START ******************************************/
-
-
+    /***********************************START ******************************************/
 
     var circle = new window.google.maps.Circle({
       map: map,
@@ -604,215 +607,235 @@ for (let i = 0; i < this.state.cardsArray.length; i++) {
                 style={{ fontFamily: "Roboto" }}
               >
                 <div>
-                  {!this.state.markerData.length ? (
-                    <h1 className="text-center">No Spots to Display</h1>
-                  ) : (
-                    <div>
-                      {this.state.cardsArray.map( (spot, i ) => {
-                        // console.log("SPOT ARRAY ++++++++++++++");
-                        // console.log(spot);
-                        // console.log(this.state.markerData);
-                        // console.log(this.state.cardsArray);
-                        return (
-                          <div>
-                            <div className={classes.root}>
-                              <Paper className={classes.paper}>
-                                <Grid container spacing={16}>
-                                  <Grid item>
-                                    <ButtonBase
-                                      className={classes.image}
-                                      key={spot[0]._id}
-                                      title={spot[0].title}
-                                      href={spot[0].photo}
-                                      street={spot[0].streetName}
-                                      neighborhood={spot[0].neighborhood}
-                                      id={spot[0]._id}
-                                      city={spot[0].city}
-                                      state={spot[0].state}
-                                      zipcode={spot[0].zipcode}
-                                      address={spot[0].address}
-                                      price={spot[0].price}
-                                      parkingtype={spot[0].parkingtype}
-                                      handleBookClick={this.handleBookClick}
-                                      // handleDialogOpen={this.handleDialogOpen}
-                                    >
-                                      <img
-                                        className={classes.img}
-                                        alt="complex"
-                                        src={spot[0].photo}
-                                      />
-                                    </ButtonBase>
-                                  </Grid>
-                                  <Grid item xs={12} sm container>
-                                    <Grid  item xs spacing={16}>
-                                      <Grid  item xs>
-                                      <Typography
-                                          gutterBottom
-                                          variant="subtitle1"
-                                        >
-                                          {i + 1}
-                                        </Typography>
-                                        <Typography
-                                          gutterBottom
-                                          variant="subtitle1"
-                                        >
-                                          {spot[0].title}
-                                        </Typography>
-                                        <Typography gutterBottom>
-                                          {spot[0].streetName}
-                                        </Typography>
-                                        <Typography color="textSecondary">
-                                          {spot[0].neighborhood}
-                                        </Typography>
-                                        <Typography color="textSecondary">
-                                          {spot[0].parkingtype}
-                                        </Typography>
+                  <GridList cellHeight={600} className={classes.gridList}>
+                    {this.state.isFetching && <Loader />}
+                    {!this.state.markerData.length && !this.state.isFetching ? (
+                      <h1 className="text-center" style={{ width: "100%" }}>
+                        No Spots to Display
+                      </h1>
+                    ) : (
+                      <div id="testing" style={{ width: "100%" }}>
+                        {this.state.cardsArray.map((spot, i) => {
+                          return (
+                            <div>
+                              <div className={classes.root}>
+                                <Paper className={classes.paper}>
+                                  <Grid container spacing={16}>
+                                    <Grid item>
+                                      <ButtonBase
+                                        className={classes.image}
+                                        key={spot[0]._id}
+                                        title={spot[0].title}
+                                        href={spot[0].photo}
+                                        street={spot[0].streetName}
+                                        neighborhood={spot[0].neighborhood}
+                                        id={spot[0]._id}
+                                        city={spot[0].city}
+                                        state={spot[0].state}
+                                        zipcode={spot[0].zipcode}
+                                        address={spot[0].address}
+                                        price={spot[0].price}
+                                        parkingtype={spot[0].parkingtype}
+                                        handleBookClick={this.handleBookClick}
+                                        // handleDialogOpen={this.handleDialogOpen}
+                                      >
+                                        <img
+                                          className={classes.img}
+                                          alt="complex"
+                                          src={spot[0].photo}
+                                        />
+                                      </ButtonBase>
+                                    </Grid>
+                                    <Grid item xs={12} sm container>
+                                      <Grid item xs spacing={16}>
+                                        <Grid item xs>
+                                          <Typography
+                                            gutterBottom
+                                            variant="heading"
+                                            style={{
+                                              paddingTop: "12px",
+                                              color: "#545454"
+                                            }}
+                                          >
+                                            {i + 1}. {spot[0].title}
+                                          </Typography>
+                                          <Typography gutterBottom>
+                                            {spot[0].streetName}
+                                          </Typography>
+                                          <Typography color="textSecondary">
+                                            {spot[0].neighborhood}
+                                          </Typography>
+                                          <Typography color="textSecondary">
+                                            {spot[0].parkingtype}
+                                          </Typography>
+                                        </Grid>
+                                        <Grid item>
+                                          <Button
+                                            variant="outlined"
+                                            color="primary"
+                                            aria-label="Booking Summary"
+                                            className={classes.button}
+                                            onClick={event => {
+                                              event.preventDefault();
+                                              this.handleClickOpen(
+                                                spot[0]._id,
+                                                spot[0].address,
+                                                spot[0].title,
+                                                spot[0].photo,
+                                                spot[0].city,
+                                                spot[0].state,
+                                                spot[0].zipcode,
+                                                spot[0].price *
+                                                  this.state.selectedDays.length
+                                              );
+                                            }}
+                                          >
+                                            Book Now
+                                          </Button>
+                                        </Grid>
                                       </Grid>
-                                      <Grid item>
-                                        <Button
-                                          variant="outlined"
-                                          color="primary"
-                                          aria-label="Booking Summary"
-                                          className={classes.button}
-                                          onClick={event => {
-                                            event.preventDefault();
-                                            this.handleClickOpen(
-                                              spot[0]._id,
-                                              spot[0].address,
-                                              spot[0].title,
-                                              spot[0].photo,
-                                              spot[0].city,
-                                              spot[0].state,
-                                              spot[0].zipcode,
-                                              spot[0].price *
-                                                this.state.selectedDays.length
-                                            );
+                                      <Grid item style={{ margin: "10px" }}>
+                                        <Typography
+                                          variant="subtitle1"
+                                          style={{
+                                            color: "#E24E28",
+                                            fontWeight: "bold",
+                                            fontSize: "20px"
                                           }}
                                         >
-                                          Book Now
-                                        </Button>
+                                          ${spot[0].price}
+                                        </Typography>
+                                        <Typography
+                                          variant="subtitle1"
+                                          style={{ fontSize: "10px" }}
+                                        >
+                                          per day
+                                        </Typography>
                                       </Grid>
                                     </Grid>
-                                    <Grid item>
-                                      <Typography variant="subtitle1">
-                                        ${spot[0].price}
-                                      </Typography>
-                                    </Grid>
                                   </Grid>
-                                </Grid>
-                                <Dialog
-                                  open={this.state.open}
-                                  handleClickOpen={this.handleClickOpen}
-                                  fullWidth={this.state.fullWidth}
-                                  maxWidth={this.state.maxWidth}
-                                >
-                                  <DialogTitle
-                                    id="form-dialog-title"
-                                    style={{
-                                      display: "flex",
-                                      flexDirection: "column",
-                                      alignItems: "center",
-                                      color: "93b7be",
-                                      fontFamily: "Roboto"
-                                    }}
+                                  <Dialog
+                                    open={this.state.open}
+                                    handleClickOpen={this.handleClickOpen}
+                                    fullWidth={this.state.fullWidth}
+                                    maxWidth={this.state.maxWidth}
                                   >
-                                    <CheckCircleIcon
+                                    <DialogTitle
+                                      id="form-dialog-title"
                                       style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
                                         color: "93b7be",
-                                        width: 75,
-                                        height: 75,
-                                        marginTop: 20
+                                        fontFamily: "Roboto"
                                       }}
-                                    />
-                                  </DialogTitle>
-                                  <DialogContent
-                                    style={{
-                                      display: "flex",
-                                      flexDirection: "column",
-                                      alignItems: "center",
-                                      fontFamily: "Roboto"
-                                    }}
-                                  >
-                                    <Typography
+                                    >
+                                      <CheckCircleIcon
+                                        style={{
+                                          color: "93b7be",
+                                          width: 75,
+                                          height: 75,
+                                          marginTop: 20
+                                        }}
+                                      />
+                                    </DialogTitle>
+                                    <DialogContent
                                       style={{
-                                        color: "#93b7be",
-                                        fontSize: 20,
-                                        fontWeight: "bold"
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        fontFamily: "Roboto"
                                       }}
                                     >
-                                      BOOKING CONFIRMATION
-                                      
-                                    </Typography>
-                                    <Card elevation={0} style={{ padding: "10px 60px", border: "1px solid  #93b7be", marginTop: 20}}>
-                                    <h3 style={{ color: "#545454" }}>
-                                      {this.state.title.toUpperCase()}
-                                    </h3>
-                                    <p>{this.state.address}</p>
-                                    <p>
-                                      {this.state.city + ", "}
-                                      <span>{this.state.state + ", "}</span>
-                                      <span>{this.state.zipcode}</span>
-                                    </p>
-                                    <h3 style={{ color: "#545454" }}>
-                                      Dates Booked:
-                                    </h3>
-                                    <p>
-                                      {this.state.selectedDays.map(date => {
-                                        return (
-                                          <p>{moment(date).format("LL")} </p>
-                                        );
-                                      })}
-                                    </p>
-                                    <h3 style={{ color: "#545454" }}>
-                                      Total:
-                                      <span>
-                                        {" "}
-                                        $
-                                        {this.state.price *
-                                          this.state.selectedDays.length}
-                                      </span>
-                                    </h3>
-                                    </Card>
-                                  </DialogContent>
-                                  <DialogActions>
-                                    <Button
-                                      onClick={event => {
-                                        event.preventDefault();
-                                        this.handleBookClick(
-                                          this.state.id,
-                                          this.state.address,
-                                          this.state.title,
-                                          this.state.href,
-                                          this.state.city,
-                                          this.state.state,
-                                          this.state.zipcode,
-                                          this.state.price
-                                        );
-                                      }}
-                                      variant="outlined"
-                                      color="secondary"
-                                    >
-                                      Confirm Booking
-                                    </Button>
-                                    <Button
-                                      onClick={event => {
-                                        event.preventDefault();
-                                        this.handleClose();
-                                      }}
-                                      variant="outlined"
-                                      color="primary"
-                                    >
-                                      Cancel
-                                    </Button>
-                                  </DialogActions>
-                                </Dialog>
-                              </Paper>
+                                      <Typography
+                                        style={{
+                                          color: "#93b7be",
+                                          fontSize: 20,
+                                          fontWeight: "bold"
+                                        }}
+                                      >
+                                        BOOKING CONFIRMATION
+                                      </Typography>
+                                      <Card
+                                        elevation={0}
+                                        style={{
+                                          padding: "10px 60px",
+                                          border: "1px solid  #93b7be",
+                                          marginTop: 20
+                                        }}
+                                      >
+                                        <h3 style={{ color: "#545454" }}>
+                                          {this.state.title.toUpperCase()}
+                                        </h3>
+                                        <p>{this.state.address}</p>
+                                        <p>
+                                          {this.state.city + ", "}
+                                          <span>{this.state.state + ", "}</span>
+                                          <span>{this.state.zipcode}</span>
+                                        </p>
+                                        <h3 style={{ color: "#545454" }}>
+                                          Dates Booked:
+                                        </h3>
+                                        <p>
+                                          {this.state.selectedDays.map(date => {
+                                            return (
+                                              <p>
+                                                {moment(date).format("LL")}{" "}
+                                              </p>
+                                            );
+                                          })}
+                                        </p>
+                                        <h3 style={{ color: "#545454" }}>
+                                          Total:
+                                          <span>
+                                            {" "}
+                                            $
+                                            {this.state.price *
+                                              this.state.selectedDays.length}
+                                          </span>
+                                        </h3>
+                                      </Card>
+                                    </DialogContent>
+                                    <DialogActions>
+                                      <Button
+                                        onClick={event => {
+                                          event.preventDefault();
+                                          this.handleBookClick(
+                                            this.state.id,
+                                            this.state.address,
+                                            this.state.title,
+                                            this.state.href,
+                                            this.state.city,
+                                            this.state.state,
+                                            this.state.zipcode,
+                                            this.state.price
+                                          );
+                                        }}
+                                        variant="outlined"
+                                        color="secondary"
+                                      >
+                                        Confirm Booking
+                                      </Button>
+                                      <Button
+                                        onClick={event => {
+                                          event.preventDefault();
+                                          this.handleClose();
+                                        }}
+                                        variant="outlined"
+                                        color="primary"
+                                      >
+                                        Cancel
+                                      </Button>
+                                    </DialogActions>
+                                  </Dialog>
+                                </Paper>
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
+                          );
+                        })}
+                      </div>
+                    )}
+                  </GridList>
                 </div>
               </Paper>
             </Grid>

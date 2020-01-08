@@ -50,3 +50,19 @@ body {
 .DayPicker-Month {
   margin: 1.2em 0 !important;
 }
+
+.DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
+  background: #72b2bf !important;
+}
+
+.DayPicker-Day--today {
+  color: #e24e28 !important;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+.gm-style .gm-style-iw-c {
+  padding-bottom: 12px !important;
+  padding-right: 12px !important;
+}
