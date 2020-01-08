@@ -25,6 +25,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import CancelIcon from "@material-ui/icons/Cancel";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 
 const styles = theme => ({
   button: {
@@ -34,7 +35,10 @@ const styles = theme => ({
     display: "none"
   },
   card: {
+    minWidth: 300,
     maxWidth: 300,
+    minHeight: 400,
+    maxHeight: 400,
     margin: "8px"
   },
   media: {
@@ -72,58 +76,39 @@ class ReservCard extends React.Component {
     photo: this.props.photo,
     currentReservedId: this.props.id,
     cancelReservationShown: false,
-    reservationToCancel: ''
+    reservationToCancel: ""
   };
 
   cancelReservation = () => {
     API.deleteAvailability(this.state.reservationToCancel)
-    .then(res => {
-      console.log(res)
-      this.props.loadReserved()
-      console.log(this); 
-      this.setState({
-        cancelReservationShown: false
+      .then(res => {
+        console.log(res);
+        this.props.loadReserved();
+        console.log(this);
+        this.setState({
+          cancelReservationShown: false
+        });
       })
-    })
       .catch(err => console.log(err));
   };
 
   hideCancelReservation = () => {
     this.setState({
       cancelReservationShown: false
-    })
-  }
+    });
+  };
 
-  showCancelReservation = (id) => {
+  showCancelReservation = id => {
     this.setState({
       cancelReservationShown: true,
       reservationToCancel: id
-    })
-  }
+    });
+  };
 
   render() {
     const { classes } = this.props;
 
     return (
-      // <Card className={classes.card}>
-      //   <CardMedia
-      //     className={classes.media}
-      //     image={this.props.photo}
-      //     title={this.props.title}
-      //   />
-      //   <CardHeader title={this.props.title} subheader={this.props.address} />
-      //   <CardContent>
-      //     <Typography component="p">Date: {this.props.date}</Typography>
-      //   </CardContent>
-      //   <CardActions className={classes.actions} disableActionSpacing>
-      //     <IconButton
-      //       aria-label="Cancel Reservation"
-      //       onClick={() => this.handleClickOpen()}
-      //     >
-      //       <CancelIcon /> Cancel
-      //     </IconButton>
-      //   </CardActions>
-
       <Card className={classes.card}>
         {console.log("kajsdkla", this.state.currentReservedId)}
         <CardMedia
@@ -133,80 +118,58 @@ class ReservCard extends React.Component {
         />
         <CardHeader title={this.props.title} subheader={this.props.address} />
         <div className={classes.bookings}>
-          
-          {
-          this.props.reservations.map((reservation) => {
+          {this.props.reservations.map(reservation => {
             return (
-          <p key={reservation.reservationId}>
-            {moment(reservation.date).format('LL')}
-            <Button onClick={() => this.showCancelReservation(reservation.reservationId)} color="warning">
-             x
-           </Button>
-            </p>
-             
-            )
-          })
-        }
+              <p
+                key={reservation.reservationId}
+                style={{
+                  fontFamily: "Roboto",
+                  fontSize: "16px",
+                  paddingRight: "40px"
+                }}
+              >
+                <Button
+                  onClick={() =>
+                    this.showCancelReservation(reservation.reservationId)
+                  }
+                  color="warning"
+                >
+                  <HighlightOffIcon style={{ color: "#DB5461" }} />
+                </Button>
+                {moment(reservation.date).format("LL")}
+              </p>
+            );
+          })}
         </div>
-        <CardActions className={classes.actions} disableActionSpacing>
-          {/* <Button
-            variant="contained"
-            className={classes.button}
-            onClick={() => this.showCancelReservation()}
-          >
-            Cancel Reservation
-          </Button> */}
-        </CardActions>
 
-        { /* Cancel Reservation */ }
+        {/* Cancel Reservation */}
 
         <Dialog
           style={{ fontFamily: "Roboto" }}
           open={this.state.cancelReservationShown}
           handleClickOpen={this.showCancelReservation}
         >
-          <DialogTitle id="form-dialog-title">Earnings</DialogTitle>
+          <DialogTitle id="form-dialog-title">Confirm Cancellation</DialogTitle>
           <DialogContent className={classes.dialog}>
             <h4>Are you sure you want to cancel this Reservation?</h4>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => this.cancelReservation()} color="warning">
+            <Button
+              onClick={() => this.cancelReservation()}
+              color="#E24E28"
+              style={{ display: "flex" }}
+            >
               Cancel Reservation
             </Button>
-            <Button onClick={() => this.hideCancelReservation()} color="secondary">
+            <Button
+              onClick={() => this.hideCancelReservation()}
+              color="secondary"
+            >
               Exit
             </Button>
           </DialogActions>
         </Dialog>
       </Card>
-      
-
-      // <div className="card" {...this.props} tabIndex="0">
-      //   <div className="card-header">
-      //     <div className="row">
-      //       <div className="card-title">
-      //         <h2>{this.props.title}</h2>
-      //       </div>
-      //       <img
-      //         alt={this.props.title}
-      //         className="img-fluid"
-      //         src={this.props.photo}
-      //       />
-      //       <h3>{this.props.address}</h3>
-      //       <p>Date: {this.props.date}</p>
-      //     </div>
-      //   </div>
-
-      //   <div className="card-footer">
-      //     <Button
-      //       variant="contained"
-      //       color="primary"
-      //       onClick={() => this.handleClickOpen()}
-      //     >
-      //       Delete reservation
-      //     </Button>
-      //   </div>
-      // </div>
     );
   }
 }
