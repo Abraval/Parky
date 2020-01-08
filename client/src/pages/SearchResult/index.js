@@ -483,7 +483,7 @@ class SearchResult extends Component {
 
     var circle = new window.google.maps.Circle({
       map: map,
-      radius: 800, // 10 miles in metres
+      radius: 900, // 10 miles in metres
       fillColor: "#FFF4B8",
       strokeColor: "#FF0000",
       strokeWeight: 0.5,
@@ -682,8 +682,7 @@ class SearchResult extends Component {
                                                 spot[0].city,
                                                 spot[0].state,
                                                 spot[0].zipcode,
-                                                spot[0].price *
-                                                  this.state.selectedDays.length
+                                                spot[0].price 
                                               );
                                             }}
                                           >
