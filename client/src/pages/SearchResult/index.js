@@ -142,7 +142,6 @@ class SearchResult extends Component {
   };
 
 
-
   handleClickOpen = (id, address, title, href, city, state, zipcode, price) => {
     this.setState({
       open: true,
@@ -191,11 +190,7 @@ class SearchResult extends Component {
     // console.log(prevProps);
     // console.log(props);
 
-    // console.log(this.state.cardsArray); 
-    // console.log(props.cardsArray); 
 
-    // console.log(this.state.cardsArray === props.cardsArray); 
-    // console.log(this.state.cardsArray.length === props.cardsArray.length); 
 
     // this.renderMap(); 
     if (this.state.markerData !== props.markerData) {
@@ -332,6 +327,7 @@ class SearchResult extends Component {
 
         console.log("Promise is invokved"); 
        
+
         return new Promise( (resolve, reject) => {
           
 
