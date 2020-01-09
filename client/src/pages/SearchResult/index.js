@@ -190,10 +190,19 @@ class SearchResult extends Component {
   componentDidUpdate(prevProps, props) {
     // console.log(prevProps);
     // console.log(props);
+
+    // console.log(this.state.cardsArray); 
+    // console.log(props.cardsArray); 
+
+    // console.log(this.state.cardsArray === props.cardsArray); 
+    // console.log(this.state.cardsArray.length === props.cardsArray.length); 
+
+    // this.renderMap(); 
     if (this.state.markerData !== props.markerData) {
       // console.log("componentDidUpdate called");
       // this.renderMap();
     }
+
   }
 
   handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
@@ -323,7 +332,6 @@ class SearchResult extends Component {
 
         console.log("Promise is invokved"); 
        
-
         return new Promise( (resolve, reject) => {
           
 
@@ -402,7 +410,7 @@ class SearchResult extends Component {
   };
 
   renderMap = () => {
-
+  
     console.log("renderMap"); 
     loadScript(
       "https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo&callback=initMap"
@@ -427,37 +435,16 @@ class SearchResult extends Component {
     // We will need to change this
     var contentString = this.state.address;
 
-    /***********************************START ******************************************/
-
     for (let i = 0; i < this.state.cardsArray.length; i++) {
-      // console.log(this.state.cardsArray);
-      // console.log(this.state.cardsArray[i][0].location.coordinates[1])
-      // console.log(this.state.cardsArray[i][0].location.coordinates[0])
 
       let latitude = this.state.cardsArray[i][0].location.coordinates[1];
       let longitude = this.state.cardsArray[i][0].location.coordinates[0];
-
-      // // Find equivalent
-      // console.log(this.state.markerData[i]);
-      // console.log(this.state.cardsArray[i][0].title);
-      // console.log(this.state.cardsArray[i][0]);
-
-      // // image source
-      // console.log(this.state.cardsArray[i][0].photo);
-
-      // // listing title
-      // console.log(this.state.cardsArray[i][0].title);
-
-      // // parking type
-      // console.log(this.state.cardsArray[i][0].parkingtype);
 
       var position = new window.google.maps.LatLng(latitude, longitude);
 
       // "<button " + "onclick=window.highlightCorrespondingCard()" + ">Book Now</button>
 
-      // Title below in marker was originally address
-
-      console.log(this.state.cardsArray); 
+      // console.log(this.state.cardsArray); 
 
       marker = new window.google.maps.Marker({
         position: position,
@@ -472,12 +459,6 @@ class SearchResult extends Component {
         "click",
         ((marker, i) => {
           return () => {
-            // console.log(this.state.markerData[i][7]);
-
-            // let listingId = this.state.markerData[i][7];
-
-            // this is how I was passing through the id of the corresponding marker
-            // this.highlightCorrespondingCard(listingId);
 
             infoWindow.setContent(
               "<img width='100px' src=" +
@@ -506,7 +487,6 @@ class SearchResult extends Component {
       );
     }
 
-    /***********************************START ******************************************/
 
     var circle = new window.google.maps.Circle({
       map: map,
