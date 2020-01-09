@@ -8,7 +8,7 @@ import API from "../../utils/API";
 import { ListingList, ListingListItem } from "../../components/ListingList";
 import moment from "moment";
 // Material UI Grid Layout imports
-import PropTypes from "prop-types";
+import PropTypes, { func } from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import FormLabel from "@material-ui/core/FormLabel";
@@ -317,59 +317,83 @@ class SearchResult extends Component {
 
       // console.log("API.getAvailableListings Called");
 
-      emptyArr.map(item => {
-        API.getListingById(item.listing).then(listing => {
-          // console.log("API.getListingByID Called");
+      console.log("1", this.state.latitude); 
+      console.log("1 long", this.state.longitude); 
+      const promiseArray = emptyArr.map(item => {
 
-          var longLatArray = [this.state.longitude, this.state.latitude];
+        console.log("Promise is invokved"); 
+       
 
-          // console.log(longLatArray);
+        return new Promise( (resolve, reject) => {
+          
 
-          API.getListingByIdAndProximity(longLatArray).then(item => {
-            // console.log("API.getListingByIdAndProximity");
+          return resolve( API.getListingById(item.listing).then(listing => {
 
-            // console.log("this.state.cardsArray: ", this.state.cardsArray);
-
-            // console.log("line 250 is: ", item);
-
-            for (let i = 0; i < item.data.length; i++) {
-              // console.log(listing.data[0]._id === item.data[i]._id);
-              if (listing.data[0]._id === item.data[i]._id) {
-                this.setState(
-                  {
-                    cardsArray: [...this.state.cardsArray, [item.data[i]]],
-                    isFetching: false
-                  },
-                  () => this.initMap()
-                );
+            console.log("first API call is made"); 
+            // console.log("API.getListingByID Called");
+  
+            var longLatArray = [this.state.longitude, this.state.latitude];
+  
+            console.log(longLatArray);
+  
+            API.getListingByIdAndProximity(longLatArray).then(item => {
+              // console.log("API.getListingByIdAndProximity");
+  
+              // console.log("this.state.cardsArray: ", this.state.cardsArray);
+  
+              // console.log("line 250 is: ", item);
+  
+              for (let i = 0; i < item.data.length; i++) {
+                // console.log(listing.data[0]._id === item.data[i]._id);
+                if (listing.data[0]._id === item.data[i]._id) {
+                  this.setState(
+                    {
+                      cardsArray: [...this.state.cardsArray, [item.data[i]]],
+                      isFetching: false
+                    });
+                }
               }
-            }
-          });
-
-          const data = listing.data[0];
-
-          this.setState({
-            markerData: [
-              ...this.state.markerData,
-              [
-                data.address,
-                data.location.coordinates[1],
-                data.location.coordinates[0],
-                data.title,
-                data.streetName,
-                data.neighborhood,
-                data.photo,
-                data._id,
-                data.city,
-                data.state,
-                data.zipcode,
-                data.price,
-                data.parkingtype
+            });
+  
+     
+  
+            const data = listing.data[0];
+  
+            this.setState({
+              markerData: [
+                ...this.state.markerData,
+                [
+                  data.address,
+                  data.location.coordinates[1],
+                  data.location.coordinates[0],
+                  data.title,
+                  data.streetName,
+                  data.neighborhood,
+                  data.photo,
+                  data._id,
+                  data.city,
+                  data.state,
+                  data.zipcode,
+                  data.price,
+                  data.parkingtype
+                ]
               ]
-            ]
-          });
-        });
+            });
+  
+            
+          }))
+
+        
+
+        })
+        
+        // this.initMap(); 
+
+        // setTimeout(() => { this.initMap(); }, 2000);
       });
+
+      Promise.all(promiseArray).then( () => { this.initMap();  console.log("promise callback is invoked")}).then( () => {  setTimeout( () => {this.renderMap()}, 2000) })
+
 
       /******************************************End******************************************/
     });
@@ -388,8 +412,8 @@ class SearchResult extends Component {
   };
 
   initMap = () => {
-
-    // console.log("initMap"); 
+    
+    console.log("initMap"); 
 
     var map = new window.google.maps.Map(document.getElementById("map"), {
       center: { lat: this.state.latitude, lng: this.state.longitude },
@@ -432,6 +456,8 @@ class SearchResult extends Component {
       // "<button " + "onclick=window.highlightCorrespondingCard()" + ">Book Now</button>
 
       // Title below in marker was originally address
+
+      console.log(this.state.cardsArray); 
 
       marker = new window.google.maps.Marker({
         position: position,
@@ -490,6 +516,7 @@ class SearchResult extends Component {
       strokeWeight: 0.5,
       center: { lat: this.state.latitude, lng: this.state.longitude }
     });
+    
     // console.log(marker);
 
     // circle.bindTo('center', marker, 'position');
