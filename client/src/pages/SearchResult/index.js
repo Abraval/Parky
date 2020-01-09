@@ -190,7 +190,9 @@ class SearchResult extends Component {
     // console.log(prevProps);
     // console.log(props);
 
-
+    if (this.state.cardsArray !== props.cardsArray) {
+      // this.renderMap(); 
+    }
 
     // this.renderMap(); 
     if (this.state.markerData !== props.markerData) {
@@ -286,6 +288,8 @@ class SearchResult extends Component {
 
   findRelevantListings = () => {
 
+    console.log("findrellistings")
+
     const formattedDates = this.state.selectedDays.map(date =>
       date.toISOString()
     );
@@ -333,12 +337,14 @@ class SearchResult extends Component {
 
           return resolve( API.getListingById(item.listing).then(listing => {
 
-            console.log("first API call is made"); 
+            // console.log("first API call is made"); 
             // console.log("API.getListingByID Called");
+
+            console.log(listing); 
   
             var longLatArray = [this.state.longitude, this.state.latitude];
   
-            console.log(longLatArray);
+            // console.log(longLatArray);
   
             API.getListingByIdAndProximity(longLatArray).then(item => {
               // console.log("API.getListingByIdAndProximity");
@@ -346,10 +352,14 @@ class SearchResult extends Component {
               // console.log("this.state.cardsArray: ", this.state.cardsArray);
   
               // console.log("line 250 is: ", item);
+
+              // let arr = []
   
               for (let i = 0; i < item.data.length; i++) {
                 // console.log(listing.data[0]._id === item.data[i]._id);
                 if (listing.data[0]._id === item.data[i]._id) {
+                  // arr.push([item.data[i]]);
+
                   this.setState(
                     {
                       cardsArray: [...this.state.cardsArray, [item.data[i]]],
@@ -357,17 +367,22 @@ class SearchResult extends Component {
                     });
                 }
               }
+          
             });
+
+            // console.log("for loop is done"); 
   
      
   
             const data = listing.data[0];
+
+            console.log(listing.data); 
   
             this.setState({
               markerData: [
                 ...this.state.markerData,
                 [
-                  data.address,
+                  // data.address,
                   data.location.coordinates[1],
                   data.location.coordinates[0],
                   data.title,
@@ -415,7 +430,24 @@ class SearchResult extends Component {
     // console.log(this.state.markerData);
   };
 
+  blank = () => {
+
+    const Promise1 = new Promise( (resolve, reject) => {
+      resolve(console.log("testing")); 
+
+    })
+
+    Promise1.then( () => {console.log("value!!!!")})
+  }
+ 
+
+// call blank 
+  
+  
+
   initMap = () => {
+
+    this.blank(); 
     
     console.log("initMap"); 
 
@@ -446,8 +478,9 @@ class SearchResult extends Component {
         position: position,
         icon: "https://img.icons8.com/color/40/000000/car.png",
         map: map,
+        animation: window.google.maps.Animation.DROP,
         title: this.state.cardsArray[i][0].title
-      });
+      }, console.log("marker created"));
 
       // Allow each marker to have an info window
       window.google.maps.event.addListener(
@@ -534,6 +567,7 @@ class SearchResult extends Component {
     // console.log(this.state);
     return (
       <div>
+        {console.log(this.state.markerData)}
         {/* {console.log(this.state.cardsArray)} */}
         <Nav />
         <div className={classes.root}>
