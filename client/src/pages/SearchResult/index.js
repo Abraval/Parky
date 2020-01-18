@@ -55,17 +55,18 @@ const styles = theme => ({
   },
   searchBar: {
     padding: "2px 4px",
-    margin: "8px 0",
+    margin: "8px",
     display: "flex",
     alignItems: "center",
-    maxWidth: "99%"
+    // maxWidth: "99%"
+    width: "400px"
   },
   dateBar: {
     padding: "2px 4px",
-    margin: "8px 0",
+    margin: "8px 0px",
     display: "flex",
     alignItems: "center",
-    minWidth: "99%"
+    width: "200px"
   },
   paper: {
     padding: "8px 10px",
@@ -73,6 +74,15 @@ const styles = theme => ({
     textAlign: "center",
     color: theme.palette.text.secondary,
     height: "100%"
+  },
+  searchPaper: {
+    padding: "8px 10px",
+    margin: "auto",
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+    height: "100%",
+    display: "flex",
+    justifyContent: "center"
   },
   card: {
     width: "100%",
@@ -90,10 +100,14 @@ const styles = theme => ({
     minWidth: "250px"
   },
   bookingContainer: {
-    minWidth: "400px"
+    minWidth: "400px",
+    marginLeft: "30px",
+    marginTop: "10px"
   },
   mapContainer: {
-    minWidth: "400px"
+    minWidth: "400px",
+    marginRight: "30px",
+    marginTop: "10px"
   },
   image: {
     width: 180,
@@ -117,6 +131,9 @@ const styles = theme => ({
   },
   typography: {
     margin: theme.spacing.unit * 2
+  },
+  error: {
+    textAlign: "center"
   }
 });
 class SearchResult extends Component {
@@ -576,8 +593,104 @@ class SearchResult extends Component {
         {/* {console.log(this.state.cardsArray)} */}
         <Nav />
         <div className={classes.root}>
+          <Grid item xs={12}>
+            <Paper className={classes.searchPaper} elevation={0}>
+              <form onSubmit={this.handleSubmitSearch}>
+                <Paper className={classes.searchBar} elevation={1}>
+                  <IconButton
+                    className={classes.iconButton}
+                    aria-label="Search"
+                    type="submit"
+                    id="queryAddress"
+                  >
+                    <RoomIcon />
+                  </IconButton>
+                  <InputBase
+                    className={classes.input}
+                    placeholder="Where?"
+                    type="search"
+                    name="addressQuery"
+                    value={this.state.addressQuery}
+                    onChange={this.handleInputChange}
+                    disabled={false}
+                  />
+                </Paper>
+              </form>
+
+              <form onClick={this.handleClick}>
+                <Paper className={classes.dateBar} elevation={1}>
+                  <IconButton
+                    className={classes.iconButton}
+                    aria-label="Search"
+                    type="submit"
+                  >
+                    <DateRangeIcon />
+                  </IconButton>
+                  <InputBase
+                    className={classes.input}
+                    placeholder="When?"
+                    type="search"
+                    disabled={false}
+                  />
+                </Paper>
+              </form>
+              <Button
+                className={classes.searchButton}
+                onClick={this.handleSubmitSearch}
+              >
+                <SearchIcon />
+              </Button>
+
+              <Popover
+                id="simple-popper"
+                open={open}
+                anchorEl={anchorEl}
+                onClose={this.handlePopClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center"
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center"
+                }}
+              >
+                <Typography className={classes.typography}>
+                  <div>
+                    <DayPicker
+                      locale="en"
+                      selectedDays={this.state.selectedDays}
+                      onDayClick={this.handleDayClick}
+                    />
+                  </div>
+                </Typography>
+              </Popover>
+            </Paper>
+
+            <Grid item xs={12} className={classes.error}>
+              {this.state.addressQuery.length === 0 &&
+              this.state.buttonClicked === true ? (
+                <span style={{ color: "red", fontFamily: "Roboto" }}>
+                  Please provide a valid address
+                </span>
+              ) : (
+                " "
+              )}
+
+              {this.state.selectedDays.length === 0 &&
+              this.state.addressQuery.length > 0 &&
+              this.state.buttonClicked === true ? (
+                <span style={{ color: "red", fontFamily: "Roboto" }}>
+                  Please select a date(s)
+                </span>
+              ) : (
+                " "
+              )}
+            </Grid>
+          </Grid>
+
           <Grid className={classes.container} container spacing={8}>
-            <Grid className={classes.calendarContainer} item width={1 / 4}>
+            {/* <Grid className={classes.calendarContainer} item width={1 / 4}>
               <Paper className={classes.paper} elevation={0}>
                 <form onSubmit={this.handleSubmitSearch}>
                   <Paper className={classes.searchBar} elevation={1}>
@@ -672,7 +785,7 @@ class SearchResult extends Component {
                   </div>
                 </Paper>
               </Paper>
-            </Grid>
+            </Grid> */}
             <Grid className={classes.bookingContainer} item xs>
               <Paper
                 className={classes.paper}
