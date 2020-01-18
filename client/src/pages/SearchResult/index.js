@@ -133,7 +133,8 @@ const styles = theme => ({
     margin: theme.spacing.unit * 2
   },
   error: {
-    textAlign: "center"
+    textAlign: "center",
+    marginTop: "3px"
   }
 });
 class SearchResult extends Component {
@@ -615,6 +616,14 @@ class SearchResult extends Component {
                     disabled={false}
                   />
                 </Paper>
+                {this.state.addressQuery.length === 0 &&
+                this.state.buttonClicked === true ? (
+                  <div style={{ color: "red", fontFamily: "Roboto" }}>
+                    Please provide a valid address
+                  </div>
+                ) : (
+                  " "
+                )}
               </form>
 
               <form onClick={this.handleClick}>
@@ -633,6 +642,15 @@ class SearchResult extends Component {
                     disabled={false}
                   />
                 </Paper>
+                {this.state.selectedDays.length === 0 &&
+                this.state.addressQuery.length > 0 &&
+                this.state.buttonClicked === true ? (
+                  <div style={{ color: "red", fontFamily: "Roboto" }}>
+                    Please select a date(s)
+                  </div>
+                ) : (
+                  " "
+                )}
               </form>
               <Button
                 className={classes.searchButton}
@@ -666,126 +684,9 @@ class SearchResult extends Component {
                 </Typography>
               </Popover>
             </Paper>
-
-            <Grid item xs={12} className={classes.error}>
-              {this.state.addressQuery.length === 0 &&
-              this.state.buttonClicked === true ? (
-                <span style={{ color: "red", fontFamily: "Roboto" }}>
-                  Please provide a valid address
-                </span>
-              ) : (
-                " "
-              )}
-
-              {this.state.selectedDays.length === 0 &&
-              this.state.addressQuery.length > 0 &&
-              this.state.buttonClicked === true ? (
-                <span style={{ color: "red", fontFamily: "Roboto" }}>
-                  Please select a date(s)
-                </span>
-              ) : (
-                " "
-              )}
-            </Grid>
           </Grid>
 
           <Grid className={classes.container} container spacing={8}>
-            {/* <Grid className={classes.calendarContainer} item width={1 / 4}>
-              <Paper className={classes.paper} elevation={0}>
-                <form onSubmit={this.handleSubmitSearch}>
-                  <Paper className={classes.searchBar} elevation={1}>
-                    <IconButton
-                      className={classes.iconButton}
-                      aria-label="Search"
-                      type="submit"
-                      id="queryAddress"
-                    >
-                      <RoomIcon />
-                    </IconButton>
-                    <InputBase
-                      className={classes.input}
-                      placeholder="Where?"
-                      type="search"
-                      name="addressQuery"
-                      value={this.state.addressQuery}
-                      onChange={this.handleInputChange}
-                      disabled={false}
-                    />
-                  </Paper>
-                </form>
-
-                {this.state.addressQuery.length === 0 &&
-                this.state.buttonClicked === true ? (
-                  <span style={{ color: "red", fontFamily: "Roboto" }}>
-                    Please provide a valid address
-                  </span>
-                ) : (
-                  " "
-                )}
-
-                {this.state.selectedDays.length === 0 &&
-                this.state.addressQuery.length > 0 &&
-                this.state.buttonClicked === true ? (
-                  <span style={{ color: "red", fontFamily: "Roboto" }}>
-                    Please select a date(s)
-                  </span>
-                ) : (
-                  " "
-                )}
-
-                <Paper
-                  className={classes.calendar}
-                  elevation={0}
-                  style={{ fontFamily: "Roboto" }}
-                >
-                  <div>
-                    <form onClick={this.handleClick}>
-                      <Paper className={classes.dateBar} elevation={1}>
-                        <IconButton
-                          className={classes.iconButton}
-                          aria-label="Search"
-                          type="submit"
-                        >
-                          <DateRangeIcon />
-                        </IconButton>
-                        <InputBase
-                          className={classes.input}
-                          placeholder="When?"
-                          type="search"
-                          disabled={false}
-                        />
-                      </Paper>
-                    </form>
-                    <Button onClick={this.handleSubmitSearch}>Search</Button>
-
-                    <Popover
-                      id="simple-popper"
-                      open={open}
-                      anchorEl={anchorEl}
-                      onClose={this.handlePopClose}
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "center"
-                      }}
-                      transformOrigin={{
-                        vertical: "top",
-                        horizontal: "center"
-                      }}
-                    >
-                      <Typography className={classes.typography}>
-                        <div>
-                          <DayPicker
-                            locale="en"
-                            selectedDays={this.state.selectedDays}
-                            onDayClick={this.handleDayClick}
-                          />
-                        </div>
-                      </Typography>
-                    </Popover>
-                  </div>
-                </Paper>
-              </Paper>
-            </Grid> */}
             <Grid className={classes.bookingContainer} item xs>
               <Paper
                 className={classes.paper}
