@@ -24,23 +24,23 @@ Create an account, or use our demo accounts:
 
 Users can login using their account information or sign up for a new account by clicking the link.
 
-<img src="/assets/login.png" width="600">
+<img src="./assets/login.png" width="600">
 
 ### Search
 
 After logging in, users are redirected to the Search page where users can search for parking spots available for rent by location and date. Users can also complete bookings from this page via the "Book Now" buttons in the search results.
 
-<img src="/assets/search.png" width="600">
+<img src="./assets/search.png" width="600">
 
 ### Create Listing
 
 Users can create listings for their own parking spots under the "Create" section of the application. This is done through a stepper component where users are guided through submitting listing details, choosing availability, and confirming the new listing.
 
-<img src="/assets/create.png" width="600">
+<img src="./assets/create.png" width="600">
 
 ### Dashboard
 
-<img src="/assets/reserv.png" width="600">
+<img src="./assets/reserv.png" width="600">
 
 The profile dashboard offers two views: Listings and Reservations.
 
