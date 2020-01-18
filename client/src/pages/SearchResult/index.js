@@ -195,10 +195,10 @@ class SearchResult extends Component {
     }
 
     // this.renderMap(); 
-    if (this.state.markerData !== props.markerData) {
-      // console.log("componentDidUpdate called");
-      // this.renderMap();
-    }
+    // if (this.state.markerData !== props.markerData) {
+    //   // console.log("componentDidUpdate called");
+    //   // this.renderMap();
+    // }
 
   }
 
@@ -295,7 +295,7 @@ class SearchResult extends Component {
     );
 
     this.setState({ cardsArray: [] });
-    this.setState({ markerData: [] });
+    // this.setState({ markerData: [] });
     this.setState({ listings: [] });
 
     API.getAvailableListings(formattedDates).then(res => {
@@ -340,7 +340,7 @@ class SearchResult extends Component {
             // console.log("first API call is made"); 
             // console.log("API.getListingByID Called");
 
-            console.log(listing); 
+            console.log(listing.data[0].title); 
   
             var longLatArray = [this.state.longitude, this.state.latitude];
   
@@ -356,7 +356,10 @@ class SearchResult extends Component {
               // let arr = []
   
               for (let i = 0; i < item.data.length; i++) {
-                // console.log(listing.data[0]._id === item.data[i]._id);
+
+                // console.log(listing.data[0]._id);
+                // console.log(item.data[i]._id); 
+
                 if (listing.data[0]._id === item.data[i]._id) {
                   // arr.push([item.data[i]]);
 
@@ -371,9 +374,6 @@ class SearchResult extends Component {
             });
 
             // console.log("for loop is done"); 
-  
-     
-  
             const data = listing.data[0];
 
             console.log(listing.data); 
@@ -411,8 +411,11 @@ class SearchResult extends Component {
         // setTimeout(() => { this.initMap(); }, 2000);
       });
 
-      Promise.all(promiseArray).then( () => { this.initMap();  console.log("promise callback is invoked")}).then( () => {  setTimeout( () => {this.renderMap()}, 2000) })
-
+      Promise.all(promiseArray)
+      .then( () => { console.log("then of initMap"); this.initMap()  })
+      .catch( (err) => console.log("initMap promise", err))
+      .then( () => { console.log("then of renderMap"); this.renderMap() })
+      .catch( (err) => console.log("renderMap promise", err))
 
       /******************************************End******************************************/
     });
@@ -420,36 +423,22 @@ class SearchResult extends Component {
     // this.renderMap();
   };
 
+
+
   renderMap = () => {
   
     console.log("renderMap"); 
     loadScript(
-      "https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo&callback=initMap"
+      "https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo"
     );
-    window.initMap = this.initMap;
+    // window.initMap = this.initMap;
     // console.log(this.state.markerData);
   };
 
-  blank = () => {
+  initMap = async () => {
 
-    const Promise1 = new Promise( (resolve, reject) => {
-      resolve(console.log("testing")); 
-
-    })
-
-    Promise1.then( () => {console.log("value!!!!")})
-  }
- 
-
-// call blank 
-  
-  
-
-  initMap = () => {
-
-    this.blank(); 
-    
-    console.log("initMap"); 
+    // this.blank(); 
+    console.log("promise callback is invoked")
 
     var map = new window.google.maps.Map(document.getElementById("map"), {
       center: { lat: this.state.latitude, lng: this.state.longitude },
@@ -567,7 +556,7 @@ class SearchResult extends Component {
     // console.log(this.state);
     return (
       <div>
-        {console.log(this.state.markerData)}
+        {/* {console.log(this.state.markerData)} */}
         {/* {console.log(this.state.cardsArray)} */}
         <Nav />
         <div className={classes.root}>
@@ -644,7 +633,7 @@ class SearchResult extends Component {
 
 
                 
-                    {!this.state.markerData.length && !this.state.isFetching ? (
+                    { !this.state.cardsArray ? (
                       <h1 className="text-center" style={{ width: "100%" }}>
                         No Spots to Display
                       </h1>
