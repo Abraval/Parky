@@ -216,6 +216,8 @@ class SearchResult extends Component {
     // console.log(prevProps);
     // console.log(props);
 
+    // This rendermap called below 
+
      this.renderMap();
     if (this.state.markerData !== props.markerData) {
       // console.log("componentDidUpdate called");
