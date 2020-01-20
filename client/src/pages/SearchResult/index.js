@@ -637,7 +637,11 @@ class SearchResult extends Component {
                   </IconButton>
                   <InputBase
                     className={classes.input}
-                    placeholder="When?"
+                    placeholder={
+                      this.state.selectedDays.length === 0
+                        ? "When?"
+                        : "Date(s) Selected!"
+                    }
                     type="search"
                     disabled={false}
                   />
