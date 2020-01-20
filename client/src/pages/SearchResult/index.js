@@ -215,6 +215,10 @@ class SearchResult extends Component {
   componentDidUpdate(prevProps, props) {
     // console.log(prevProps);
     // console.log(props);
+
+    // This rendermap called below 
+
+     this.renderMap();
     if (this.state.markerData !== props.markerData) {
       // console.log("componentDidUpdate called");
       // this.renderMap();
@@ -404,11 +408,11 @@ class SearchResult extends Component {
           this.initMap();
           console.log("promise callback is invoked");
         })
-        .then(() => {
-          setTimeout(() => {
-            this.renderMap();
-          }, 2000);
-        });
+        // .then(() => {
+        //   setTimeout(() => {
+        //     this.renderMap();
+        //   }, 2000);
+        // });
 
       /******************************************End******************************************/
     });
