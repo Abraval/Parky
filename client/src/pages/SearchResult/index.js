@@ -23,6 +23,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+//end Dialog
 // Material UI Card Imports
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -43,10 +44,6 @@ import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Loader from "../../components/Loader";
-//Material UI Popover
-import Popover from "@material-ui/core/Popover";
-import DateRangeIcon from "@material-ui/icons/DateRange";
-import RoomIcon from "@material-ui/icons/Room";
 
 const styles = theme => ({
   root: {
@@ -57,15 +54,7 @@ const styles = theme => ({
     padding: "2px 4px",
     margin: "8px 0",
     display: "flex",
-    alignItems: "center",
-    maxWidth: "99%"
-  },
-  dateBar: {
-    padding: "2px 4px",
-    margin: "8px 0",
-    display: "flex",
-    alignItems: "center",
-    minWidth: "99%"
+    alignItems: "center"
   },
   paper: {
     padding: "8px 10px",
@@ -114,9 +103,6 @@ const styles = theme => ({
   },
   iconButton: {
     padding: 10
-  },
-  typography: {
-    margin: theme.spacing.unit * 2
   }
 });
 class SearchResult extends Component {
@@ -134,6 +120,7 @@ class SearchResult extends Component {
     idToBook: "",
     user: {},
     address: "",
+    searchState: false,
     photo: "",
     title: "",
     href: "",
@@ -145,9 +132,8 @@ class SearchResult extends Component {
     fullWidth: true,
     maxWidth: "sm",
     buttonClicked: false,
-    isFetching: false,
-    // Popover
-    anchorEl: null
+    isFetching: false
+    // availId: ""
   };
 
   handleChange = key => (event, value) => {
@@ -156,17 +142,7 @@ class SearchResult extends Component {
     });
   };
 
-  handleClick = event => {
-    this.setState({
-      anchorEl: event.currentTarget
-    });
-  };
 
-  handlePopClose = () => {
-    this.setState({
-      anchorEl: null
-    });
-  };
 
   handleClickOpen = (id, address, title, href, city, state, zipcode, price) => {
     this.setState({
@@ -216,13 +192,30 @@ class SearchResult extends Component {
     // console.log(prevProps);
     // console.log(props);
 
-    // This rendermap called below 
+    // console.log(this.state.cardsArray); 
+    // console.log(props.cardsArray); 
 
-     this.renderMap();
+    // console.log(this.state.cardsArray === props.cardsArray); 
+    // console.log(this.state.cardsArray.length === props.cardsArray.length); 
+
+    console.log(props.searchState === true); 
+    console.log(props.addressQuery)
+
+    // see if you can create 
+    console.log(props.addressQuery === ""); 
+    console.log(props.addressQuery !== ""); 
+
+    if (props.searchState === true) {
+      this.renderMap(); 
+    }
+
+
+    // this.renderMap(); 
     if (this.state.markerData !== props.markerData) {
       // console.log("componentDidUpdate called");
       // this.renderMap();
     }
+
   }
 
   handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
@@ -278,7 +271,9 @@ class SearchResult extends Component {
   }
 
   handleInputChange = event => {
-    const { name, value } = event.target;
+    const { name, value } = event.target; 
+
+    this.setState({searchState: false}); 
 
     this.setState({
       [name]: value
@@ -286,24 +281,33 @@ class SearchResult extends Component {
   };
 
   checkForAddress = () => {
+
     this.setState({ isFetching: false });
 
     this.setState({ buttonClicked: true });
 
     if (this.state.addressQuery) {
+
       this.getAddress();
 
       this.setState({ isFetching: true });
+
     }
-  };
+
+  }
 
   handleSubmitSearch = e => {
+
     e.preventDefault();
 
-    this.checkForAddress();
+    this.setState({ searchState: true });
+
+    this.checkForAddress(); 
+
   };
 
   findRelevantListings = () => {
+
     const formattedDates = this.state.selectedDays.map(date =>
       date.toISOString()
     );
@@ -339,80 +343,84 @@ class SearchResult extends Component {
 
       // console.log("API.getAvailableListings Called");
 
-      console.log("1", this.state.latitude);
-      console.log("1 long", this.state.longitude);
+      console.log("1", this.state.latitude); 
+      console.log("1 long", this.state.longitude); 
       const promiseArray = emptyArr.map(item => {
-        console.log("Promise is invokved");
 
-        return new Promise((resolve, reject) => {
-          return resolve(
-            API.getListingById(item.listing).then(listing => {
-              console.log("first API call is made");
-              // console.log("API.getListingByID Called");
+        console.log("Promise is invokved"); 
+       
+        return new Promise( (resolve, reject) => {
+          
 
-              var longLatArray = [this.state.longitude, this.state.latitude];
+          return resolve( API.getListingById(item.listing).then(listing => {
 
-              console.log(longLatArray);
-
-              API.getListingByIdAndProximity(longLatArray).then(item => {
-                // console.log("API.getListingByIdAndProximity");
-
-                // console.log("this.state.cardsArray: ", this.state.cardsArray);
-
-                // console.log("line 250 is: ", item);
-
-                for (let i = 0; i < item.data.length; i++) {
-                  // console.log(listing.data[0]._id === item.data[i]._id);
-                  if (listing.data[0]._id === item.data[i]._id) {
-                    this.setState({
+            console.log("first API call is made"); 
+            // console.log("API.getListingByID Called");
+  
+            var longLatArray = [this.state.longitude, this.state.latitude];
+  
+            console.log(longLatArray);
+  
+            API.getListingByIdAndProximity(longLatArray).then(item => {
+              // console.log("API.getListingByIdAndProximity");
+  
+              // console.log("this.state.cardsArray: ", this.state.cardsArray);
+  
+              // console.log("line 250 is: ", item);
+  
+              for (let i = 0; i < item.data.length; i++) {
+                // console.log(listing.data[0]._id === item.data[i]._id);
+                if (listing.data[0]._id === item.data[i]._id) {
+                  this.setState(
+                    {
                       cardsArray: [...this.state.cardsArray, [item.data[i]]],
                       isFetching: false
                     });
-                  }
                 }
-              });
-
-              const data = listing.data[0];
-
-              this.setState({
-                markerData: [
-                  ...this.state.markerData,
-                  [
-                    data.address,
-                    data.location.coordinates[1],
-                    data.location.coordinates[0],
-                    data.title,
-                    data.streetName,
-                    data.neighborhood,
-                    data.photo,
-                    data._id,
-                    data.city,
-                    data.state,
-                    data.zipcode,
-                    data.price,
-                    data.parkingtype
-                  ]
+              }
+            });
+  
+     
+  
+            const data = listing.data[0];
+  
+            this.setState({
+              markerData: [
+                ...this.state.markerData,
+                [
+                  data.address,
+                  data.location.coordinates[1],
+                  data.location.coordinates[0],
+                  data.title,
+                  data.streetName,
+                  data.neighborhood,
+                  data.photo,
+                  data._id,
+                  data.city,
+                  data.state,
+                  data.zipcode,
+                  data.price,
+                  data.parkingtype
                 ]
-              });
-            })
-          );
-        });
+              ]
+            });
+  
+            
+          }))
 
-        // this.initMap();
+        
+
+        })
+        
+        // this.initMap(); 
 
         // setTimeout(() => { this.initMap(); }, 2000);
       });
 
       Promise.all(promiseArray)
-        .then(() => {
-          this.initMap();
-          console.log("promise callback is invoked");
-        })
-        // .then(() => {
-        //   setTimeout(() => {
-        //     this.renderMap();
-        //   }, 2000);
-        // });
+        .then( () => { this.initMap();  console.log("promise callback is invoked")})
+        // .then( () => {  setTimeout( () => {this.renderMap()}, 2000) })
+
 
       /******************************************End******************************************/
     });
@@ -421,7 +429,8 @@ class SearchResult extends Component {
   };
 
   renderMap = () => {
-    console.log("renderMap");
+  
+    console.log("renderMap"); 
     loadScript(
       "https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo&callback=initMap"
     );
@@ -430,7 +439,8 @@ class SearchResult extends Component {
   };
 
   initMap = () => {
-    console.log("initMap");
+    
+    console.log("initMap"); 
 
     var map = new window.google.maps.Map(document.getElementById("map"), {
       center: { lat: this.state.latitude, lng: this.state.longitude },
@@ -444,37 +454,16 @@ class SearchResult extends Component {
     // We will need to change this
     var contentString = this.state.address;
 
-    /***********************************START ******************************************/
-
     for (let i = 0; i < this.state.cardsArray.length; i++) {
-      // console.log(this.state.cardsArray);
-      // console.log(this.state.cardsArray[i][0].location.coordinates[1])
-      // console.log(this.state.cardsArray[i][0].location.coordinates[0])
 
       let latitude = this.state.cardsArray[i][0].location.coordinates[1];
       let longitude = this.state.cardsArray[i][0].location.coordinates[0];
-
-      // // Find equivalent
-      // console.log(this.state.markerData[i]);
-      // console.log(this.state.cardsArray[i][0].title);
-      // console.log(this.state.cardsArray[i][0]);
-
-      // // image source
-      // console.log(this.state.cardsArray[i][0].photo);
-
-      // // listing title
-      // console.log(this.state.cardsArray[i][0].title);
-
-      // // parking type
-      // console.log(this.state.cardsArray[i][0].parkingtype);
 
       var position = new window.google.maps.LatLng(latitude, longitude);
 
       // "<button " + "onclick=window.highlightCorrespondingCard()" + ">Book Now</button>
 
-      // Title below in marker was originally address
-
-      console.log(this.state.cardsArray);
+      // console.log(this.state.cardsArray); 
 
       marker = new window.google.maps.Marker({
         position: position,
@@ -489,12 +478,6 @@ class SearchResult extends Component {
         "click",
         ((marker, i) => {
           return () => {
-            // console.log(this.state.markerData[i][7]);
-
-            // let listingId = this.state.markerData[i][7];
-
-            // this is how I was passing through the id of the corresponding marker
-            // this.highlightCorrespondingCard(listingId);
 
             infoWindow.setContent(
               "<img width='100px' src=" +
@@ -523,7 +506,6 @@ class SearchResult extends Component {
       );
     }
 
-    /***********************************START ******************************************/
 
     var circle = new window.google.maps.Circle({
       map: map,
@@ -533,7 +515,7 @@ class SearchResult extends Component {
       strokeWeight: 0.5,
       center: { lat: this.state.latitude, lng: this.state.longitude }
     });
-
+    
     // console.log(marker);
 
     // circle.bindTo('center', marker, 'position');
@@ -570,8 +552,6 @@ class SearchResult extends Component {
   render() {
     const { classes } = this.props;
     const { spacing } = this.state;
-    const { anchorEl } = this.state;
-    const open = Boolean(anchorEl);
     // console.log(this.state.markerData);
     // console.log(this.state.cardsArray);
     // console.log(this.state);
@@ -585,34 +565,30 @@ class SearchResult extends Component {
               <Paper className={classes.paper} elevation={0}>
                 <form onSubmit={this.handleSubmitSearch}>
                   <Paper className={classes.searchBar} elevation={1}>
-                    <IconButton
-                      className={classes.iconButton}
-                      aria-label="Search"
-                      type="submit"
-                      id="queryAddress"
-                    >
-                      <RoomIcon />
-                    </IconButton>
                     <InputBase
                       className={classes.input}
-                      placeholder="Where?"
+                      placeholder="Search for a spot"
                       type="search"
                       name="addressQuery"
                       value={this.state.addressQuery}
                       onChange={this.handleInputChange}
                       disabled={false}
                     />
+                    <IconButton
+                      className={classes.iconButton}
+                      aria-label="Search"
+                      type="submit"
+                      id="queryAddress"
+                    >
+                      <SearchIcon />
+                    </IconButton>
                   </Paper>
                 </form>
 
-                {this.state.addressQuery.length === 0 &&
-                this.state.buttonClicked === true ? (
-                  <span style={{ color: "red", fontFamily: "Roboto" }}>
-                    Please provide a valid address
-                  </span>
-                ) : (
-                  " "
-                )}
+                {this.state.addressQuery.length === 0 && this.state.buttonClicked === true ? ( <span style={{ color: "red", fontFamily: "Roboto" }}>
+                    Please provide a valid address 
+                  </span>) : (" ")}
+
 
                 {this.state.selectedDays.length === 0 &&
                 this.state.addressQuery.length > 0 &&
@@ -630,49 +606,11 @@ class SearchResult extends Component {
                   style={{ fontFamily: "Roboto" }}
                 >
                   <div>
-                    <form onClick={this.handleClick}>
-                      <Paper className={classes.dateBar} elevation={1}>
-                        <IconButton
-                          className={classes.iconButton}
-                          aria-label="Search"
-                          type="submit"
-                        >
-                          <DateRangeIcon />
-                        </IconButton>
-                        <InputBase
-                          className={classes.input}
-                          placeholder="When?"
-                          type="search"
-                          disabled={false}
-                        />
-                      </Paper>
-                    </form>
-                    <Button onClick={this.handleSubmitSearch}>Search</Button>
-
-                    <Popover
-                      id="simple-popper"
-                      open={open}
-                      anchorEl={anchorEl}
-                      onClose={this.handlePopClose}
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "center"
-                      }}
-                      transformOrigin={{
-                        vertical: "top",
-                        horizontal: "center"
-                      }}
-                    >
-                      <Typography className={classes.typography}>
-                        <div>
-                          <DayPicker
-                            locale="en"
-                            selectedDays={this.state.selectedDays}
-                            onDayClick={this.handleDayClick}
-                          />
-                        </div>
-                      </Typography>
-                    </Popover>
+                    <DayPicker
+                      locale="en"
+                      selectedDays={this.state.selectedDays}
+                      onDayClick={this.handleDayClick}
+                    />
                   </div>
                 </Paper>
               </Paper>
@@ -685,12 +623,16 @@ class SearchResult extends Component {
               >
                 <div>
                   <GridList cellHeight={600} className={classes.gridList}>
-                    {/* {this.state.isFetching && this.state.cardsArray.length ? (<Loader />) : ( <h1 className="text-center" style={{ width: "100%" }}>
+
+
+                  {/* {this.state.isFetching && this.state.cardsArray.length ? (<Loader />) : ( <h1 className="text-center" style={{ width: "100%" }}>
                         No Spots to Display
                       </h1>) }   */}
 
-                    {this.state.isFetching && <Loader />}
+                      {this.state.isFetching && <Loader />}
 
+
+                
                     {!this.state.markerData.length && !this.state.isFetching ? (
                       <h1 className="text-center" style={{ width: "100%" }}>
                         No Spots to Display
@@ -767,7 +709,9 @@ class SearchResult extends Component {
                                                 spot[0].city,
                                                 spot[0].state,
                                                 spot[0].zipcode,
-                                                spot[0].price
+                                                spot[0].price 
+
+                                            
                                               );
                                             }}
                                           >
