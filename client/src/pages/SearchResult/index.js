@@ -23,6 +23,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+//end Dialog
 // Material UI Card Imports
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -43,10 +44,6 @@ import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Loader from "../../components/Loader";
-//Material UI Popover
-import Popover from "@material-ui/core/Popover";
-import DateRangeIcon from "@material-ui/icons/DateRange";
-import RoomIcon from "@material-ui/icons/Room";
 
 const styles = theme => ({
   root: {
@@ -152,6 +149,7 @@ class SearchResult extends Component {
     idToBook: "",
     user: {},
     address: "",
+    searchState: false,
     photo: "",
     title: "",
     href: "",
@@ -163,26 +161,13 @@ class SearchResult extends Component {
     fullWidth: true,
     maxWidth: "sm",
     buttonClicked: false,
-    isFetching: false,
-    // Popover
-    anchorEl: null
+    isFetching: false
+    // availId: ""
   };
 
   handleChange = key => (event, value) => {
     this.setState({
       [key]: value
-    });
-  };
-
-  handleClick = event => {
-    this.setState({
-      anchorEl: event.currentTarget
-    });
-  };
-
-  handlePopClose = () => {
-    this.setState({
-      anchorEl: null
     });
   };
 
@@ -234,9 +219,24 @@ class SearchResult extends Component {
     // console.log(prevProps);
     // console.log(props);
 
-    // This rendermap called below
+    // console.log(this.state.cardsArray);
+    // console.log(props.cardsArray);
 
-    this.renderMap();
+    // console.log(this.state.cardsArray === props.cardsArray);
+    // console.log(this.state.cardsArray.length === props.cardsArray.length);
+
+    console.log(props.searchState === true);
+    console.log(props.addressQuery);
+
+    // see if you can create
+    console.log(props.addressQuery === "");
+    console.log(props.addressQuery !== "");
+
+    if (props.searchState === true) {
+      this.renderMap();
+    }
+
+    // this.renderMap();
     if (this.state.markerData !== props.markerData) {
       // console.log("componentDidUpdate called");
       // this.renderMap();
@@ -298,6 +298,8 @@ class SearchResult extends Component {
   handleInputChange = event => {
     const { name, value } = event.target;
 
+    this.setState({ searchState: false });
+
     this.setState({
       [name]: value
     });
@@ -317,6 +319,8 @@ class SearchResult extends Component {
 
   handleSubmitSearch = e => {
     e.preventDefault();
+
+    this.setState({ searchState: true });
 
     this.checkForAddress();
   };
@@ -357,7 +361,7 @@ class SearchResult extends Component {
       if (emptyArr.length === 0) {
         this.setState({
           isFetching: false
-        })
+        });
       }
 
       /******************************************Start******************************************/
@@ -387,7 +391,7 @@ class SearchResult extends Component {
                 // console.log("line 250 is: ", item);
 
                 for (let i = 0; i < item.data.length; i++) {
-                  console.log(listing.data[0]);
+                  // console.log(listing.data[0]._id === item.data[i]._id);
                   if (listing.data[0]._id === item.data[i]._id) {
                     this.setState({
                       cardsArray: [...this.state.cardsArray, [item.data[i]]],
@@ -432,11 +436,7 @@ class SearchResult extends Component {
         this.initMap();
         console.log("promise callback is invoked");
       });
-      // .then(() => {
-      //   setTimeout(() => {
-      //     this.renderMap();
-      //   }, 2000);
-      // });
+      // .then( () => {  setTimeout( () => {this.renderMap()}, 2000) })
 
       /******************************************End******************************************/
     });
@@ -468,37 +468,15 @@ class SearchResult extends Component {
     // We will need to change this
     var contentString = this.state.address;
 
-    /***********************************START ******************************************/
-
     for (let i = 0; i < this.state.cardsArray.length; i++) {
-      // console.log(this.state.cardsArray);
-      // console.log(this.state.cardsArray[i][0].location.coordinates[1])
-      // console.log(this.state.cardsArray[i][0].location.coordinates[0])
-
       let latitude = this.state.cardsArray[i][0].location.coordinates[1];
       let longitude = this.state.cardsArray[i][0].location.coordinates[0];
-
-      // // Find equivalent
-      // console.log(this.state.markerData[i]);
-      // console.log(this.state.cardsArray[i][0].title);
-      // console.log(this.state.cardsArray[i][0]);
-
-      // // image source
-      // console.log(this.state.cardsArray[i][0].photo);
-
-      // // listing title
-      // console.log(this.state.cardsArray[i][0].title);
-
-      // // parking type
-      // console.log(this.state.cardsArray[i][0].parkingtype);
 
       var position = new window.google.maps.LatLng(latitude, longitude);
 
       // "<button " + "onclick=window.highlightCorrespondingCard()" + ">Book Now</button>
 
-      // Title below in marker was originally address
-
-      console.log(this.state.cardsArray);
+      // console.log(this.state.cardsArray);
 
       marker = new window.google.maps.Marker({
         position: position,
@@ -513,13 +491,6 @@ class SearchResult extends Component {
         "click",
         ((marker, i) => {
           return () => {
-            // console.log(this.state.markerData[i][7]);
-
-            // let listingId = this.state.markerData[i][7];
-
-            // this is how I was passing through the id of the corresponding marker
-            // this.highlightCorrespondingCard(listingId);
-
             infoWindow.setContent(
               "<img width='100px' src=" +
                 this.state.cardsArray[i][0].photo +
@@ -546,8 +517,6 @@ class SearchResult extends Component {
         })(marker, i)
       );
     }
-
-    /***********************************START ******************************************/
 
     var circle = new window.google.maps.Circle({
       map: map,
@@ -594,8 +563,6 @@ class SearchResult extends Component {
   render() {
     const { classes } = this.props;
     const { spacing } = this.state;
-    const { anchorEl } = this.state;
-    const open = Boolean(anchorEl);
     // console.log(this.state.markerData);
     // console.log(this.state.cardsArray);
     // console.log(this.state);
