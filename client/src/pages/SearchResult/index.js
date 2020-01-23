@@ -199,11 +199,13 @@ class SearchResult extends Component {
     // console.log(this.state.cardsArray.length === props.cardsArray.length); 
 
     console.log(props.searchState === true); 
-    console.log(props.addressQuery)
+    // console.log(props.addressQuery)
+
+    console.log(props.searchState); 
 
     // see if you can create 
-    console.log(props.addressQuery === ""); 
-    console.log(props.addressQuery !== ""); 
+    // console.log(props.addressQuery === ""); 
+    // console.log(props.addressQuery !== ""); 
 
     if (props.searchState === true) {
       this.renderMap(); 
@@ -348,18 +350,26 @@ class SearchResult extends Component {
       const promiseArray = emptyArr.map(item => {
 
         console.log("Promise is invokved"); 
+
+        console.log(item); 
+
+        // this.setState({searchState: false}); 
        
         return new Promise( (resolve, reject) => {
           
 
           return resolve( API.getListingById(item.listing).then(listing => {
-
+            // this API call comes back with an empty 
             console.log("first API call is made"); 
             // console.log("API.getListingByID Called");
   
             var longLatArray = [this.state.longitude, this.state.latitude];
-  
-            console.log(longLatArray);
+            
+            console.log("+++++++++");
+            console.log(listing.data);
+            console.log("+++++++++");
+
+            // this.setState({searchState: false}); 
   
             API.getListingByIdAndProximity(longLatArray).then(item => {
               // console.log("API.getListingByIdAndProximity");
@@ -367,9 +377,20 @@ class SearchResult extends Component {
               // console.log("this.state.cardsArray: ", this.state.cardsArray);
   
               // console.log("line 250 is: ", item);
+
+              // this.setState({searchState: false}); 
   
               for (let i = 0; i < item.data.length; i++) {
-                // console.log(listing.data[0]._id === item.data[i]._id);
+
+                // this.setState({searchState: false}); 
+
+                // console.log("line 373 ", listing.data[0]._id === item.data[i]._id);
+                console.log("------------------------------"); 
+                console.log("line 374 ", listing.data); // this last one is empty 
+                console.log("line 375 ", item.data); 
+                console.log("------------------------------"); 
+
+
                 if (listing.data[0]._id === item.data[i]._id) {
                   this.setState(
                     {
@@ -380,7 +401,7 @@ class SearchResult extends Component {
               }
             });
   
-     
+            
   
             const data = listing.data[0];
   
@@ -418,12 +439,15 @@ class SearchResult extends Component {
       });
 
       Promise.all(promiseArray)
-        .then( () => { this.initMap();  console.log("promise callback is invoked")})
+        .then( () => { this.initMap();  
+          // this.setState({searchState: true});   
+          console.log("promise callback is invoked")})
         // .then( () => {  setTimeout( () => {this.renderMap()}, 2000) })
 
 
       /******************************************End******************************************/
     });
+   
 
     // this.renderMap();
   };
@@ -519,6 +543,8 @@ class SearchResult extends Component {
     // console.log(marker);
 
     // circle.bindTo('center', marker, 'position');
+
+
   };
 
   getAddress = async () => {
@@ -550,6 +576,7 @@ class SearchResult extends Component {
   };
 
   render() {
+    console.log(this.state.searchState); 
     const { classes } = this.props;
     const { spacing } = this.state;
     // console.log(this.state.markerData);
