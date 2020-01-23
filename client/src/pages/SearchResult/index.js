@@ -234,9 +234,9 @@ class SearchResult extends Component {
     // console.log(prevProps);
     // console.log(props);
 
-    // This rendermap called below 
+    // This rendermap called below
 
-     this.renderMap();
+    this.renderMap();
     if (this.state.markerData !== props.markerData) {
       // console.log("componentDidUpdate called");
       // this.renderMap();
@@ -304,7 +304,7 @@ class SearchResult extends Component {
   };
 
   checkForAddress = () => {
-    this.setState({ isFetching: false });
+    // this.setState({ isFetching: false });
 
     this.setState({ buttonClicked: true });
 
@@ -353,6 +353,13 @@ class SearchResult extends Component {
         }
       }
 
+      console.log("356: " + emptyArr.length);
+      if (emptyArr.length === 0) {
+        this.setState({
+          isFetching: false
+        })
+      }
+
       /******************************************Start******************************************/
 
       // console.log("API.getAvailableListings Called");
@@ -380,7 +387,7 @@ class SearchResult extends Component {
                 // console.log("line 250 is: ", item);
 
                 for (let i = 0; i < item.data.length; i++) {
-                  // console.log(listing.data[0]._id === item.data[i]._id);
+                  console.log(listing.data[0]);
                   if (listing.data[0]._id === item.data[i]._id) {
                     this.setState({
                       cardsArray: [...this.state.cardsArray, [item.data[i]]],
@@ -421,16 +428,15 @@ class SearchResult extends Component {
         // setTimeout(() => { this.initMap(); }, 2000);
       });
 
-      Promise.all(promiseArray)
-        .then(() => {
-          this.initMap();
-          console.log("promise callback is invoked");
-        })
-        // .then(() => {
-        //   setTimeout(() => {
-        //     this.renderMap();
-        //   }, 2000);
-        // });
+      Promise.all(promiseArray).then(() => {
+        this.initMap();
+        console.log("promise callback is invoked");
+      });
+      // .then(() => {
+      //   setTimeout(() => {
+      //     this.renderMap();
+      //   }, 2000);
+      // });
 
       /******************************************End******************************************/
     });
