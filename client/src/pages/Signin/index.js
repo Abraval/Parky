@@ -55,6 +55,9 @@ class LoginForm extends Component {
     super();
     this.state = {
       open: false,
+      openInfoModal: false,
+      fullWidth: true,
+      maxWidth: "sm",
       username: "",
       password: "",
       redirectTo: null,
@@ -88,6 +91,15 @@ class LoginForm extends Component {
       // dobError: "",
       licenseError: ""
     });
+  };
+
+  handleClickOpen2 = () => {
+    this.setState({
+      openInfoModal: true
+    });
+  };
+  handleClose2 = () => {
+    this.setState({ openInfoModal: false });
   };
 
   handleClose = () => {
@@ -517,7 +529,235 @@ class LoginForm extends Component {
                 </DialogActions>
               </Dialog>
             </Paper>
-            {/* <img src="https://image.flaticon.com/icons/svg/149/149852.svg" /> */}
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              // open={this.state.openInfoModal}
+              onClick={() => this.handleClickOpen2()}
+              style={{
+                fontFamily: "Roboto",
+                margin: "20px 0",
+                backgroundColor: "#f1ab86",
+                color: "#f1f1f1",
+                fontSize: "20px",
+                fontWeight: "bold"
+              }}
+            >
+              How to Use
+            </Button>
+
+            <Dialog
+              open={this.state.openInfoModal}
+              handleClickOpen={this.handleClickOpen2}
+              style={{
+                fontFamily: "Roboto",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                color: "#84817a"
+              }}
+              fullWidth={this.state.fullWidth}
+              maxWidth={this.state.maxWidth}
+            >
+              <DialogTitle id="info-modal">
+                <Typography
+                  style={{
+                    color: "#93b7be",
+                    fontSize: 20,
+                    fontWeight: "bold"
+                  }}
+                >
+                  How to use
+                </Typography>
+              </DialogTitle>
+              <DialogContent style={{ fontFamily: "Roboto" }}>
+                <Typography
+                  style={{
+                    fontFamily: "Roboto",
+                    color: "#84817a",
+                    fontSize: "16px"
+                  }}
+                >
+                  Parky is a full-stack web application that allows users to
+                  search, list, and rent private parking spaces.
+                </Typography>
+                <hr />
+                <Typography
+                  style={{
+                    fontFamily: "Roboto",
+                    fontWeight: "bold",
+                    color: "#93b7be",
+                    fontSize: "16px",
+                    marginTop: "5px"
+                  }}
+                >
+                  1. Create an account, or use our demo accounts.
+                </Typography>
+                <Typography
+                  style={{
+                    fontFamily: "Roboto",
+                    fontWeight: "bold",
+                    color: "#ef7939",
+                    fontSize: "16px",
+                    marginTop: "5px"
+                  }}
+                >
+                  Power User view:
+                </Typography>
+
+                <Typography
+                  style={{
+                    fontFamily: "Roboto",
+                    color: "#84817a",
+                    fontSize: "16px"
+                  }}
+                >
+                  <strong>Username:</strong> user
+                </Typography>
+                <Typography
+                  style={{
+                    fontFamily: "Roboto",
+                    color: "#84817a",
+                    fontSize: "16px"
+                  }}
+                >
+                  <strong>Password:</strong> test
+                </Typography>
+                <Typography
+                  style={{
+                    fontFamily: "Roboto",
+                    fontWeight: "bold",
+                    color: "#ef7939",
+                    fontSize: "16px",
+                    marginTop: "5px"
+                  }}
+                >
+                  Listing Owner view:
+                </Typography>
+
+                <Typography
+                  style={{
+                    fontFamily: "Roboto",
+                    color: "#84817a",
+                    fontSize: "16px"
+                  }}
+                >
+                  <strong>Username:</strong> owner
+                </Typography>
+                <Typography
+                  style={{
+                    fontFamily: "Roboto",
+                    color: "#84817a",
+                    fontSize: "16px"
+                  }}
+                >
+                  <strong>Password:</strong> test
+                </Typography>
+                <Typography
+                  style={{
+                    fontFamily: "Roboto",
+                    fontWeight: "bold",
+                    color: "#93b7be",
+                    fontSize: "16px",
+                    marginTop: "5px"
+                  }}
+                >
+                  <hr />
+                  2. Search for parking spots available for rent by location and
+                  date.
+                </Typography>
+                <Typography
+                  style={{
+                    fontFamily: "Roboto",
+
+                    color: "#84817a",
+                    fontSize: "16px",
+                    marginTop: "5px"
+                  }}
+                >
+                  Search for parking spots in June 2020.
+                  <br />
+                  Try using these Philly search queries:
+                </Typography>
+                <Typography
+                  style={{
+                    fontFamily: "Roboto",
+
+                    color: "#84817a",
+                    fontSize: "16px",
+                    marginTop: "5px"
+                  }}
+                >
+                  - Queen Village Philadelphia
+                  <br />- 2320 E Gordon St Philadelphia PA 19125
+                </Typography>
+                <Typography
+                  style={{
+                    fontFamily: "Roboto",
+                    fontWeight: "bold",
+                    color: "#93b7be",
+                    fontSize: "16px",
+                    marginTop: "5px"
+                  }}
+                >
+                  <hr />
+                  3. Create your own listing.
+                </Typography>
+                <Typography
+                  style={{
+                    fontFamily: "Roboto",
+
+                    color: "#84817a",
+                    fontSize: "16px",
+                    marginTop: "5px"
+                  }}
+                >
+                  Users can create listings for their own parking spots under
+                  the "Create" section of the application.
+                  <br />
+                  You will be guided through submitting listing details, choosing
+                  availability, and confirming the new listing.
+                </Typography>
+                <Typography
+                  style={{
+                    fontFamily: "Roboto",
+                    fontWeight: "bold",
+                    color: "#93b7be",
+                    fontSize: "16px",
+                    marginTop: "5px"
+                  }}
+                >
+                  <hr />
+                  4. Dashboard.
+                </Typography>
+                <Typography
+                  style={{
+                    fontFamily: "Roboto",
+
+                    color: "#84817a",
+                    fontSize: "16px",
+                    marginTop: "5px"
+                  }}
+                >
+                  The Listings view allows users to view, edit and remove all of
+                  their active listings.
+                  <br />
+                  The reservation view allows users to see all upcoming
+                  reservations, cancel reservations entirely or partially.
+                </Typography>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={() => this.handleClose2()}
+                  color="error"
+                  variant="outlined"
+                >
+                  Close
+                </Button>
+              </DialogActions>
+            </Dialog>
           </Grid>
           <div className="overlay" />
         </Grid>
