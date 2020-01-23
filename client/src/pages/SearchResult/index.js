@@ -44,6 +44,10 @@ import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Loader from "../../components/Loader";
+//Material UI Popover
+import Popover from "@material-ui/core/Popover";
+import DateRangeIcon from "@material-ui/icons/DateRange";
+import RoomIcon from "@material-ui/icons/Room";
 
 const styles = theme => ({
   root: {
@@ -134,6 +138,7 @@ const styles = theme => ({
     marginTop: "3px"
   }
 });
+
 class SearchResult extends Component {
   state = {
     //Dialog
@@ -161,8 +166,8 @@ class SearchResult extends Component {
     fullWidth: true,
     maxWidth: "sm",
     buttonClicked: false,
-    isFetching: false
-    // availId: ""
+    isFetching: false,
+    anchorEl: null
   };
 
   handleChange = key => (event, value) => {
@@ -187,6 +192,18 @@ class SearchResult extends Component {
 
   handleClose = () => {
     this.setState({ open: false });
+  };
+
+  handleClick = event => {
+    this.setState({
+      anchorEl: event.currentTarget
+    });
+  };
+
+  handlePopClose = () => {
+    this.setState({
+      anchorEl: null
+    });
   };
 
   componentDidMount() {
@@ -563,9 +580,8 @@ class SearchResult extends Component {
   render() {
     const { classes } = this.props;
     const { spacing } = this.state;
-    // console.log(this.state.markerData);
-    // console.log(this.state.cardsArray);
-    // console.log(this.state);
+    const { anchorEl } = this.state;
+    const open = Boolean(anchorEl);
     return (
       <div>
         {/* {console.log(this.state.cardsArray)} */}
