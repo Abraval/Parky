@@ -596,6 +596,7 @@ class SearchResult extends Component {
                     aria-label="Search"
                     type="submit"
                     id="queryAddress"
+                    disabled="true"
                   >
                     <RoomIcon />
                   </IconButton>
@@ -625,6 +626,7 @@ class SearchResult extends Component {
                     className={classes.iconButton}
                     aria-label="Search"
                     type="submit"
+                    disabled="true"
                   >
                     <DateRangeIcon />
                   </IconButton>
