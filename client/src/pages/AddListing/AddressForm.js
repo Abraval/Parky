@@ -1,15 +1,6 @@
 import React from "react";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import { withStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
-import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
 
 const ranges = [
   {
@@ -34,14 +25,12 @@ function AddressForm(props) {
   return (
     <React.Fragment style={{ fontFamily: "Roboto" }}>
       <form noValidate autoComplete="off">
-        {console.log(props)}
         {/* //TITLE */}
         <TextField
           id="title"
           label="Title"
           fullWidth={true}
           placeholder="Open driveway on quiet street"
-          // className={classes.textField}
           margin="normal"
           variant="outlined"
           value={props.title}
@@ -60,7 +49,6 @@ function AddressForm(props) {
           select
           label="Select"
           fullWidth={true}
-          // className={classes.textField}
           value={props.parkingtype}
           onChange={props.handleInputChange}
           SelectProps={
@@ -94,7 +82,6 @@ function AddressForm(props) {
           onChange={props.handleInputChange}
           type="number"
           fullWidth={true}
-          // className={classes.textField}
           InputLabelProps={{
             shrink: true
           }}
@@ -116,7 +103,6 @@ function AddressForm(props) {
           fullWidth={true}
           label="Street Address"
           placeholder="1200 Market Street"
-          // className={classes.textField}
           margin="normal"
           variant="outlined"
           value={props.address}
@@ -135,7 +121,6 @@ function AddressForm(props) {
           label="City"
           fullWidth={true}
           placeholder="Philadelphia"
-          // className={classes.textField}
           margin="normal"
           variant="outlined"
           value={props.city}
@@ -154,7 +139,6 @@ function AddressForm(props) {
           id="state"
           label="State"
           placeholder="PA"
-          // className={classes.textField}
           margin="normal"
           variant="outlined"
           value={props.state}
@@ -172,7 +156,6 @@ function AddressForm(props) {
           id="zipcode"
           label="Zip"
           placeholder="19107"
-          // className={classes.textField}
           margin="normal"
           variant="outlined"
           value={props.zipcode}

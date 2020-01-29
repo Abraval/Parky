@@ -14,23 +14,13 @@ import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
-import GridList from "@material-ui/core/GridList";
 // Material UI sidebar imports
 import Hidden from "@material-ui/core/Hidden";
-
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Toolbar from "@material-ui/core/Toolbar";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-
 import Avatar from "@material-ui/core/Avatar";
 
 const drawerWidth = 240;
@@ -67,15 +57,9 @@ const styles = theme => ({
     flexWrap: "wrap",
     justifyContent: "center"
   },
-  // appBar: {
-  //   zIndex: theme.zIndex.drawer + 1
-  // },
   drawerPaper: {
     width: drawerWidth
   },
-  // content: {
-  //   flexGrow: 1
-  // },
   drawer: {
     [theme.breakpoints.up("sm")]: {
       width: drawerWidth,
@@ -89,11 +73,7 @@ const styles = theme => ({
     alignItems: "center"
   },
   appBar: {
-    // marginLeft: drawerWidth,
     zIndex: theme.zIndex.drawer + 1
-    // [theme.breakpoints.up("sm")]: {
-    //   width: `calc(100% - ${drawerWidth}px)`
-    // }
   },
   menuButton: {
     marginRight: 20,
@@ -104,7 +84,6 @@ const styles = theme => ({
   toolbar: theme.mixins.toolbar,
   content: {
     flexGrow: 1
-    // padding: theme.spacing.unit * 3
   },
   large: {
     width: 150,
@@ -160,7 +139,6 @@ class Profile extends Component {
     API.getListingsForProf()
 
       .then(res => {
-        console.log("Profile.loadListing res.date", res.data);
         this.setState({ listing: res.data });
       })
       .catch(err => console.log(err));
@@ -180,7 +158,6 @@ class Profile extends Component {
       ]; // Add a new reservation to the listing
     });
 
-    console.log("Reservation Obj", reservationsObject);
     this.setState({
       reservationsObject
     });
@@ -191,11 +168,6 @@ class Profile extends Component {
       .then(res => {
         this.processReserved(res.data);
         this.setState({ reserved: res.data });
-        console.log("RESERVATIONS");
-        console.log(res.data);
-        // let reservListId =
-        // console.log("RESERVATIONS");
-        // console.log(res.data);
       })
 
       .catch(err => console.log(err));
@@ -207,9 +179,6 @@ class Profile extends Component {
         this.setState({ reserved: res.data });
         console.log("RESERVATIONS");
         console.log(res.data);
-        // let reservListId =
-        // console.log("RESERVATIONS");
-        // console.log(res.data);
       })
 
       .catch(err => console.log(err));
@@ -220,9 +189,6 @@ class Profile extends Component {
         this.setState({ reserved: res.data });
         console.log("RESERVATIONS");
         console.log(res.data);
-        // let reservListId =
-        // console.log("RESERVATIONS");
-        // console.log(res.data);
       })
 
       .catch(err => console.log(err));
@@ -265,26 +231,7 @@ class Profile extends Component {
           <h3 style={{ textAlign: "center" }}>
             Welcome back, {this.state.firstname}!
           </h3>
-          {/* {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                <ExitToAppIcon />
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))} */}
         </List>
-        {/* <Divider />
-        <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List> */}
       </div>
     );
 
@@ -296,12 +243,10 @@ class Profile extends Component {
         </AppBar>
 
         <nav className={classes.drawer}>
-          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
           <Hidden smUp implementation="css">
             <Drawer
               container={this.props.container}
               variant="temporary"
-              // anchor={theme.direction === "rtl" ? "right" : "left"}
               open={this.state.mobileOpen}
               onClose={this.handleDrawerToggle}
               classes={{
@@ -345,7 +290,6 @@ class Profile extends Component {
                     </Tabs>
                   </Paper>
                   {/* End Tabs Menu// */}
-                  {console.log(this.value)}
                   {value === 0 && (
                     <TabContainer>
                       <Paper className={classes.paper} elevation={0}>
