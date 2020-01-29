@@ -52,7 +52,7 @@ module.exports = {
       },
       renter: null
     })
-      .populate("listing")
+      // .populate("listing")
       // .exec()
       .then(dbModel => {
         res.json(dbModel);
