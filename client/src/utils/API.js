@@ -2,7 +2,6 @@ import axios from "axios";
 
 export default {
   saveListing: function(listingData) {
-    // console.log(listingData);
     return axios.post("/api/listing", listingData);
   },
   getUser: function() {
@@ -33,7 +32,6 @@ export default {
     });
   },
   getListingByIdAndProximity: function(data) {
-    // console.log("line 35 data is", data);
     return axios.get("api/listing/near", {
       params: {
         data
@@ -41,14 +39,12 @@ export default {
     });
   },
   updateAvailability: function(availabilityData) {
-    console.log("updateAvailability.API availDATA", availabilityData);
     return axios.put("api/availability", availabilityData);
   },
   createAvailability: function(availabilityData) {
     return axios.post("api/availability", availabilityData);
   },
   deleteAvailability: function(id) {
-    console.log("ksmdkamsd", id)
     return axios.delete(`/api/availability/${id}`);
   },
   getAvailableListings: function(dates) {
@@ -59,7 +55,6 @@ export default {
     });
   },
   editListing: function(listing) {
-    // console.log("API.editListing listing", listing);
     return axios.put("api/listing/profile", { listing });
   },
   deleteListing: function(id) {
