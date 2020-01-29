@@ -39,26 +39,12 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   findAllAvailable: function(req, res) {
-    console.dir("req.params is" + req.params);
-    console.log("this is line 22: " + req.query);
-    console.log("=======================");
-    console.dir(JSON.stringify(req.query));
-    console.log("=======================");
-    let dates = req.query.dates;
-    console.log("Searched dates: ", dates);
-    let startDay = dates[0];
-    let endDay;
-    console.log("Dates length", dates.length);
-
-    if (dates.length == 1) {
-      endDay = startDay;
-    } else {
-      endDay = dates[req.query.dates.length - 1];
-    }
-
-    console.log("startDay is", startDay);
-    console.log("endDay is", endDay);
-
+    console.log("Starting to Find All Available");
+    const dates = req.query.dates;
+    const startDay = dates[0];
+    const endDay =
+      dates.length === 1 ? startDay : dates[req.query.dates.length - 1];
+    console.log("startDay is", startDay, "endDay is", endDay);
     db.Availability.find({
       date: {
         $gte: startDay,
@@ -66,6 +52,8 @@ module.exports = {
       },
       renter: null
     })
+      // .populate("listing")
+      // .exec()
       .then(dbModel => {
         res.json(dbModel);
       })
@@ -178,7 +166,11 @@ module.exports = {
       });
   },
   deleteListing: function(req, res) {
-    db.Listing.findById({ _id: req.params.id })
+    // db.Listing.remove({ _id: req.params.id })
+    const { id } = req.params.id;
+    db.Availability.remove({ listing: id })
+
+      .exec()
       .then(dbModel => dbModel.deleteOne())
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));

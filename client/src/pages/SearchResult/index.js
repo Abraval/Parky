@@ -5,43 +5,28 @@ import axios from "axios";
 import DayPicker, { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import API from "../../utils/API";
-import { ListingList, ListingListItem } from "../../components/ListingList";
 import moment from "moment";
 // Material UI Grid Layout imports
 import PropTypes, { func } from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import FormLabel from "@material-ui/core/FormLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import Radio from "@material-ui/core/Radio";
 import Paper from "@material-ui/core/Paper";
 //Material Dialog
-import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-//end Dialog
 // Material UI Card Imports
 import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import ButtonBase from "@material-ui/core/ButtonBase";
 //Material UI Search Bar Imports
 import InputBase from "@material-ui/core/InputBase";
-import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 //Material UI Grid List
 import GridList from "@material-ui/core/GridList";
-import GridListTile from "@material-ui/core/GridListTile";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Loader from "../../components/Loader";
 //Material UI Popover
@@ -59,7 +44,6 @@ const styles = theme => ({
     margin: "8px",
     display: "flex",
     alignItems: "center",
-    // maxWidth: "99%"
     width: "400px"
   },
   dateBar: {
@@ -207,8 +191,6 @@ class SearchResult extends Component {
   };
 
   componentDidMount() {
-    // window.highlightCorrespondingCard = this.highlightCorrespondingCard;
-
     this.renderMap();
     this.userInfo().then(response =>
       this.setState(
@@ -220,10 +202,6 @@ class SearchResult extends Component {
     );
   }
 
-  componentWillUnmount() {
-    // window.highlightCorrespondingCard = null;
-  }
-
   tester() {
     console.log(this.state.user);
   }
@@ -233,27 +211,10 @@ class SearchResult extends Component {
   }
 
   componentDidUpdate(prevProps, props) {
-    // console.log(prevProps);
-    // console.log(props);
-
-    // console.log(this.state.cardsArray);
-    // console.log(props.cardsArray);
-
-    // console.log(this.state.cardsArray === props.cardsArray);
-    // console.log(this.state.cardsArray.length === props.cardsArray.length);
-
-    console.log(props.searchState === true);
-    console.log(props.addressQuery);
-
-    // see if you can create
-    console.log(props.addressQuery === "");
-    console.log(props.addressQuery !== "");
-
     if (props.searchState === true) {
       this.renderMap();
     }
 
-    // this.renderMap();
     if (this.state.markerData !== props.markerData) {
       // console.log("componentDidUpdate called");
       // this.renderMap();
@@ -294,7 +255,6 @@ class SearchResult extends Component {
   constructor(props) {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
-    // this.highlightCorrespondingCard = this.highlightCorrespondingCard.bind(this);
   }
 
   handleDayClick(day, { selected }) {
@@ -323,8 +283,6 @@ class SearchResult extends Component {
   };
 
   checkForAddress = () => {
-    // this.setState({ isFetching: false });
-
     this.setState({ buttonClicked: true });
 
     if (this.state.addressQuery) {
@@ -352,18 +310,13 @@ class SearchResult extends Component {
     this.setState({ listings: [] });
 
     API.getAvailableListings(formattedDates).then(res => {
-      // console.log("here", res);
-
       let emptyArr = []; // these are the items that we are displaying
       const datesLength = formattedDates.length;
       for (let i = 0; i < res.data.length; i++) {
         let count = 0;
         for (let j = 0; j < res.data.length; j++) {
-          // console.log(res.data[i].listing === res.data[j].listing);
           if (res.data[i].listing === res.data[j].listing) {
             count++;
-            // console.log(count);
-            // console.log(emptyArr.findIndex(x => x.listing === res.data[i].listing) === -1);
             if (
               count == datesLength &&
               emptyArr.findIndex(x => x.listing === res.data[i].listing) === -1
@@ -383,32 +336,14 @@ class SearchResult extends Component {
 
       /******************************************Start******************************************/
 
-      // console.log("API.getAvailableListings Called");
-
-      console.log("1", this.state.latitude);
-      console.log("1 long", this.state.longitude);
       const promiseArray = emptyArr.map(item => {
-        console.log("Promise is invokved");
-
         return new Promise((resolve, reject) => {
           return resolve(
             API.getListingById(item.listing).then(listing => {
-              console.log("first API call is made");
-              // console.log("API.getListingByID Called");
-
               var longLatArray = [this.state.longitude, this.state.latitude];
 
-              console.log(longLatArray);
-
               API.getListingByIdAndProximity(longLatArray).then(item => {
-                // console.log("API.getListingByIdAndProximity");
-
-                // console.log("this.state.cardsArray: ", this.state.cardsArray);
-
-                // console.log("line 250 is: ", item);
-
                 for (let i = 0; i < item.data.length; i++) {
-                  // console.log(listing.data[0]._id === item.data[i]._id);
                   if (listing.data[0]._id === item.data[i]._id) {
                     this.setState({
                       cardsArray: [...this.state.cardsArray, [item.data[i]]],
@@ -443,22 +378,15 @@ class SearchResult extends Component {
             })
           );
         });
-
-        // this.initMap();
-
-        // setTimeout(() => { this.initMap(); }, 2000);
       });
 
       Promise.all(promiseArray).then(() => {
         this.initMap();
         console.log("promise callback is invoked");
       });
-      // .then( () => {  setTimeout( () => {this.renderMap()}, 2000) })
 
       /******************************************End******************************************/
     });
-
-    // this.renderMap();
   };
 
   renderMap = () => {
@@ -467,7 +395,6 @@ class SearchResult extends Component {
       "https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo&callback=initMap"
     );
     window.initMap = this.initMap;
-    // console.log(this.state.markerData);
   };
 
   initMap = () => {
@@ -490,10 +417,6 @@ class SearchResult extends Component {
       let longitude = this.state.cardsArray[i][0].location.coordinates[0];
 
       var position = new window.google.maps.LatLng(latitude, longitude);
-
-      // "<button " + "onclick=window.highlightCorrespondingCard()" + ">Book Now</button>
-
-      // console.log(this.state.cardsArray);
 
       marker = new window.google.maps.Marker({
         position: position,
@@ -543,10 +466,6 @@ class SearchResult extends Component {
       strokeWeight: 0.5,
       center: { lat: this.state.latitude, lng: this.state.longitude }
     });
-
-    // console.log(marker);
-
-    // circle.bindTo('center', marker, 'position');
   };
 
   getAddress = async () => {
@@ -560,31 +479,20 @@ class SearchResult extends Component {
         }
       })
       .then(response => {
-        // console.log(
-        //   "Axios.get.then is called, setting state of latitude and longitude for the map"
-        // );
         var latitude = response.data.results[0].geometry.location.lat;
         var longitude = response.data.results[0].geometry.location.lng;
         this.setState({ latitude, longitude }, () => {
-          // console.log(
-          //   "inside the callback for this.setState latitude and longitude"
-          // );
-          // this.renderMap();
           this.findRelevantListings();
-          // this.functionA();
         });
-        // this.renderMap();
       });
   };
 
   render() {
     const { classes } = this.props;
-    const { spacing } = this.state;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
     return (
       <div>
-        {/* {console.log(this.state.cardsArray)} */}
         <Nav />
         <div className={classes.root}>
           <Grid item xs={12}>
@@ -596,6 +504,7 @@ class SearchResult extends Component {
                     aria-label="Search"
                     type="submit"
                     id="queryAddress"
+                    disabled="true"
                   >
                     <RoomIcon />
                   </IconButton>
@@ -625,6 +534,7 @@ class SearchResult extends Component {
                     className={classes.iconButton}
                     aria-label="Search"
                     type="submit"
+                    disabled="true"
                   >
                     <DateRangeIcon />
                   </IconButton>
@@ -692,10 +602,6 @@ class SearchResult extends Component {
               >
                 <div>
                   <GridList cellHeight={600} className={classes.gridList}>
-                    {/* {this.state.isFetching && this.state.cardsArray.length ? (<Loader />) : ( <h1 className="text-center" style={{ width: "100%" }}>
-                        No Spots to Display
-                      </h1>) }   */}
-
                     {this.state.isFetching && <Loader />}
 
                     {!this.state.markerData.length && !this.state.isFetching ? (
@@ -726,7 +632,6 @@ class SearchResult extends Component {
                                         price={spot[0].price}
                                         parkingtype={spot[0].parkingtype}
                                         handleBookClick={this.handleBookClick}
-                                        // handleDialogOpen={this.handleDialogOpen}
                                       >
                                         <img
                                           className={classes.img}

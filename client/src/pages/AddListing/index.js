@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Toolbar from "@material-ui/core/Toolbar";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
@@ -16,11 +15,7 @@ import DayPicker, { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
 // Material UI Input imports
 import PropTypes from "prop-types";
-import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -28,7 +23,6 @@ import Typography from "@material-ui/core/Typography";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 const styles = theme => ({
@@ -68,25 +62,6 @@ const styles = theme => ({
   }
 });
 
-// const ranges = [
-//   {
-//     value: "Garage",
-//     label: "Garage"
-//   },
-//   {
-//     value: "Street",
-//     label: "Street"
-//   },
-//   {
-//     value: "Private Lot",
-//     label: "Private Lot"
-//   },
-//   {
-//     value: "Driveway",
-//     label: "Driveway"
-//   }
-// ];
-
 const steps = ["Listing Address", "Availability", "Review Your Listing"];
 
 class AddListing extends Component {
@@ -121,7 +96,6 @@ class AddListing extends Component {
   }
 
   getStepContent = step => {
-    console.log(step);
     switch (step) {
       case 0:
         return (
@@ -173,7 +147,6 @@ class AddListing extends Component {
   };
 
   componentDidMount() {
-    console.log(this.state);
     this.userInfo();
   }
 
@@ -276,12 +249,10 @@ class AddListing extends Component {
     }
 
     this.setState({ selectedDays });
-    console.log(this.state.selectedDays);
   }
 
   userInfo = () => {
     axios.get("/user/").then(response => {
-      console.log(response.data);
       if (response.data.user) {
         this.setState({
           user: response.data.user
@@ -314,7 +285,6 @@ class AddListing extends Component {
         },
         () => {
           let location = this.state.fulladdress;
-          // console.log(location);
 
           this.setState(
             {
@@ -329,7 +299,6 @@ class AddListing extends Component {
             },
             () => {
               let location = this.state.fulladdress;
-              // console.log(location);
 
               axios
                 .get("https://maps.googleapis.com/maps/api/geocode/json", {
@@ -349,7 +318,6 @@ class AddListing extends Component {
                     response.data.results[0].address_components[2].long_name;
 
                   var typeLat = typeof latitude;
-                  console.log(typeLat);
 
                   let apiKey = "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo";
 
@@ -395,7 +363,6 @@ class AddListing extends Component {
                               // .map over all selected dates in array and create a new row in the avail collection for each date and include the the the id of listing
                             });
                           });
-                          // this.handleClickOpen();
                           this.handleClose();
                         })
                         .catch(err => console.log(err));
@@ -411,7 +378,6 @@ class AddListing extends Component {
 
   render() {
     const { classes } = this.props;
-    // const { activeStep } = this.state;
 
     return (
       <div>
