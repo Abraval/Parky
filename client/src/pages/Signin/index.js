@@ -673,13 +673,12 @@ class LoginForm extends Component {
                     fontFamily: "Roboto",
 
                     color: "#84817a",
+                    fontWeight: "bold",
                     fontSize: "16px",
                     marginTop: "5px"
                   }}
                 >
-                  Search for parking spots in June 2020.
-                  <br />
-                  Try using these Philly search queries:
+                  Search for parking spots in July 2020.
                 </Typography>
                 <Typography
                   style={{
@@ -690,6 +689,8 @@ class LoginForm extends Component {
                     marginTop: "5px"
                   }}
                 >
+                  Try using these Philly search queries:
+                  <br />
                   - Queen Village Philadelphia
                   <br />- 2320 E Gordon St Philadelphia PA 19125
                 </Typography>
@@ -717,8 +718,8 @@ class LoginForm extends Component {
                   Users can create listings for their own parking spots under
                   the "Create" section of the application.
                   <br />
-                  You will be guided through submitting listing details, choosing
-                  availability, and confirming the new listing.
+                  You will be guided through submitting listing details,
+                  choosing availability, and confirming the new listing.
                 </Typography>
                 <Typography
                   style={{
