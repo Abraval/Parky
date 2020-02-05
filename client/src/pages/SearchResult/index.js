@@ -1,14 +1,14 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Nav from "../../components/Nav";
 import "./style.css";
 import axios from "axios";
-import DayPicker, { DateUtils } from "react-day-picker";
+import DayPicker, {DateUtils} from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import API from "../../utils/API";
 import moment from "moment";
 // Material UI Grid Layout imports
-import PropTypes, { func } from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
+import PropTypes from "prop-types";
+import {withStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 //Material Dialog
@@ -16,6 +16,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+//end Dialog
 // Material UI Card Imports
 import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
@@ -29,6 +30,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import GridList from "@material-ui/core/GridList";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Loader from "../../components/Loader";
+import {findAllAvailAndNear} from "./functions";
 //Material UI Popover
 import Popover from "@material-ui/core/Popover";
 import DateRangeIcon from "@material-ui/icons/DateRange";
@@ -44,6 +46,7 @@ const styles = theme => ({
     margin: "8px",
     display: "flex",
     alignItems: "center",
+    // maxWidth: "99%"
     width: "400px"
   },
   dateBar: {
@@ -154,6 +157,45 @@ class SearchResult extends Component {
     anchorEl: null
   };
 
+  constructor(props) {
+    super(props);
+    this.handleDayClick = this.handleDayClick.bind(this);
+  }
+
+  componentDidMount() {
+    // Setup map render
+    console.log("Mounted and setting up the Map Script");
+    loadScript(
+        "https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo&callback=initializeMap"
+    );
+    window.initializeMap = this.initializeMap;
+    // End map render
+    this.userInfo().then(response =>
+        this.setState(
+            {
+              user: response.data.user
+            },
+        )
+    );
+  }
+
+  initializeMap = () => {
+    console.log("We are initializing the map");
+    window.map = new window.google.maps.Map(document.getElementById("map"), {
+      center: {lat: this.state.latitude, lng: this.state.longitude},
+      zoom: 15
+    });
+  };
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevState.longitude !== this.state.longitude || prevState.latitude !== this.state.latitude) {
+      console.log("State Changed for Long and Latitude", this.state.longitude, this.state.latitude, "Previous Data: ", prevState.longitude, prevState.latitude);
+      // Find Relevant Listings can just be called anytime now. As features change or UX needs change we have a safe
+      // function that just takes the state long / lat and finds listings. It's not connected to any other calls.
+      this.findRelevantListings();
+    }
+  }
+
   handleChange = key => (event, value) => {
     this.setState({
       [key]: value
@@ -190,35 +232,8 @@ class SearchResult extends Component {
     });
   };
 
-  componentDidMount() {
-    this.renderMap();
-    this.userInfo().then(response =>
-      this.setState(
-        {
-          user: response.data.user
-        },
-        () => this.tester()
-      )
-    );
-  }
-
-  tester() {
-    console.log(this.state.user);
-  }
-
   userInfo() {
     return axios.get("/user/");
-  }
-
-  componentDidUpdate(prevProps, props) {
-    if (props.searchState === true) {
-      this.renderMap();
-    }
-
-    if (this.state.markerData !== props.markerData) {
-      // console.log("componentDidUpdate called");
-      // this.renderMap();
-    }
   }
 
   handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
@@ -248,17 +263,8 @@ class SearchResult extends Component {
     this.handleClose();
   };
 
-  handleDialogOpen = event => {
-    this.handleClickOpen();
-  };
-
-  constructor(props) {
-    super(props);
-    this.handleDayClick = this.handleDayClick.bind(this);
-  }
-
   handleDayClick(day, { selected }) {
-    const { selectedDays } = this.state;
+    const {selectedDays} = this.state;
     if (selected) {
       const selectedIndex = selectedDays.findIndex(selectedDay => {
         DateUtils.isSameDay(selectedDay, day);
@@ -268,223 +274,132 @@ class SearchResult extends Component {
       selectedDays.push(day);
     }
 
-    this.setState({ selectedDays });
-    this.setState({ buttonClicked: false });
+    this.setState({selectedDays});
+    this.setState({buttonClicked: false});
   }
 
   handleInputChange = event => {
-    const { name, value } = event.target;
-
-    this.setState({ searchState: false });
-
     this.setState({
-      [name]: value
+      [event.target.name]: event.target.value
     });
-  };
-
-  checkForAddress = () => {
-    this.setState({ buttonClicked: true });
-
-    if (this.state.addressQuery) {
-      this.getAddress();
-
-      this.setState({ isFetching: true });
-    }
   };
 
   handleSubmitSearch = e => {
     e.preventDefault();
+    this.getLongitudeLatitude();
+  };
 
-    this.setState({ searchState: true });
-
-    this.checkForAddress();
+  getLongitudeLatitude = () => {
+    this.setState({isFetching: false, buttonClicked: true});
+    if (this.state.addressQuery) {
+      console.log("Calling Google Maps API for Long/Lat Data");
+      this.setState({isFetching: true});
+      let location = this.state.addressQuery;
+      axios
+          .get("https://maps.googleapis.com/maps/api/geocode/json", {
+            params: {
+              address: location,
+              key: "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo"
+            }
+          })
+          .then(response => {
+            var latitude = response.data.results[0].geometry.location.lat;
+            var longitude = response.data.results[0].geometry.location.lng;
+            this.setState({latitude, longitude});
+          });
+    }
   };
 
   findRelevantListings = () => {
+    this.setState({cardsArray: [], markerData: [], listings: []});
     const formattedDates = this.state.selectedDays.map(date =>
-      date.toISOString()
+        date.toISOString()
     );
+    findAllAvailAndNear(formattedDates, [this.state.longitude, this.state.latitude])
+        .then(res => {
 
-    this.setState({ cardsArray: [] });
-    this.setState({ markerData: [] });
-    this.setState({ listings: [] });
-
-    API.getAvailableListings(formattedDates).then(res => {
-      let emptyArr = []; // these are the items that we are displaying
-      const datesLength = formattedDates.length;
-      for (let i = 0; i < res.data.length; i++) {
-        let count = 0;
-        for (let j = 0; j < res.data.length; j++) {
-          if (res.data[i].listing === res.data[j].listing) {
-            count++;
-            if (
-              count == datesLength &&
-              emptyArr.findIndex(x => x.listing === res.data[i].listing) === -1
-            ) {
-              emptyArr.push(res.data[i]);
-            }
-          }
-        }
-      }
-
-      console.log("356: " + emptyArr.length);
-      if (emptyArr.length === 0) {
-        this.setState({
-          isFetching: false
-        });
-      }
-
-      /******************************************Start******************************************/
-
-      const promiseArray = emptyArr.map(item => {
-        return new Promise((resolve, reject) => {
-          return resolve(
-            API.getListingById(item.listing).then(listing => {
-              var longLatArray = [this.state.longitude, this.state.latitude];
-
-              API.getListingByIdAndProximity(longLatArray).then(item => {
-                for (let i = 0; i < item.data.length; i++) {
-                  if (listing.data[0]._id === item.data[i]._id) {
-                    this.setState({
-                      cardsArray: [...this.state.cardsArray, [item.data[i]]],
-                      isFetching: false
-                    });
-                  }
-                }
-              });
-
-              const data = listing.data[0];
-
-              this.setState({
-                markerData: [
-                  ...this.state.markerData,
-                  [
-                    data.address,
-                    data.location.coordinates[1],
-                    data.location.coordinates[0],
-                    data.title,
-                    data.streetName,
-                    data.neighborhood,
-                    data.photo,
-                    data._id,
-                    data.city,
-                    data.state,
-                    data.zipcode,
-                    data.price,
-                    data.parkingtype
-                  ]
-                ]
-              });
-            })
-          );
-        });
-      });
-
-      Promise.all(promiseArray).then(() => {
-        this.initMap();
-        console.log("promise callback is invoked");
-      });
-
-      /******************************************End******************************************/
-    });
+          this.setState({isFetching: false});
+          // res.data.map(availability => {
+          //   getListingById(availability.listing).then(listing => {
+          //     console.log("Listing Fetched by Id: ", listing);
+          //     const data = listing.data[0];
+          //     this.setState({
+          //       cardsArray: [...this.state.cardsArray, [data]],
+          //       markerData: [
+          //         ...this.state.markerData,
+          //         [
+          //           data.address,
+          //           data.location.coordinates[1],
+          //           data.location.coordinates[0],
+          //           data.title,
+          //           data.streetName,
+          //           data.neighborhood,
+          //           data.photo,
+          //           data._id,
+          //           data.city,
+          //           data.state,
+          //           data.zipcode,
+          //           data.price,
+          //           data.parkingtype
+          //         ]
+          //       ]
+          //     });
+          //   })
+          // })
+        })
   };
 
-  renderMap = () => {
-    console.log("renderMap");
-    loadScript(
-      "https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo&callback=initMap"
-    );
-    window.initMap = this.initMap;
-  };
-
-  initMap = () => {
-    console.log("initMap");
-
-    var map = new window.google.maps.Map(document.getElementById("map"), {
-      center: { lat: this.state.latitude, lng: this.state.longitude },
-      zoom: 15
-    });
-
+  drawOnTheMap = () => {
+    console.log("Starting to draw on the map: ", this.state.cardsArray);
+    var panPoint = new window.google.maps.LatLng(this.state.latitude, this.state.longitude);
+    window.map.setCenter(panPoint);
     // Create An InfoWindow
-    var infoWindow = new window.google.maps.InfoWindow(),
-      marker,
-      i;
-    // We will need to change this
-    var contentString = this.state.address;
-
+    var infoWindow = new window.google.maps.InfoWindow();
     for (let i = 0; i < this.state.cardsArray.length; i++) {
+      console.log("Starting for loop", this.state.cardsArray.length, i);
       let latitude = this.state.cardsArray[i][0].location.coordinates[1];
       let longitude = this.state.cardsArray[i][0].location.coordinates[0];
-
+      console.log("Creating marker for listing", this.state.cardsArray[i][0].title);
       var position = new window.google.maps.LatLng(latitude, longitude);
-
-      marker = new window.google.maps.Marker({
+      var marker = new window.google.maps.Marker({
         position: position,
         icon: "https://img.icons8.com/color/40/000000/car.png",
-        map: map,
+        map: window.map,
         title: this.state.cardsArray[i][0].title
       });
 
       // Allow each marker to have an info window
-      window.google.maps.event.addListener(
-        marker,
-        "click",
-        ((marker, i) => {
-          return () => {
-            infoWindow.setContent(
-              "<img width='100px' src=" +
-                this.state.cardsArray[i][0].photo +
-                " />" +
-                "</br>" +
-                "<span style='margin-top:10px;color:black;font-weight:bold;font-size:14px;'>" +
-                (i + 1) +
-                ". " +
-                "<span/>" +
-                "<span>" +
-                this.state.cardsArray[i][0].title +
-                "</span>" +
-                "</br>" +
-                "<p style='font-weight:normal;font-size:12px;'> $" +
-                this.state.cardsArray[i][0].price +
-                " / day" +
-                "</p>" +
-                "<p style='margin-bottom:0px;font-weight:normal;font-size:12px;'> Type: " +
-                this.state.cardsArray[i][0].parkingtype +
-                "</p>"
-            );
-            infoWindow.open(map, marker);
-          };
-        })(marker, i)
+      new window.google.maps.event.addListener(
+          marker,
+          "click",
+          ((marker, i) => {
+            return () => {
+              infoWindow.setContent(
+                  "<img width='100px' src=" +
+                  this.state.cardsArray[i][0].photo +
+                  " />" +
+                  "</br>" +
+                  "<span style='margin-top:10px;color:black;font-weight:bold;font-size:14px;'>" +
+                  (i + 1) +
+                  ". " +
+                  "<span/>" +
+                  "<span>" +
+                  this.state.cardsArray[i][0].title +
+                  "</span>" +
+                  "</br>" +
+                  "<p style='font-weight:normal;font-size:12px;'> $" +
+                  this.state.cardsArray[i][0].price +
+                  " / day" +
+                  "</p>" +
+                  "<p style='margin-bottom:0px;font-weight:normal;font-size:12px;'> Type: " +
+                  this.state.cardsArray[i][0].parkingtype +
+                  "</p>"
+              );
+              infoWindow.open(window.map, marker);
+            };
+          })(marker, i)
       );
     }
-
-    var circle = new window.google.maps.Circle({
-      map: map,
-      radius: 900, // 10 miles in metres
-      fillColor: "#FFF4B8",
-      strokeColor: "#FF0000",
-      strokeWeight: 0.5,
-      center: { lat: this.state.latitude, lng: this.state.longitude }
-    });
-  };
-
-  getAddress = async () => {
-    console.log("getAddress async is called");
-    let location = this.state.addressQuery;
-    axios
-      .get("https://maps.googleapis.com/maps/api/geocode/json", {
-        params: {
-          address: location,
-          key: "AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo"
-        }
-      })
-      .then(response => {
-        var latitude = response.data.results[0].geometry.location.lat;
-        var longitude = response.data.results[0].geometry.location.lng;
-        this.setState({ latitude, longitude }, () => {
-          this.findRelevantListings();
-        });
-      });
   };
 
   render() {
@@ -504,7 +419,6 @@ class SearchResult extends Component {
                     aria-label="Search"
                     type="submit"
                     id="queryAddress"
-                    disabled="true"
                   >
                     <RoomIcon />
                   </IconButton>
@@ -534,7 +448,6 @@ class SearchResult extends Component {
                     className={classes.iconButton}
                     aria-label="Search"
                     type="submit"
-                    disabled="true"
                   >
                     <DateRangeIcon />
                   </IconButton>
@@ -560,7 +473,6 @@ class SearchResult extends Component {
                 )}
               </form>
               <Button
-                className={classes.searchButton}
                 onClick={this.handleSubmitSearch}
               >
                 <SearchIcon />
@@ -601,48 +513,47 @@ class SearchResult extends Component {
                 style={{ fontFamily: "Roboto" }}
               >
                 <div>
-                  <GridList cellHeight={600} className={classes.gridList}>
-                    {this.state.isFetching && <Loader />}
-
+                  <GridList cellHeight={600}>
+                    {this.state.isFetching && <Loader/>}
                     {!this.state.markerData.length && !this.state.isFetching ? (
-                      <h1 className="text-center" style={{ width: "100%" }}>
-                        No Spots to Display
-                      </h1>
+                        <h1 className="text-center" style={{width: "100%"}}>
+                          No Spots to Display
+                        </h1>
                     ) : (
-                      <div id="testing" style={{ width: "100%" }}>
-                        {this.state.cardsArray.map((spot, i) => {
-                          return (
-                            <div>
-                              <div className={classes.root}>
-                                <Paper className={classes.paper}>
-                                  <Grid container spacing={16}>
-                                    <Grid item>
-                                      <ButtonBase
-                                        className={classes.image}
-                                        key={spot[0]._id}
-                                        title={spot[0].title}
-                                        href={spot[0].photo}
-                                        street={spot[0].streetName}
-                                        neighborhood={spot[0].neighborhood}
-                                        id={spot[0]._id}
-                                        city={spot[0].city}
-                                        state={spot[0].state}
-                                        zipcode={spot[0].zipcode}
-                                        address={spot[0].address}
-                                        price={spot[0].price}
-                                        parkingtype={spot[0].parkingtype}
-                                        handleBookClick={this.handleBookClick}
-                                      >
-                                        <img
-                                          className={classes.img}
-                                          alt="complex"
-                                          src={spot[0].photo}
-                                        />
-                                      </ButtonBase>
-                                    </Grid>
-                                    <Grid item xs={12} sm container>
-                                      <Grid item xs spacing={16}>
-                                        <Grid item xs>
+                        <div id="testing" style={{width: "100%"}}>
+                          {this.state.cardsArray.map((spot, i) => {
+                            return (
+                                <div>
+                                  <div className={classes.root}>
+                                    <Paper className={classes.paper}>
+                                      <Grid container spacing={16}>
+                                        <Grid item>
+                                          <ButtonBase
+                                              className={classes.image}
+                                              key={spot[0]._id}
+                                              title={spot[0].title}
+                                              href={spot[0].photo}
+                                              street={spot[0].streetName}
+                                              neighborhood={spot[0].neighborhood}
+                                              id={spot[0]._id}
+                                              city={spot[0].city}
+                                              state={spot[0].state}
+                                              zipcode={spot[0].zipcode}
+                                              address={spot[0].address}
+                                              price={spot[0].price}
+                                              parkingtype={spot[0].parkingtype}
+                                              handleBookClick={this.handleBookClick}
+                                          >
+                                            <img
+                                                className={classes.img}
+                                                alt="complex"
+                                                src={spot[0].photo}
+                                            />
+                                          </ButtonBase>
+                                        </Grid>
+                                        <Grid item xs={12} sm container>
+                                          <Grid item xs spacing={16}>
+                                            <Grid item xs>
                                           <Typography
                                             gutterBottom
                                             variant="heading"
@@ -835,7 +746,7 @@ class SearchResult extends Component {
             <Grid className={classes.mapContainer} item xs>
               <Paper className={classes.paper} elevation={0}>
                 <main>
-                  <div id="map"></div>
+                  <div id="map"/>
                 </main>
               </Paper>
             </Grid>
