@@ -1,0 +1,1445 @@
+Index: client/src/pages/Profile/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, { Component } from \"react\";\nimport moment from \"moment\";\nimport ListingCard from \"../../components/ListingCard\";\nimport ReservCard from \"../../components/ReservCard\";\nimport API from \"../../utils/API\";\nimport \"./style.css\";\nimport Nav from \"../../components/Nav\";\n// Material UI Grid Layout imports\nimport PropTypes from \"prop-types\";\nimport { withStyles } from \"@material-ui/core/styles\";\nimport Grid from \"@material-ui/core/Grid\";\nimport Paper from \"@material-ui/core/Paper\";\n// Material UI Tabs imports\nimport Tabs from \"@material-ui/core/Tabs\";\nimport Tab from \"@material-ui/core/Tab\";\nimport Typography from \"@material-ui/core/Typography\";\nimport GridList from \"@material-ui/core/GridList\";\n// Material UI sidebar imports\nimport Hidden from \"@material-ui/core/Hidden\";\n\nimport Drawer from \"@material-ui/core/Drawer\";\nimport AppBar from \"@material-ui/core/AppBar\";\nimport CssBaseline from \"@material-ui/core/CssBaseline\";\nimport Toolbar from \"@material-ui/core/Toolbar\";\nimport List from \"@material-ui/core/List\";\nimport Divider from \"@material-ui/core/Divider\";\nimport ListItem from \"@material-ui/core/ListItem\";\nimport ListItemIcon from \"@material-ui/core/ListItemIcon\";\nimport ListItemText from \"@material-ui/core/ListItemText\";\nimport InboxIcon from \"@material-ui/icons/MoveToInbox\";\nimport MailIcon from \"@material-ui/icons/Mail\";\nimport ExitToAppIcon from \"@material-ui/icons/ExitToApp\";\n\nimport Avatar from \"@material-ui/core/Avatar\";\n\nconst drawerWidth = 240;\n\nfunction TabContainer(props) {\n  return (\n    <Typography component=\"div\" style={{ padding: \"8px\" }}>\n      {props.children}\n    </Typography>\n  );\n}\n\nTabContainer.propTypes = {\n  children: PropTypes.node.isRequired\n};\n\nconst styles = theme => ({\n  root: {\n    flexGrow: 1,\n    display: \"flex\"\n  },\n  tabs: {\n    flexGrow: 1\n  },\n  paper: {\n    padding: theme.spacing.unit * 1,\n    margin: \"auto\",\n    textAlign: \"center\",\n    color: theme.palette.text.secondary,\n    height: \"100%\"\n  },\n  cardContainer: {\n    display: \"flex\",\n    flexWrap: \"wrap\",\n    justifyContent: \"center\"\n  },\n  // appBar: {\n  //   zIndex: theme.zIndex.drawer + 1\n  // },\n  drawerPaper: {\n    width: drawerWidth\n  },\n  // content: {\n  //   flexGrow: 1\n  // },\n  drawer: {\n    [theme.breakpoints.up(\"sm\")]: {\n      width: drawerWidth,\n      flexShrink: 0\n    }\n  },\n  drawerList: {\n    display: \"flex\",\n    flexDirection: \"column\",\n    justifyContent: \"center\",\n    alignItems: \"center\"\n  },\n  appBar: {\n    // marginLeft: drawerWidth,\n    zIndex: theme.zIndex.drawer + 1\n    // [theme.breakpoints.up(\"sm\")]: {\n    //   width: `calc(100% - ${drawerWidth}px)`\n    // }\n  },\n  menuButton: {\n    marginRight: 20,\n    [theme.breakpoints.up(\"sm\")]: {\n      display: \"none\"\n    }\n  },\n  toolbar: theme.mixins.toolbar,\n  content: {\n    flexGrow: 1\n    // padding: theme.spacing.unit * 3\n  },\n  large: {\n    width: 150,\n    height: 150,\n    marginTop: \"20px\"\n  }\n});\n\nclass Profile extends Component {\n  state = {\n    listing: [],\n    reserved: [],\n    user: {},\n    userId: \"\",\n    userName: \"\",\n    firstname: \"\",\n    lastname: \"\",\n    photo: \"\",\n    reservationsObject: {},\n    // For tabs\n    value: 0,\n    mobileOpen: false\n  };\n\n  componentDidMount() {\n    this.userInfo();\n    this.loadListings();\n  }\n\n  userInfo = () => {\n    API.getUser()\n      .then(res => {\n        console.log(\"=======\");\n        console.log(res);\n        console.log(\"=======\");\n        this.setState({ user: res.data });\n        this.setState({ userId: res.data.user._id });\n        this.setState({ firstname: res.data.user.firstname });\n        this.setState({ lastname: res.data.user.firstname });\n        this.setState({ photo: res.data.user.photo });\n        this.loadListings();\n        this.loadReserved();\n      })\n      .catch(err => console.log(err));\n  };\n\n  tester() {\n    console.log(\"testing user\");\n    console.log(this.state);\n  }\n\n  loadListings = () => {\n    API.getListingsForProf()\n\n      .then(res => {\n        console.log(\"Profile.loadListing res.date\", res.data);\n        this.setState({ listing: res.data });\n      })\n      .catch(err => console.log(err));\n  };\n\n  processReserved = reserved => {\n    // The default data model (array) isn't suitable for grouping the listings by dates. An object is more appropriate.\n    let reservationsObject = {};\n    reserved.forEach(reservation => {\n      reservationsObject[reservation.listing] =\n        reservationsObject[reservation.listing] || reservation; // Initialize the listing key with the reservation\n      reservationsObject[reservation.listing].reservations =\n        reservationsObject[reservation.listing].reservations || []; // Create an empty array if no previous reservations were added to this listing\n      reservationsObject[reservation.listing].reservations = [\n        ...reservationsObject[reservation.listing].reservations,\n        { date: reservation.date, reservationId: reservation._id }\n      ]; // Add a new reservation to the listing\n    });\n\n    console.log(\"Reservation Obj\", reservationsObject);\n    this.setState({\n      reservationsObject\n    });\n  };\n\n  loadReserved = () => {\n    API.getReservForProf(this.state.userId)\n      .then(res => {\n        this.processReserved(res.data);\n        this.setState({ reserved: res.data });\n        console.log(\"RESERVATIONS\");\n        console.log(res.data);\n        // let reservListId =\n        // console.log(\"RESERVATIONS\");\n        // console.log(res.data);\n      })\n\n      .catch(err => console.log(err));\n  };\n\n  loadReserved3 = () => {\n    API.getReservForProf(this.state.userId)\n      .then(res => {\n        this.setState({ reserved: res.data });\n        console.log(\"RESERVATIONS\");\n        console.log(res.data);\n        // let reservListId =\n        // console.log(\"RESERVATIONS\");\n        // console.log(res.data);\n      })\n\n      .catch(err => console.log(err));\n  };\n  loadReserved2 = () => {\n    API.getReservForProf()\n      .then(res => {\n        this.setState({ reserved: res.data });\n        console.log(\"RESERVATIONS\");\n        console.log(res.data);\n        // let reservListId =\n        // console.log(\"RESERVATIONS\");\n        // console.log(res.data);\n      })\n\n      .catch(err => console.log(err));\n  };\n\n  handleChange = (event, value) => {\n    this.setState({ value });\n  };\n\n  handleDrawerToggle = () => {\n    this.setState(state => ({ mobileOpen: !state.mobileOpen }));\n  };\n\n  render() {\n    const { classes } = this.props;\n    const { value, reservationsObject } = this.state;\n\n    const drawer = (\n      <div>\n        <div className={classes.toolbar} />\n        <Divider />\n\n        <List\n          className={classes.drawerList}\n          style={{\n            fontFamily: \"Roboto\",\n            color: \"#545454\",\n            fontSize: \"18px\"\n          }}\n        >\n          <Avatar\n            width=\"200\"\n            src={\n              !this.state.photo\n                ? \"https://cdn0.iconfinder.com/data/icons/user-collection-4/512/user-512.png\"\n                : this.state.photo\n            }\n            className={classes.large}\n          />\n          <h3 style={{ textAlign: \"center\" }}>\n            Welcome back, {this.state.firstname}!\n          </h3>\n          {/* {[\"Inbox\", \"Starred\", \"Send email\", \"Drafts\"].map((text, index) => (\n            <ListItem button key={text}>\n              <ListItemIcon>\n                <ExitToAppIcon />\n              </ListItemIcon>\n              <ListItemText primary={text} />\n            </ListItem>\n          ))} */}\n        </List>\n        {/* <Divider />\n        <List>\n          {[\"All mail\", \"Trash\", \"Spam\"].map((text, index) => (\n            <ListItem button key={text}>\n              <ListItemIcon>\n                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}\n              </ListItemIcon>\n              <ListItemText primary={text} />\n            </ListItem>\n          ))}\n        </List> */}\n      </div>\n    );\n\n    return (\n      <div className={classes.root}>\n        <CssBaseline />\n        <AppBar position=\"fixed\" className={classes.appBar} elevation={0}>\n          <Nav />\n        </AppBar>\n\n        <nav className={classes.drawer}>\n          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}\n          <Hidden smUp implementation=\"css\">\n            <Drawer\n              container={this.props.container}\n              variant=\"temporary\"\n              // anchor={theme.direction === \"rtl\" ? \"right\" : \"left\"}\n              open={this.state.mobileOpen}\n              onClose={this.handleDrawerToggle}\n              classes={{\n                paper: classes.drawerPaper\n              }}\n            >\n              {drawer}\n            </Drawer>\n          </Hidden>\n          <Hidden xsDown implementation=\"css\">\n            <Drawer\n              classes={{\n                paper: classes.drawerPaper\n              }}\n              variant=\"permanent\"\n              open\n            >\n              {drawer}\n            </Drawer>\n          </Hidden>\n        </nav>\n        <main className={classes.content}>\n          <div className={classes.toolbar} />\n\n          <div>\n            <div className={classes.root}>\n              <Grid container spacing={0}>\n                <Grid item xs={12}>\n                  {/* //Begin Tabs Menu// */}\n                  <Paper className={classes.tabs} square={true} elevation={0}>\n                    <Tabs\n                      value={this.state.value}\n                      onChange={this.handleChange}\n                      indicatorColor=\"primary\"\n                      textColor=\"primary\"\n                      centered\n                      variant=\"fullWidth\"\n                    >\n                      <Tab label=\"Listings\" />\n                      <Tab label=\"Reservations\" />\n                    </Tabs>\n                  </Paper>\n                  {/* End Tabs Menu// */}\n                  {console.log(this.value)}\n                  {value === 0 && (\n                    <TabContainer>\n                      <Paper className={classes.paper} elevation={0}>\n                        <div>\n                          <h1>LISTINGS</h1>\n                          <div className={classes.cardContainer}>\n                            {this.state.listing.map(listing => {\n                              if (listing.user === this.state.userId) {\n                                return (\n                                  <div>\n                                    <ListingCard\n                                      loadListings={this.loadListings}\n                                      key={listing._id}\n                                      id={listing._id}\n                                      title={listing.title}\n                                      photo={listing.photo}\n                                      address={listing.address}\n                                      earning={listing.earning}\n                                      earnings={listing.earnings}\n                                      city={listing.city}\n                                      state={listing.state}\n                                      zipcode={listing.zipcode}\n                                      handleEditListing={this.handleEditListing}\n                                      handleAvailListing={\n                                        this.handleAvailListing\n                                      }\n                                    />\n                                  </div>\n                                );\n                              }\n                            })}\n                          </div>\n                        </div>\n                      </Paper>\n                    </TabContainer>\n                  )}\n                  {value === 1 && (\n                    <TabContainer>\n                      <Paper className={classes.paper} elevation={0}>\n                        <div>\n                          <h1>RESERVATIONS</h1>\n                          <div className={classes.cardContainer}>\n                            {Object.keys(this.state.reservationsObject).map(\n                              key => {\n                                console.log(\"jknasjdnasjnd\", key);\n                                if (\n                                  reservationsObject[key].renter ===\n                                  this.state.userId\n                                )\n                                  return (\n                                    <div>\n                                      <ReservCard\n                                        date={moment(\n                                          reservationsObject[key].date\n                                        ).format(\"LL\")}\n                                        reservations={\n                                          reservationsObject[key].reservations\n                                        }\n                                        id={reservationsObject[key]._id}\n                                        address={\n                                          reservationsObject[key].address\n                                        }\n                                        title={reservationsObject[key].title}\n                                        photo={reservationsObject[key].photo}\n                                        loadReserved={this.loadReserved}\n                                      />\n                                    </div>\n                                  );\n                              }\n                            )}\n                          </div>\n                        </div>\n                      </Paper>\n                    </TabContainer>\n                  )}\n                </Grid>\n              </Grid>\n            </div>\n          </div>\n        </main>\n      </div>\n    );\n  }\n}\n\nProfile.propTypes = {\n  classes: PropTypes.object.isRequired\n};\n\nexport default withStyles(styles)(Profile);\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- client/src/pages/Profile/index.js	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ client/src/pages/Profile/index.js	(date 1580326306844)
+@@ -1,4 +1,4 @@
+-import React, { Component } from "react";
++import React, {Component} from "react";
+ import moment from "moment";
+ import ListingCard from "../../components/ListingCard";
+ import ReservCard from "../../components/ReservCard";
+@@ -7,29 +7,21 @@
+ import Nav from "../../components/Nav";
+ // Material UI Grid Layout imports
+ import PropTypes from "prop-types";
+-import { withStyles } from "@material-ui/core/styles";
++import {withStyles} from "@material-ui/core/styles";
+ import Grid from "@material-ui/core/Grid";
+ import Paper from "@material-ui/core/Paper";
+ // Material UI Tabs imports
+ import Tabs from "@material-ui/core/Tabs";
+ import Tab from "@material-ui/core/Tab";
+ import Typography from "@material-ui/core/Typography";
+-import GridList from "@material-ui/core/GridList";
+ // Material UI sidebar imports
+ import Hidden from "@material-ui/core/Hidden";
+ 
+ import Drawer from "@material-ui/core/Drawer";
+ import AppBar from "@material-ui/core/AppBar";
+ import CssBaseline from "@material-ui/core/CssBaseline";
+-import Toolbar from "@material-ui/core/Toolbar";
+ import List from "@material-ui/core/List";
+ import Divider from "@material-ui/core/Divider";
+-import ListItem from "@material-ui/core/ListItem";
+-import ListItemIcon from "@material-ui/core/ListItemIcon";
+-import ListItemText from "@material-ui/core/ListItemText";
+-import InboxIcon from "@material-ui/icons/MoveToInbox";
+-import MailIcon from "@material-ui/icons/Mail";
+-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+ 
+ import Avatar from "@material-ui/core/Avatar";
+ 
+@@ -67,15 +59,9 @@
+     flexWrap: "wrap",
+     justifyContent: "center"
+   },
+-  // appBar: {
+-  //   zIndex: theme.zIndex.drawer + 1
+-  // },
+   drawerPaper: {
+     width: drawerWidth
+   },
+-  // content: {
+-  //   flexGrow: 1
+-  // },
+   drawer: {
+     [theme.breakpoints.up("sm")]: {
+       width: drawerWidth,
+@@ -89,11 +75,7 @@
+     alignItems: "center"
+   },
+   appBar: {
+-    // marginLeft: drawerWidth,
+     zIndex: theme.zIndex.drawer + 1
+-    // [theme.breakpoints.up("sm")]: {
+-    //   width: `calc(100% - ${drawerWidth}px)`
+-    // }
+   },
+   menuButton: {
+     marginRight: 20,
+@@ -104,7 +86,6 @@
+   toolbar: theme.mixins.toolbar,
+   content: {
+     flexGrow: 1
+-    // padding: theme.spacing.unit * 3
+   },
+   large: {
+     width: 150,
+@@ -265,26 +246,7 @@
+           <h3 style={{ textAlign: "center" }}>
+             Welcome back, {this.state.firstname}!
+           </h3>
+-          {/* {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+-            <ListItem button key={text}>
+-              <ListItemIcon>
+-                <ExitToAppIcon />
+-              </ListItemIcon>
+-              <ListItemText primary={text} />
+-            </ListItem>
+-          ))} */}
+         </List>
+-        {/* <Divider />
+-        <List>
+-          {["All mail", "Trash", "Spam"].map((text, index) => (
+-            <ListItem button key={text}>
+-              <ListItemIcon>
+-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+-              </ListItemIcon>
+-              <ListItemText primary={text} />
+-            </ListItem>
+-          ))}
+-        </List> */}
+       </div>
+     );
+ 
+@@ -301,7 +263,6 @@
+             <Drawer
+               container={this.props.container}
+               variant="temporary"
+-              // anchor={theme.direction === "rtl" ? "right" : "left"}
+               open={this.state.mobileOpen}
+               onClose={this.handleDrawerToggle}
+               classes={{
+@@ -325,7 +286,6 @@
+         </nav>
+         <main className={classes.content}>
+           <div className={classes.toolbar} />
+-
+           <div>
+             <div className={classes.root}>
+               <Grid container spacing={0}>
+Index: client/src/components/ListingCard/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React from \"react\";\nimport \"./style.css\";\nimport PropTypes from \"prop-types\";\nimport { withStyles } from \"@material-ui/core/styles\";\nimport Button from \"@material-ui/core/Button\";\nimport TextField from \"@material-ui/core/TextField\";\nimport Dialog from \"@material-ui/core/Dialog\";\nimport DialogActions from \"@material-ui/core/DialogActions\";\nimport DialogContent from \"@material-ui/core/DialogContent\";\nimport DialogContentText from \"@material-ui/core/DialogContentText\";\nimport DialogTitle from \"@material-ui/core/DialogTitle\";\nimport API from \"../../utils/API\";\nimport DayPicker, { DateUtils } from \"react-day-picker\";\nimport \"react-day-picker/lib/style.css\";\n// Material UI Cards imports\nimport classnames from \"classnames\";\nimport Card from \"@material-ui/core/Card\";\nimport CardHeader from \"@material-ui/core/CardHeader\";\nimport CardMedia from \"@material-ui/core/CardMedia\";\nimport CardContent from \"@material-ui/core/CardContent\";\nimport CardActions from \"@material-ui/core/CardActions\";\nimport IconButton from \"@material-ui/core/IconButton\";\nimport Typography from \"@material-ui/core/Typography\";\nimport red from \"@material-ui/core/colors/red\";\nimport DeleteIcon from \"@material-ui/icons/Delete\";\nimport EditIcon from \"@material-ui/icons/Edit\";\nimport DateRangeIcon from \"@material-ui/icons/DateRange\";\nimport AttachMoneyIcon from \"@material-ui/icons/AttachMoney\";\n\nconst styles = theme => ({\n  button: {\n    margin: theme.spacing.unit\n  },\n  input: {\n    display: \"none\"\n  },\n  card: {\n    minWidth: 300,\n    maxWidth: 300,\n    minHeight: 400,\n    maxHeight: 400,\n    margin: \"8px\"\n  },\n  media: {\n    height: 0,\n    paddingTop: \"56.25%\" // 16:9\n  },\n  actions: {\n    display: \"flex\",\n    justifyContent: \"center\"\n  },\n  expand: {\n    transform: \"rotate(0deg)\",\n    marginLeft: \"auto\",\n    transition: theme.transitions.create(\"transform\", {\n      duration: theme.transitions.duration.shortest\n    })\n  },\n  expandOpen: {\n    transform: \"rotate(180deg)\"\n  },\n  avatar: {\n    backgroundColor: red[500]\n  },\n  dialog: {\n    minWidth: 500,\n    minHeight: 275,\n    textAlign: \"center\"\n  }\n});\n\nclass ListingCard extends React.Component {\n  state = {\n    open: false,\n    open2: false,\n    openEarnings: false,\n    title: this.props.title,\n    address: this.props.address,\n    city: this.props.city,\n    state: this.props.state,\n    zipcode: this.props.zipcode,\n    currentModalId: this.props.id,\n    //Material UI card\n    openDeleteConfirm: false,\n    expanded: false,\n    selectedDays: [],\n    lastWeekEarnings: 0,\n    lastMonthEarnings: 0,\n    totalEarnings: 0,\n    deleteListingPopuUpShown: false,\n    initialAvailabilities: [] //used to figure out which availablities to create and to delete\n  };\n\n  //You should only fetch availabilities when the modal opens\n  //availabilites modal should be a class componenent.\n  componentDidMount = () => {\n    console.log(\"props... \", this.props);\n    this.processEarnings(this.props.earnings);\n    API.getAvailabilitiesByListingId(this.props.id)\n      .then(res => {\n        console.log(\"ListingCard.ComponentDIdMount res\", res);\n        console.log(\n          \"ListingCard.ComponentDIdMount this.props.id\",\n          this.props.id\n        );\n        const selectedDays = res.data.map(day => new Date(day.date));\n        this.setState({\n          selectedDays: [...selectedDays],\n          initialAvailabilities: [...res.data]\n        });\n      })\n      .catch(err => console.log(\"ListingCard.componentDidMount err\", err));\n  };\n\n  handleClickOpen = () => {\n    this.setState({ open: true });\n  };\n\n  handleClickOpen2 = () => {\n    this.setState({ open2: true });\n  };\n\n  handleClose = () => {\n    this.setState({ open: false });\n  };\n\n  showEarning = () => {\n    this.setState({ openEarnings: true });\n  };\n\n  hideEarning = () => {\n    this.setState({ openEarnings: false });\n  };\n\n  handleClose2 = () => {\n    this.setState({ open2: false });\n  };\n\n  showDeleteListing = () => {\n    this.setState({\n      deleteListingPopuUpShown: true\n    });\n  };\n\n  hideDeleteListing = () => {\n    this.setState({\n      deleteListingPopuUpShown: false\n    });\n  };\n\n  deleteListing = id => {\n    API.deleteListing(id)\n      .then(res => {\n        this.props.loadListings();\n      })\n      .catch(err => console.log(err));\n  };\n\n  handleInputChange = event => {\n    let value = event.target.value;\n    let name = event.target.name;\n    console.log(event.target.value);\n    this.setState({\n      [name]: value\n    });\n  };\n\n  handleDateSubmit = event => {\n    console.log(\"this has been submitted!!\");\n    const currentSet = this.state.selectedDays;\n\n    const initialSelectedDays = this.state.initialAvailabilities.map(\n      day => new Date(day.date)\n    );\n    console.log(\n      \"listingCard.handleDateSubmit initialSelectedDays\",\n      initialSelectedDays\n    );\n    const initialSet = initialSelectedDays;\n\n    const removedElements = [...initialSet].filter(initialElement => {\n      let found = true;\n      currentSet.forEach(currentElement => {\n        if (DateUtils.isSameDay(initialElement, currentElement)) {\n          found = false;\n        }\n      });\n      return found;\n    });\n    const addedElements = [...currentSet].filter(currentElement => {\n      let found = true;\n      initialSet.forEach(initialElement => {\n        if (DateUtils.isSameDay(initialElement, currentElement)) {\n          found = false;\n        }\n      });\n      return found;\n    });\n\n    console.log(\n      \"ListingCard.handleDateSubmit \",\n      \"removedElements\",\n      removedElements,\n      \"addedElements\",\n      addedElements\n    );\n\n    addedElements.forEach(day => {\n      API.createAvailability({\n        date: day,\n        listing: this.props.id\n        // .map over all selected dates in array and create a new row in the avail collection for each date and include the the the id of listing\n      });\n    });\n    removedElements.forEach(day => {\n      const availability = this.state.initialAvailabilities.find(avail => {\n        return DateUtils.isSameDay(new Date(avail.date), new Date(day));\n      });\n      API.deleteAvailability(availability._id);\n    });\n    this.setState({ open2: false });\n  };\n\n  handleListingUpdate = event => {\n    this.setState({ open: false });\n    console.log(\"ListingCard.handleListingUpdate this.state\", this.state);\n    API.editListing(this.state)\n      .then(res => {\n        console.log(\"ListingCard.handleListingUpdate res\", res);\n        this.props.loadListings();\n      })\n\n      .catch(err => console.log(err));\n  };\n\n  handleDelete = id => {\n    API.deleteListing(id)\n      .then(res => {\n        this.props.loadListings();\n      })\n      .catch(err => console.log(err));\n  };\n\n  processEarnings = earnings => {\n    //Define temporary variable to hold computtion\n    let lastWeekEarnings = 0;\n    let lastMonthEarnings = 0;\n    let totalEarnings = 0;\n\n    // For each earning, check what date bracket it falls into\n    earnings.forEach(earning => {\n      // Compare the earnings date to the date today\n      let today = new Date();\n      totalEarnings += earning.amount;\n      let earningDate = new Date(earning.date);\n      const diffTime = Math.abs(today - earningDate);\n      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));\n      if (diffDays <= 7) {\n        lastWeekEarnings += earning.amount;\n        lastMonthEarnings += earning.amount;\n      } else if (diffDays <= 30) {\n        lastMonthEarnings += earning.amount;\n      }\n    });\n    console.log(\n      \"earnings....\",\n      \"Total\",\n      totalEarnings,\n      lastWeekEarnings,\n      lastMonthEarnings\n    );\n    this.setState({\n      lastWeekEarnings,\n      lastMonthEarnings,\n      totalEarnings\n    });\n  };\n\n  constructor(props) {\n    super(props);\n    this.handleDayClick = this.handleDayClick.bind(this);\n    this.state = {\n      open: false,\n      open2: false,\n      title: this.props.title,\n      address: this.props.address,\n      city: this.props.city,\n      state: this.props.state,\n      zipcode: this.props.zipcode,\n      currentModalId: this.props.id,\n      //Material UI card\n      expanded: false,\n      selectedDays: []\n    };\n  }\n\n  handleDayClick(day, { selected }) {\n    console.log(\"ListingCard.handleDayClick day\", day);\n    console.log(\"ListingCard.handleDayClick selected\", selected);\n    const { selectedDays } = this.state;\n    if (selected) {\n      const selectedIndex = selectedDays.findIndex(selectedDay =>\n        DateUtils.isSameDay(selectedDay, day)\n      );\n      selectedDays.splice(selectedIndex, 1);\n    } else {\n      selectedDays.push(day);\n    }\n    this.setState({ selectedDays });\n  }\n  handleExpandClick = () => {\n    this.setState(state => ({ expanded: !state.expanded }));\n  };\n\n  render() {\n    console.log(this.state);\n    console.log(this.props);\n    const { classes } = this.props;\n    return (\n      <Card className={classes.card} style={{ position: \"relative\" }}>\n        <CardMedia\n          className={classes.media}\n          image={this.props.photo}\n          title={this.props.title}\n        />\n        <CardHeader title={this.props.title} subheader={this.props.address} />\n        <CardContent></CardContent>\n        <CardActions\n          className={classes.actions}\n          disableActionSpacing\n          style={{\n            position: \"absolute\",\n            bottom: \"10px\",\n            left: \"0\",\n            right: \"0\",\n            margin: \"auto\"\n          }}\n        >\n          <IconButton\n            aria-label=\"Edit Listing\"\n            title=\"Edit\"\n            onClick={() => this.handleClickOpen()}\n          >\n            <EditIcon />\n          </IconButton>\n          <IconButton\n            aria-label=\"Edit Availability\"\n            title=\"Availability\"\n            onClick={() => this.handleClickOpen2()}\n          >\n            <DateRangeIcon />\n          </IconButton>\n          <IconButton\n            aria-label=\"Show Earnings\"\n            title=\"Earnings\"\n            onClick={() => this.showEarning()}\n          >\n            <AttachMoneyIcon />\n          </IconButton>\n          <IconButton\n            aria-label=\"Delete Listing\"\n            title=\"Delete\"\n            onClick={() => this.showDeleteListing()}\n          >\n            <DeleteIcon />\n          </IconButton>\n        </CardActions>\n\n        <Dialog\n          open={this.state.open}\n          style={{ fontFamily: \"Roboto\" }}\n          handleClickOpen={this.handleClickOpen}\n        >\n          <DialogTitle\n            id=\"form-dialog-title\"\n            style={{\n              fontFamily: \"Roboto\",\n              display: \"flex\",\n              justifyContent: \"center\"\n            }}\n          >\n            <EditIcon\n              style={{\n                color: \"93b7be\",\n                width: 75,\n                height: 75,\n                marginTop: 20\n              }}\n            />\n          </DialogTitle>\n          <DialogContent>\n            <Typography\n              style={{\n                color: \"#93b7be\",\n                fontSize: 20,\n                fontWeight: \"bold\",\n                display: \"flex\",\n                justifyContent: \"center\"\n              }}\n            >\n              EDIT LISTING\n            </Typography>\n            <form className={classes.container} noValidate autoComplete=\"off\">\n              <TextField\n                autoFocus\n                margin=\"dense\"\n                name=\"title\"\n                type=\"text\"\n                fullWidth\n                value={this.state.title}\n                onChange={this.handleInputChange}\n                label=\"Title\"\n                variant=\"outlined\"\n              />\n\n              <TextField\n                autoFocus\n                margin=\"dense\"\n                // id=\"name\"\n                name=\"address\"\n                // label=\"Email Address\"\n                type=\"text\"\n                fullWidth\n                value={this.state.address}\n                onChange={this.handleInputChange}\n                label=\"Address\"\n                variant=\"outlined\"\n              />\n\n              <TextField\n                autoFocus\n                margin=\"dense\"\n                name=\"city\"\n                type=\"text\"\n                fullWidth\n                value={this.state.city}\n                onChange={this.handleInputChange}\n                label=\"City\"\n                variant=\"outlined\"\n              />\n\n              <TextField\n                autoFocus\n                margin=\"dense\"\n                // id=\"name\"\n                name=\"state\"\n                // label=\"Email Address\"\n                type=\"text\"\n                fullWidth\n                value={this.state.state}\n                onChange={this.handleInputChange}\n                label=\"State\"\n                variant=\"outlined\"\n              />\n\n              <TextField\n                autoFocus\n                margin=\"dense\"\n                // id=\"name\"\n                name=\"zipcode\"\n                // label=\"Email Address\"\n                type=\"text\"\n                fullWidth\n                value={this.state.zipcode}\n                onChange={this.handleInputChange}\n                label=\"Zipcode\"\n                variant=\"outlined\"\n              />\n            </form>\n          </DialogContent>\n          <DialogActions>\n            <Button onClick={() => this.handleListingUpdate()} color=\"primary\">\n              Submit\n            </Button>\n            <Button onClick={() => this.handleClose()} color=\"secondary\">\n              Cancel\n            </Button>\n          </DialogActions>\n        </Dialog>\n\n        {/* This is a new dialog */}\n\n        <Dialog\n          style={{ fontFamily: \"Roboto\" }}\n          open={this.state.openEarnings}\n          handleClickOpen={this.showEarning}\n        >\n          <DialogTitle\n            id=\"form-dialog-title\"\n            style={{\n              display: \"flex\",\n              flexDirection: \"column\",\n              alignItems: \"center\",\n              color: \"#93b7be\",\n              fontFamily: \"Roboto\"\n            }}\n          >\n            <AttachMoneyIcon\n              style={{\n                color: \"#93b7be\",\n                width: 75,\n                height: 75,\n                marginTop: 20\n              }}\n            />\n          </DialogTitle>\n          <DialogContent\n            style={{\n              display: \"flex\",\n              flexDirection: \"column\",\n              alignItems: \"center\",\n              fontFamily: \"Roboto\"\n            }}\n            className={classes.dialog}\n          >\n            <Typography\n              style={{\n                color: \"#93b7be\",\n                fontSize: 20,\n                fontWeight: \"bold\"\n              }}\n            >\n              EARNINGS\n            </Typography>\n            <Card\n              elevation={0}\n              style={{\n                padding: \"10px 60px\",\n                border: \"1px solid  #93b7be\",\n                marginTop: 20\n              }}\n            >\n              <h4 style={{ color: \"#545454\" }}>\n                Total Earnings: ${this.state.totalEarnings}{\" \"}\n              </h4>\n              <h6 style={{ color: \"#545454\" }}>\n                Total earnings to date, incluing future bookings\n              </h6>\n              <h4 style={{ color: \"#545454\" }}>\n                Last 7 Days: ${this.state.lastWeekEarnings}{\" \"}\n              </h4>\n              <h4 style={{ color: \"#545454\" }}>\n                Last 30 Days: ${this.state.lastMonthEarnings}{\" \"}\n              </h4>\n            </Card>\n          </DialogContent>\n          <DialogActions>\n            <Button onClick={() => this.hideEarning()} color=\"secondary\">\n              Close\n            </Button>\n          </DialogActions>\n        </Dialog>\n\n        {/* Delete Popup */}\n\n        <Dialog\n          style={{ fontFamily: \"Roboto\" }}\n          open={this.state.deleteListingPopuUpShown}\n          handleClickOpen={this.showDeleteListing}\n        >\n          <DialogTitle\n            style={{\n              display: \"flex\",\n              flexDirection: \"column\",\n              alignItems: \"center\",\n              color: \"#93b7be\",\n              fontFamily: \"Roboto\"\n            }}\n            id=\"form-dialog-title\"\n          >\n            <DeleteIcon\n              style={{\n                color: \"93b7be\",\n                width: 75,\n                height: 75,\n                marginTop: 20\n              }}\n            />\n          </DialogTitle>\n          <DialogContent\n            className={classes.dialog}\n            style={{\n              display: \"flex\",\n              flexDirection: \"column\",\n              alignItems: \"center\",\n              fontFamily: \"Roboto\"\n            }}\n          >\n            <Typography\n              style={{\n                color: \"#93b7be\",\n                fontSize: 20,\n                fontWeight: \"bold\"\n              }}\n            >\n              CONFIRMATION\n            </Typography>\n            <Card\n              elevation={0}\n              style={{\n                padding: \"10px 60px\",\n                border: \"1px solid  #93b7be\",\n                marginTop: 20\n              }}\n            >\n              <h4 style={{ color: \"#545454\" }}>\n                Do you want to delete this listing?{\" \"}\n              </h4>\n            </Card>\n          </DialogContent>\n          <DialogActions>\n            <Button\n              onClick={() => this.deleteListing(this.state.currentModalId)}\n              color=\"primary\"\n            >\n              Delete\n            </Button>\n            <Button onClick={() => this.hideDeleteListing()} color=\"secondary\">\n              Cancel\n            </Button>\n          </DialogActions>\n        </Dialog>\n\n        {/* This is a new dialog */}\n        <Dialog\n          style={{ fontFamily: \"Roboto\" }}\n          open={this.state.open2}\n          handleClickOpen={this.handleClickOpen2}\n        >\n          <DialogTitle\n            id=\"form-dialog-title\"\n            style={{\n              fontFamily: \"Roboto\",\n              display: \"flex\",\n              justifyContent: \"center\"\n            }}\n          >\n            <DateRangeIcon\n              style={{\n                color: \"93b7be\",\n                width: 75,\n                height: 75,\n                marginTop: 20\n              }}\n            />\n          </DialogTitle>\n          <DialogContent className={classes.dialog}>\n            <Typography\n              style={{\n                color: \"#93b7be\",\n                fontSize: 20,\n                fontWeight: \"bold\",\n                display: \"flex\",\n                justifyContent: \"center\"\n              }}\n            >\n              EDIT AVAILABILITY\n            </Typography>\n            {/* <Button onClick={() => this.handleListingUpdate()} color=\"primary\">\n      Submit\n    </Button> */}\n            <div>\n              <DayPicker\n                selectedDays={this.state.selectedDays}\n                onDayClick={this.handleDayClick}\n              />\n            </div>\n          </DialogContent>\n          <DialogActions>\n            <Button onClick={() => this.handleDateSubmit()} color=\"primary\">\n              Submit\n            </Button>\n            <Button onClick={() => this.handleClose2()} color=\"secondary\">\n              Cancel\n            </Button>\n          </DialogActions>\n        </Dialog>\n      </Card>\n    );\n  }\n}\n\nListingCard.propTypes = {\n  classes: PropTypes.object.isRequired\n};\n\nexport default withStyles(styles)(ListingCard);\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- client/src/components/ListingCard/index.js	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ client/src/components/ListingCard/index.js	(date 1580326306844)
+@@ -1,19 +1,17 @@
+ import React from "react";
+ import "./style.css";
+ import PropTypes from "prop-types";
+-import { withStyles } from "@material-ui/core/styles";
++import {withStyles} from "@material-ui/core/styles";
+ import Button from "@material-ui/core/Button";
+ import TextField from "@material-ui/core/TextField";
+ import Dialog from "@material-ui/core/Dialog";
+ import DialogActions from "@material-ui/core/DialogActions";
+ import DialogContent from "@material-ui/core/DialogContent";
+-import DialogContentText from "@material-ui/core/DialogContentText";
+ import DialogTitle from "@material-ui/core/DialogTitle";
+ import API from "../../utils/API";
+-import DayPicker, { DateUtils } from "react-day-picker";
++import DayPicker, {DateUtils} from "react-day-picker";
+ import "react-day-picker/lib/style.css";
+ // Material UI Cards imports
+-import classnames from "classnames";
+ import Card from "@material-ui/core/Card";
+ import CardHeader from "@material-ui/core/CardHeader";
+ import CardMedia from "@material-ui/core/CardMedia";
+@@ -149,10 +147,10 @@
+   };
+ 
+   deleteListing = id => {
+-    API.deleteListing(id)
+-      .then(res => {
+-        this.props.loadListings();
+-      })
++      API.deleteListing(id)
++          .then(() => {
++              this.props.loadListings();
++          })
+       .catch(err => console.log(err));
+   };
+ 
+@@ -165,17 +163,17 @@
+     });
+   };
+ 
+-  handleDateSubmit = event => {
+-    console.log("this has been submitted!!");
+-    const currentSet = this.state.selectedDays;
++    handleDateSubmit = () => {
++        console.log("this has been submitted!!");
++        const currentSet = this.state.selectedDays;
+ 
+-    const initialSelectedDays = this.state.initialAvailabilities.map(
+-      day => new Date(day.date)
+-    );
+-    console.log(
+-      "listingCard.handleDateSubmit initialSelectedDays",
+-      initialSelectedDays
+-    );
++        const initialSelectedDays = this.state.initialAvailabilities.map(
++            day => new Date(day.date)
++        );
++        console.log(
++            "listingCard.handleDateSubmit initialSelectedDays",
++            initialSelectedDays
++        );
+     const initialSet = initialSelectedDays;
+ 
+     const removedElements = [...initialSet].filter(initialElement => {
+@@ -212,36 +210,27 @@
+         // .map over all selected dates in array and create a new row in the avail collection for each date and include the the the id of listing
+       });
+     });
+-    removedElements.forEach(day => {
+-      const availability = this.state.initialAvailabilities.find(avail => {
+-        return DateUtils.isSameDay(new Date(avail.date), new Date(day));
+-      });
+-      API.deleteAvailability(availability._id);
+-    });
+-    this.setState({ open2: false });
+-  };
++        removedElements.forEach(day => {
++            const availability = this.state.initialAvailabilities.find(avail => {
++                return DateUtils.isSameDay(new Date(avail.date), new Date(day));
++            });
++            API.deleteAvailability(availability._id);
++        });
++        this.setState({open2: false});
++    };
+ 
+-  handleListingUpdate = event => {
+-    this.setState({ open: false });
+-    console.log("ListingCard.handleListingUpdate this.state", this.state);
+-    API.editListing(this.state)
+-      .then(res => {
+-        console.log("ListingCard.handleListingUpdate res", res);
+-        this.props.loadListings();
+-      })
++    handleListingUpdate = () => {
++        this.setState({open: false});
++        console.log("ListingCard.handleListingUpdate this.state", this.state);
++        API.editListing(this.state)
++            .then(res => {
++                console.log("ListingCard.handleListingUpdate res", res);
++                this.props.loadListings();
++            })
+ 
+-      .catch(err => console.log(err));
+-  };
+-
+-  handleDelete = id => {
+-    API.deleteListing(id)
+-      .then(res => {
+-        this.props.loadListings();
+-      })
+-      .catch(err => console.log(err));
+-  };
+-
+-  processEarnings = earnings => {
++            .catch(err => console.log(err));
++    };
++    processEarnings = earnings => {
+     //Define temporary variable to hold computtion
+     let lastWeekEarnings = 0;
+     let lastMonthEarnings = 0;
+@@ -308,53 +297,50 @@
+     }
+     this.setState({ selectedDays });
+   }
+-  handleExpandClick = () => {
+-    this.setState(state => ({ expanded: !state.expanded }));
+-  };
+ 
+   render() {
+     console.log(this.state);
+     console.log(this.props);
+     const { classes } = this.props;
+     return (
+-      <Card className={classes.card} style={{ position: "relative" }}>
+-        <CardMedia
+-          className={classes.media}
+-          image={this.props.photo}
+-          title={this.props.title}
+-        />
+-        <CardHeader title={this.props.title} subheader={this.props.address} />
+-        <CardContent></CardContent>
+-        <CardActions
+-          className={classes.actions}
+-          disableActionSpacing
+-          style={{
+-            position: "absolute",
+-            bottom: "10px",
+-            left: "0",
+-            right: "0",
+-            margin: "auto"
+-          }}
+-        >
+-          <IconButton
+-            aria-label="Edit Listing"
+-            title="Edit"
+-            onClick={() => this.handleClickOpen()}
+-          >
+-            <EditIcon />
+-          </IconButton>
+-          <IconButton
+-            aria-label="Edit Availability"
+-            title="Availability"
+-            onClick={() => this.handleClickOpen2()}
+-          >
+-            <DateRangeIcon />
+-          </IconButton>
+-          <IconButton
+-            aria-label="Show Earnings"
+-            title="Earnings"
+-            onClick={() => this.showEarning()}
+-          >
++        <Card className={classes.card} style={{position: "relative"}}>
++            <CardMedia
++                className={classes.media}
++                image={this.props.photo}
++                title={this.props.title}
++            />
++            <CardHeader title={this.props.title} subheader={this.props.address}/>
++            <CardContent/>
++            <CardActions
++                className={classes.actions}
++                disableActionSpacing
++                style={{
++                    position: "absolute",
++                    bottom: "10px",
++                    left: "0",
++                    right: "0",
++                    margin: "auto"
++                }}
++            >
++                <IconButton
++                    aria-label="Edit Listing"
++                    title="Edit"
++                    onClick={() => this.handleClickOpen()}
++                >
++                    <EditIcon/>
++                </IconButton>
++                <IconButton
++                    aria-label="Edit Availability"
++                    title="Availability"
++                    onClick={() => this.handleClickOpen2()}
++                >
++                    <DateRangeIcon/>
++                </IconButton>
++                <IconButton
++                    aria-label="Show Earnings"
++                    title="Earnings"
++                    onClick={() => this.showEarning()}
++                >
+             <AttachMoneyIcon />
+           </IconButton>
+           <IconButton
+Index: client/src/pages/Calendar/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React from \"react\";\nimport DayPicker, { DateUtils } from \"react-day-picker\";\nimport \"react-day-picker/lib/style.css\";\n\nexport default class Calendar extends React.Component {\n  constructor(props) {\n    super(props);\n    this.handleDayClick = this.handleDayClick.bind(this);\n    this.state = {\n      selectedDays: []\n    };\n  }\n\n  handleDayClick(day, { selected }) {\n    const { selectedDays } = this.state;\n    if (selected) {\n      const selectedIndex = selectedDays.findIndex(selectedDay =>\n        DateUtils.isSameDay(selectedDay, day)\n      );\n      selectedDays.splice(selectedIndex, 1);\n    } else {\n      selectedDays.push(day);\n    }\n    this.setState({ selectedDays });\n  }\n\n  render() {\n    return (\n      <div>\n        <DayPicker\n          selectedDays={this.state.selectedDays}\n          onDayClick={this.handleDayClick}\n        />\n      </div>\n    );\n  }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- client/src/pages/Calendar/index.js	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ client/src/pages/Calendar/index.js	(date 1580326306844)
+@@ -1,5 +1,5 @@
+ import React from "react";
+-import DayPicker, { DateUtils } from "react-day-picker";
++import DayPicker, {DateUtils} from "react-day-picker";
+ import "react-day-picker/lib/style.css";
+ 
+ export default class Calendar extends React.Component {
+@@ -26,12 +26,10 @@
+ 
+   render() {
+     return (
+-      <div>
+         <DayPicker
+           selectedDays={this.state.selectedDays}
+           onDayClick={this.handleDayClick}
+         />
+-      </div>
+     );
+   }
+ }
+Index: client/src/pages/AddListing/AddressForm.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React from \"react\";\nimport Grid from \"@material-ui/core/Grid\";\nimport Typography from \"@material-ui/core/Typography\";\nimport TextField from \"@material-ui/core/TextField\";\nimport FormControlLabel from \"@material-ui/core/FormControlLabel\";\nimport Checkbox from \"@material-ui/core/Checkbox\";\nimport PropTypes from \"prop-types\";\nimport classNames from \"classnames\";\nimport { withStyles } from \"@material-ui/core/styles\";\nimport MenuItem from \"@material-ui/core/MenuItem\";\nimport Paper from \"@material-ui/core/Paper\";\nimport Button from \"@material-ui/core/Button\";\n\nconst ranges = [\n  {\n    value: \"Garage\",\n    label: \"Garage\"\n  },\n  {\n    value: \"Street\",\n    label: \"Street\"\n  },\n  {\n    value: \"Private Lot\",\n    label: \"Private Lot\"\n  },\n  {\n    value: \"Driveway\",\n    label: \"Driveway\"\n  }\n];\n\nfunction AddressForm(props) {\n  return (\n    <React.Fragment style={{ fontFamily: \"Roboto\" }}>\n      <form noValidate autoComplete=\"off\">\n        {console.log(props)}\n        {/* //TITLE */}\n        <TextField\n          id=\"title\"\n          label=\"Title\"\n          fullWidth={true}\n          placeholder=\"Open driveway on quiet street\"\n          // className={classes.textField}\n          margin=\"normal\"\n          variant=\"outlined\"\n          value={props.title}\n          onChange={props.handleInputChange}\n          name=\"title\"\n        />\n        <div\n          style={{ fontFamily: \"Roboto\", color: \"#DB5461\", fontSize: \"12px\" }}\n        >\n          {props.titleError}\n        </div>\n\n        {/* // PARKING Type */}\n        <TextField\n          id=\"parkingtype\"\n          select\n          label=\"Select\"\n          fullWidth={true}\n          // className={classes.textField}\n          value={props.parkingtype}\n          onChange={props.handleInputChange}\n          SelectProps={\n            {\n              // MenuProps: {\n              //   className: classes.menu\n              // }\n            }\n          }\n          helperText=\"Select spot type\"\n          margin=\"normal\"\n          name=\"parkingtype\"\n        >\n          {ranges.map(option => (\n            <MenuItem key={option.value} value={option.value}>\n              {option.label}\n            </MenuItem>\n          ))}\n        </TextField>\n        <div\n          style={{ fontFamily: \"Roboto\", color: \"#DB5461\", fontSize: \"12px\" }}\n        >\n          {props.parkingtypeError}\n        </div>\n\n        {/* // PRICE */}\n        <TextField\n          id=\"price\"\n          label=\"Daily Price\"\n          value={props.price !== 0 && props.price}\n          onChange={props.handleInputChange}\n          type=\"number\"\n          fullWidth={true}\n          // className={classes.textField}\n          InputLabelProps={{\n            shrink: true\n          }}\n          name=\"price\"\n          margin=\"normal\"\n          variant=\"outlined\"\n          placeholder=\"$\"\n          name=\"price\"\n        />\n        <div\n          style={{ fontFamily: \"Roboto\", color: \"#DB5461\", fontSize: \"12px\" }}\n        >\n          {props.priceError}\n        </div>\n\n        {/* //ADDRESS */}\n        <TextField\n          id=\"address\"\n          fullWidth={true}\n          label=\"Street Address\"\n          placeholder=\"1200 Market Street\"\n          // className={classes.textField}\n          margin=\"normal\"\n          variant=\"outlined\"\n          value={props.address}\n          onChange={props.handleInputChange}\n          name=\"address\"\n        />\n        <div\n          style={{ fontFamily: \"Roboto\", color: \"#DB5461\", fontSize: \"12px\" }}\n        >\n          {props.addressError}\n        </div>\n\n        {/* //City */}\n        <TextField\n          id=\"city\"\n          label=\"City\"\n          fullWidth={true}\n          placeholder=\"Philadelphia\"\n          // className={classes.textField}\n          margin=\"normal\"\n          variant=\"outlined\"\n          value={props.city}\n          onChange={props.handleInputChange}\n          name=\"city\"\n        />\n        <div\n          style={{ fontFamily: \"Roboto\", color: \"#DB5461\", fontSize: \"12px\" }}\n        >\n          {props.cityError}\n        </div>\n\n        {/* //State */}\n        <TextField\n          fullWidth={true}\n          id=\"state\"\n          label=\"State\"\n          placeholder=\"PA\"\n          // className={classes.textField}\n          margin=\"normal\"\n          variant=\"outlined\"\n          value={props.state}\n          onChange={props.handleInputChange}\n          name=\"state\"\n        />\n        <div\n          style={{ fontFamily: \"Roboto\", color: \"#DB5461\", fontSize: \"12px\" }}\n        >\n          {props.stateError}\n        </div>\n\n        {/* //Zip */}\n        <TextField\n          id=\"zipcode\"\n          label=\"Zip\"\n          placeholder=\"19107\"\n          // className={classes.textField}\n          margin=\"normal\"\n          variant=\"outlined\"\n          value={props.zipcode}\n          onChange={props.handleInputChange}\n          name=\"zipcode\"\n          fullWidth={true}\n        />\n        <div\n          style={{ fontFamily: \"Roboto\", color: \"#DB5461\", fontSize: \"12px\" }}\n        >\n          {props.zipcodeError}\n        </div>\n      </form>\n    </React.Fragment>\n  );\n}\n\nexport default AddressForm;\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- client/src/pages/AddListing/AddressForm.js	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ client/src/pages/AddListing/AddressForm.js	(date 1580326306844)
+@@ -1,15 +1,6 @@
+ import React from "react";
+-import Grid from "@material-ui/core/Grid";
+-import Typography from "@material-ui/core/Typography";
+ import TextField from "@material-ui/core/TextField";
+-import FormControlLabel from "@material-ui/core/FormControlLabel";
+-import Checkbox from "@material-ui/core/Checkbox";
+-import PropTypes from "prop-types";
+-import classNames from "classnames";
+-import { withStyles } from "@material-ui/core/styles";
+ import MenuItem from "@material-ui/core/MenuItem";
+-import Paper from "@material-ui/core/Paper";
+-import Button from "@material-ui/core/Button";
+ 
+ const ranges = [
+   {
+@@ -56,32 +47,24 @@
+ 
+         {/* // PARKING Type */}
+         <TextField
+-          id="parkingtype"
+-          select
+-          label="Select"
+-          fullWidth={true}
+-          // className={classes.textField}
+-          value={props.parkingtype}
+-          onChange={props.handleInputChange}
+-          SelectProps={
+-            {
+-              // MenuProps: {
+-              //   className: classes.menu
+-              // }
+-            }
+-          }
+-          helperText="Select spot type"
+-          margin="normal"
+-          name="parkingtype"
++            id="parkingtype"
++            select
++            label="Select"
++            fullWidth={true}
++            value={props.parkingtype}
++            onChange={props.handleInputChange}
++            helperText="Select spot type"
++            margin="normal"
++            name="parkingtype"
+         >
+           {ranges.map(option => (
+-            <MenuItem key={option.value} value={option.value}>
+-              {option.label}
+-            </MenuItem>
++              <MenuItem key={option.value} value={option.value}>
++                {option.label}
++              </MenuItem>
+           ))}
+         </TextField>
+         <div
+-          style={{ fontFamily: "Roboto", color: "#DB5461", fontSize: "12px" }}
++            style={{fontFamily: "Roboto", color: "#DB5461", fontSize: "12px"}}
+         >
+           {props.parkingtypeError}
+         </div>
+@@ -94,7 +77,6 @@
+           onChange={props.handleInputChange}
+           type="number"
+           fullWidth={true}
+-          // className={classes.textField}
+           InputLabelProps={{
+             shrink: true
+           }}
+@@ -102,7 +84,6 @@
+           margin="normal"
+           variant="outlined"
+           placeholder="$"
+-          name="price"
+         />
+         <div
+           style={{ fontFamily: "Roboto", color: "#DB5461", fontSize: "12px" }}
+@@ -116,7 +97,6 @@
+           fullWidth={true}
+           label="Street Address"
+           placeholder="1200 Market Street"
+-          // className={classes.textField}
+           margin="normal"
+           variant="outlined"
+           value={props.address}
+@@ -135,7 +115,6 @@
+           label="City"
+           fullWidth={true}
+           placeholder="Philadelphia"
+-          // className={classes.textField}
+           margin="normal"
+           variant="outlined"
+           value={props.city}
+@@ -154,7 +133,6 @@
+           id="state"
+           label="State"
+           placeholder="PA"
+-          // className={classes.textField}
+           margin="normal"
+           variant="outlined"
+           value={props.state}
+@@ -172,7 +150,6 @@
+           id="zipcode"
+           label="Zip"
+           placeholder="19107"
+-          // className={classes.textField}
+           margin="normal"
+           variant="outlined"
+           value={props.zipcode}
+Index: client/src/pages/AddListing/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, { Component } from \"react\";\nimport CssBaseline from \"@material-ui/core/CssBaseline\";\nimport Toolbar from \"@material-ui/core/Toolbar\";\nimport Stepper from \"@material-ui/core/Stepper\";\nimport Step from \"@material-ui/core/Step\";\nimport StepLabel from \"@material-ui/core/StepLabel\";\nimport AddressForm from \"./AddressForm\";\nimport PaymentForm from \"./PaymentForm\";\nimport Review from \"./Review\";\nimport \"./style.css\";\n//\nimport Nav from \"../../components/Nav\";\nimport API from \"../../utils/API\";\nimport axios from \"axios\";\nimport DayPicker, { DateUtils } from \"react-day-picker\";\nimport \"react-day-picker/lib/style.css\";\n// Material UI Input imports\nimport PropTypes from \"prop-types\";\nimport classNames from \"classnames\";\nimport { withStyles } from \"@material-ui/core/styles\";\nimport MenuItem from \"@material-ui/core/MenuItem\";\nimport TextField from \"@material-ui/core/TextField\";\nimport Grid from \"@material-ui/core/Grid\";\nimport Paper from \"@material-ui/core/Paper\";\nimport Button from \"@material-ui/core/Button\";\nimport Typography from \"@material-ui/core/Typography\";\n//Dialog\nimport Dialog from \"@material-ui/core/Dialog\";\nimport DialogActions from \"@material-ui/core/DialogActions\";\nimport DialogContent from \"@material-ui/core/DialogContent\";\nimport DialogContentText from \"@material-ui/core/DialogContentText\";\nimport DialogTitle from \"@material-ui/core/DialogTitle\";\n\nconst styles = theme => ({\n  appBar: {\n    position: \"relative\"\n  },\n  layout: {\n    width: \"auto\",\n    marginLeft: theme.spacing.unit * 2,\n    marginRight: theme.spacing.unit * 2,\n    [theme.breakpoints.up(600 + theme.spacing.unit * 2 * 2)]: {\n      width: 600,\n      marginLeft: \"auto\",\n      marginRight: \"auto\"\n    }\n  },\n  paper: {\n    marginTop: theme.spacing.unit * 3,\n    marginBottom: theme.spacing.unit * 3,\n    padding: theme.spacing.unit * 2,\n    [theme.breakpoints.up(600 + theme.spacing.unit * 3 * 2)]: {\n      marginTop: theme.spacing.unit * 6,\n      marginBottom: theme.spacing.unit * 6,\n      padding: theme.spacing.unit * 3\n    }\n  },\n  stepper: {\n    padding: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit * 5}px`\n  },\n  buttons: {\n    display: \"flex\",\n    justifyContent: \"flex-end\"\n  },\n  button: {\n    marginTop: theme.spacing.unit * 3,\n    marginLeft: theme.spacing.unit\n  }\n});\n\n// const ranges = [\n//   {\n//     value: \"Garage\",\n//     label: \"Garage\"\n//   },\n//   {\n//     value: \"Street\",\n//     label: \"Street\"\n//   },\n//   {\n//     value: \"Private Lot\",\n//     label: \"Private Lot\"\n//   },\n//   {\n//     value: \"Driveway\",\n//     label: \"Driveway\"\n//   }\n// ];\n\nconst steps = [\"Listing Address\", \"Availability\", \"Review Your Listing\"];\n\nclass AddListing extends Component {\n  constructor(props) {\n    super(props);\n    this.handleDayClick = this.handleDayClick.bind(this);\n    this.state = {\n      title: \"\",\n      parkingtype: \"\",\n      photo: \"\",\n      price: 0,\n      address: \"\",\n      city: \"\",\n      state: \"\",\n      zipcode: \"\",\n      user: {},\n      fulladdress: \"\",\n      coordinates: {},\n      longitude: 0.0,\n      latitude: 0.0,\n      activeStep: 0,\n      selectedDays: [],\n      //errors\n      titleError: \"\",\n      parkingtypeError: \"\",\n      priceError: \"\",\n      addressError: \"\",\n      cityError: \"\",\n      stateError: \"\",\n      zipcodeError: \"\"\n    };\n  }\n\n  getStepContent = step => {\n    console.log(step);\n    switch (step) {\n      case 0:\n        return (\n          <AddressForm\n            {...this.state}\n            handleInputChange={this.handleInputChange}\n            handleFormSubmit={this.handleFormSubmit}\n            validate={this.validate}\n          />\n        );\n      case 1:\n        return (\n          <PaymentForm\n            {...this.state}\n            // selectedDays={this.state.selectedDays}\n            handleDayClick={this.handleDayClick}\n            handleFormSubmit={this.handleFormSubmit}\n          />\n        );\n      case 2:\n        return (\n          <Review {...this.state} handleFormSubmit={this.handleFormSubmit} />\n        );\n      default:\n        throw new Error(\"Unknown step\");\n    }\n  };\n\n  handleNext = () => {\n    if (!this.validate()) {\n      return;\n    } else {\n      this.setState({\n        activeStep: this.state.activeStep + 1\n      });\n    }\n  };\n\n  handleBack = () => {\n    this.setState({\n      activeStep: this.state.activeStep - 1\n    });\n  };\n\n  handleReset = () => {\n    this.setState({\n      activeStep: 0\n    });\n  };\n\n  componentDidMount() {\n    console.log(this.state);\n    this.userInfo();\n  }\n\n  handleClickOpen = () => {\n    this.setState({\n      open: true\n    });\n  };\n\n  handleClose = () => {\n    this.setState(\n      {\n        open: false,\n        title: \"\",\n        parkingtype: \"\",\n        photo: \"\",\n        price: 0.0,\n        address: \"\",\n        city: \"\",\n        state: \"\",\n        zipcode: \"\",\n        titleError: \"\",\n        parkingtypeError: \"\",\n        priceError: \"\",\n        addressError: \"\",\n        cityError: \"\",\n        stateError: \"\",\n        zipcodeError: \"\"\n      },\n      () => {\n        this.props.history.push(\"/profile\");\n      }\n    );\n  };\n\n  //Validation function\n  validate = () => {\n    let titleError = \"\";\n    let parkingtypeError = \"\";\n    let priceError = \"\";\n    let addressError = \"\";\n    let cityError = \"\";\n    let stateError = \"\";\n    let zipcodeError = \"\";\n\n    if (!this.state.title) {\n      titleError = \"title cannot be empty\";\n    }\n    if (!this.state.parkingtype) {\n      parkingtypeError = \"please select a type\";\n    }\n    if (isNaN(this.state.price) || !this.state.price) {\n      priceError = \"price cannot be empty\";\n    }\n    if (!this.state.address) {\n      addressError = \"password cannot be empty\";\n    }\n    if (!this.state.city) {\n      cityError = \"city cannot be empty\";\n    }\n    if (!this.state.state) {\n      stateError = \"state cannot be empty\";\n    }\n    if (isNaN(this.state.zipcode) || !this.state.zipcode) {\n      zipcodeError = \"zip cannot be empty\";\n    }\n    if (\n      titleError ||\n      parkingtypeError ||\n      priceError ||\n      addressError ||\n      cityError ||\n      stateError ||\n      zipcodeError\n    ) {\n      this.setState({\n        titleError,\n        parkingtypeError,\n        priceError,\n        addressError,\n        cityError,\n        stateError,\n        zipcodeError\n      });\n      return false;\n    }\n\n    return true;\n  };\n\n  handleDayClick(day, { selected }) {\n    const { selectedDays } = this.state;\n    if (selected) {\n      const selectedIndex = selectedDays.findIndex(selectedDay =>\n        DateUtils.isSameDay(selectedDay, day)\n      );\n      selectedDays.splice(selectedIndex, 1);\n    } else {\n      selectedDays.push(day);\n    }\n\n    this.setState({ selectedDays });\n    console.log(this.state.selectedDays);\n  }\n\n  userInfo = () => {\n    axios.get(\"/user/\").then(response => {\n      console.log(response.data);\n      if (response.data.user) {\n        this.setState({\n          user: response.data.user\n        });\n      }\n    });\n  };\n\n  handleInputChange = event => {\n    const { name, value } = event.target;\n    this.setState({\n      [name]: value\n    });\n  };\n\n  handleFormSubmit = event => {\n    event.preventDefault();\n    const isValid = this.validate();\n    if (isValid) {\n      this.setState(\n        {\n          fulladdress:\n            this.state.address +\n            \" \" +\n            this.state.city +\n            \" \" +\n            this.state.state +\n            \" \" +\n            this.state.zipcode\n        },\n        () => {\n          let location = this.state.fulladdress;\n          // console.log(location);\n\n          this.setState(\n            {\n              fulladdress:\n                this.state.address +\n                \" \" +\n                this.state.city +\n                \" \" +\n                this.state.state +\n                \" \" +\n                this.state.zipcode\n            },\n            () => {\n              let location = this.state.fulladdress;\n              // console.log(location);\n\n              axios\n                .get(\"https://maps.googleapis.com/maps/api/geocode/json\", {\n                  params: {\n                    address: location,\n                    key: \"AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo\"\n                  }\n                })\n                .then(response => {\n                  var latitude = response.data.results[0].geometry.location.lat;\n                  var longitude =\n                    response.data.results[0].geometry.location.lng;\n                  var coordinates = { longitude, latitude };\n                  var streetName =\n                    response.data.results[0].address_components[1].long_name;\n                  var neighborhood =\n                    response.data.results[0].address_components[2].long_name;\n\n                  var typeLat = typeof latitude;\n                  console.log(typeLat);\n\n                  let apiKey = \"AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo\";\n\n                  var queryUrl =\n                    \"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=\" +\n                    latitude +\n                    \",\" +\n                    longitude +\n                    \"&fov=80&heading=70&pitch=0&key=\" +\n                    apiKey;\n\n                  this.setState(\n                    {\n                      coordinates: coordinates,\n                      longitude: longitude,\n                      latitude: latitude,\n                      photo: queryUrl\n                    },\n                    () => {\n                      API.saveListing({\n                        user: this.state.user._id,\n                        title: this.state.title,\n                        parkingtype: this.state.parkingtype || \"None\",\n                        photo: this.state.photo,\n                        price: this.state.price,\n                        address: this.state.address,\n                        city: this.state.city,\n                        state: this.state.state,\n                        zipcode: this.state.zipcode,\n                        streetName,\n                        neighborhood,\n                        location: {\n                          coordinates: [longitude, latitude]\n                        }\n                      })\n                        .then(res => {\n                          this.state.selectedDays.map(date => {\n                            const listingId = res.data._id;\n\n                            API.createAvailability({\n                              date,\n                              listing: listingId\n                              // .map over all selected dates in array and create a new row in the avail collection for each date and include the the the id of listing\n                            });\n                          });\n                          // this.handleClickOpen();\n                          this.handleClose();\n                        })\n                        .catch(err => console.log(err));\n                    }\n                  );\n                });\n            }\n          );\n        }\n      );\n    }\n  };\n\n  render() {\n    const { classes } = this.props;\n    // const { activeStep } = this.state;\n\n    return (\n      <div>\n        <Nav />\n        <React.Fragment>\n          <CssBaseline />\n          <main className={classes.layout}>\n            <Paper className={classes.paper}>\n              <Typography component=\"h1\" variant=\"h4\" align=\"center\">\n                Create New Listing\n              </Typography>\n              <Stepper\n                activeStep={this.state.activeStep}\n                className={classes.stepper}\n              >\n                {steps.map(label => (\n                  <Step key={label}>\n                    <StepLabel>{label}</StepLabel>\n                  </Step>\n                ))}\n              </Stepper>\n              <React.Fragment>\n                {this.state.activeStep === steps.length ? (\n                  <React.Fragment></React.Fragment>\n                ) : (\n                  <React.Fragment>\n                    {console.log(this.state.activeStep)}\n                    {this.getStepContent(this.state.activeStep)}\n                    <div className={classes.buttons}>\n                      {this.state.activeStep !== 0 && (\n                        <Button\n                          onClick={this.handleBack}\n                          className={classes.button}\n                        >\n                          Back\n                        </Button>\n                      )}\n                      <Button\n                        variant=\"contained\"\n                        color=\"primary\"\n                        onClick={\n                          this.state.activeStep === 2\n                            ? this.handleFormSubmit\n                            : this.handleNext\n                        }\n                        className={classes.button}\n                      >\n                        {this.state.activeStep === steps.length - 1\n                          ? \"Confirm Listing\"\n                          : \"Next\"}\n                      </Button>\n                    </div>\n                  </React.Fragment>\n                )}\n              </React.Fragment>\n            </Paper>\n\n            <Dialog\n              open={this.state.open}\n              handleClickOpen={this.handleClickOpen}\n            >\n              <DialogTitle id=\"form-dialog-title\">Listing Summary</DialogTitle>\n              <DialogContent>\n                {\" \"}\n                <Typography>Listing is created successfully!</Typography>\n              </DialogContent>\n\n              <DialogActions>\n                <Button\n                  onClick={() => this.handleClose()}\n                  color=\"secondary\"\n                  variant=\"outlined\"\n                >\n                  Close\n                </Button>\n              </DialogActions>\n            </Dialog>\n          </main>\n        </React.Fragment>\n      </div>\n    );\n  }\n}\n\nAddListing.propTypes = {\n  classes: PropTypes.object.isRequired\n};\n\nexport default withStyles(styles)(AddListing);\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- client/src/pages/AddListing/index.js	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ client/src/pages/AddListing/index.js	(date 1580326306844)
+@@ -1,6 +1,5 @@
+-import React, { Component } from "react";
++import React, {Component} from "react";
+ import CssBaseline from "@material-ui/core/CssBaseline";
+-import Toolbar from "@material-ui/core/Toolbar";
+ import Stepper from "@material-ui/core/Stepper";
+ import Step from "@material-ui/core/Step";
+ import StepLabel from "@material-ui/core/StepLabel";
+@@ -12,15 +11,11 @@
+ import Nav from "../../components/Nav";
+ import API from "../../utils/API";
+ import axios from "axios";
+-import DayPicker, { DateUtils } from "react-day-picker";
++import {DateUtils} from "react-day-picker";
+ import "react-day-picker/lib/style.css";
+ // Material UI Input imports
+ import PropTypes from "prop-types";
+-import classNames from "classnames";
+-import { withStyles } from "@material-ui/core/styles";
+-import MenuItem from "@material-ui/core/MenuItem";
+-import TextField from "@material-ui/core/TextField";
+-import Grid from "@material-ui/core/Grid";
++import {withStyles} from "@material-ui/core/styles";
+ import Paper from "@material-ui/core/Paper";
+ import Button from "@material-ui/core/Button";
+ import Typography from "@material-ui/core/Typography";
+@@ -28,7 +23,6 @@
+ import Dialog from "@material-ui/core/Dialog";
+ import DialogActions from "@material-ui/core/DialogActions";
+ import DialogContent from "@material-ui/core/DialogContent";
+-import DialogContentText from "@material-ui/core/DialogContentText";
+ import DialogTitle from "@material-ui/core/DialogTitle";
+ 
+ const styles = theme => ({
+@@ -68,25 +62,6 @@
+   }
+ });
+ 
+-// const ranges = [
+-//   {
+-//     value: "Garage",
+-//     label: "Garage"
+-//   },
+-//   {
+-//     value: "Street",
+-//     label: "Street"
+-//   },
+-//   {
+-//     value: "Private Lot",
+-//     label: "Private Lot"
+-//   },
+-//   {
+-//     value: "Driveway",
+-//     label: "Driveway"
+-//   }
+-// ];
+-
+ const steps = ["Listing Address", "Availability", "Review Your Listing"];
+ 
+ class AddListing extends Component {
+@@ -411,7 +386,6 @@
+ 
+   render() {
+     const { classes } = this.props;
+-    // const { activeStep } = this.state;
+ 
+     return (
+       <div>
+@@ -435,7 +409,7 @@
+               </Stepper>
+               <React.Fragment>
+                 {this.state.activeStep === steps.length ? (
+-                  <React.Fragment></React.Fragment>
++                    <React.Fragment/>
+                 ) : (
+                   <React.Fragment>
+                     {console.log(this.state.activeStep)}
+Index: client/src/pages/SearchResult/functions.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import API from \"../../utils/API\";\n\nexport async function getListingById(listing) {\n    try {\n        return await API.getListingById(listing);\n    } catch (error) {\n        console.error(\"Error occurred gettingListing\", error);\n    }\n}\n\nexport async function getListingByIdAndProximity(longLatArray) {\n    try {\n        return await API.getListingByIdAndProximity(longLatArray)\n    } catch (error) {\n        console.error(\"Error occurred getListingByIdAndProximity\", error);\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- client/src/pages/SearchResult/functions.js	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ client/src/pages/SearchResult/functions.js	(date 1580326306844)
+@@ -1,17 +1,17 @@
+ import API from "../../utils/API";
+ 
+-export async function getListingById(listing) {
+-    try {
+-        return await API.getListingById(listing);
+-    } catch (error) {
+-        console.error("Error occurred gettingListing", error);
+-    }
+-}
+-
+-export async function getListingByIdAndProximity(longLatArray) {
++export async function findAllAvailAndNear(formattedDates, longLatArray) {
+     try {
+-        return await API.getListingByIdAndProximity(longLatArray)
++        console.log("Starting to findAllAvailAndNear");
++        const availableData = await API.getAvailableListings(formattedDates);
++        const listingNearData = await API.getListingByIdAndProximity(longLatArray);
++        console.log("AvailableData: ", availableData, "listingNearData: ", listingNearData);
++        availableData.data.some(r => {
++            console.log("WOW", r);
++            listingNearData.data.includes(r)
++        });
++        return {availableData, listingNearData};
+     } catch (error) {
+-        console.error("Error occurred getListingByIdAndProximity", error);
++        console.error("Error occurred findAllAvailAndNear", error);
+     }
+-}
+\ No newline at end of file
++}
+Index: client/src/pages/SearchResult/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, {Component} from \"react\";\nimport Nav from \"../../components/Nav\";\nimport \"./style.css\";\nimport axios from \"axios\";\nimport DayPicker, {DateUtils} from \"react-day-picker\";\nimport \"react-day-picker/lib/style.css\";\nimport API from \"../../utils/API\";\nimport moment from \"moment\";\n// Material UI Grid Layout imports\nimport PropTypes from \"prop-types\";\nimport {withStyles} from \"@material-ui/core/styles\";\nimport Grid from \"@material-ui/core/Grid\";\nimport Paper from \"@material-ui/core/Paper\";\n//Material Dialog\nimport Dialog from \"@material-ui/core/Dialog\";\nimport DialogActions from \"@material-ui/core/DialogActions\";\nimport DialogContent from \"@material-ui/core/DialogContent\";\nimport DialogTitle from \"@material-ui/core/DialogTitle\";\n//end Dialog\n// Material UI Card Imports\nimport Card from \"@material-ui/core/Card\";\nimport Button from \"@material-ui/core/Button\";\nimport Typography from \"@material-ui/core/Typography\";\nimport ButtonBase from \"@material-ui/core/ButtonBase\";\n//Material UI Search Bar Imports\nimport InputBase from \"@material-ui/core/InputBase\";\nimport IconButton from \"@material-ui/core/IconButton\";\nimport SearchIcon from \"@material-ui/icons/Search\";\n//Material UI Grid List\nimport GridList from \"@material-ui/core/GridList\";\nimport CheckCircleIcon from \"@material-ui/icons/CheckCircle\";\nimport Loader from \"../../components/Loader\";\nimport {getListingById} from \"./functions\";\n//Material UI Popover\nimport Popover from \"@material-ui/core/Popover\";\nimport DateRangeIcon from \"@material-ui/icons/DateRange\";\nimport RoomIcon from \"@material-ui/icons/Room\";\n\nconst styles = theme => ({\n  root: {\n    flexGrow: 1,\n    margin: \"6px 0\"\n  },\n  searchBar: {\n    padding: \"2px 4px\",\n    margin: \"8px\",\n    display: \"flex\",\n    alignItems: \"center\",\n    // maxWidth: \"99%\"\n    width: \"400px\"\n  },\n  dateBar: {\n    padding: \"2px 4px\",\n    margin: \"8px 0px\",\n    display: \"flex\",\n    alignItems: \"center\",\n    width: \"200px\"\n  },\n  paper: {\n    padding: \"8px 10px\",\n    margin: \"auto\",\n    textAlign: \"center\",\n    color: theme.palette.text.secondary,\n    height: \"100%\"\n  },\n  searchPaper: {\n    padding: \"8px 10px\",\n    margin: \"auto\",\n    textAlign: \"center\",\n    color: theme.palette.text.secondary,\n    height: \"100%\",\n    display: \"flex\",\n    justifyContent: \"center\"\n  },\n  card: {\n    width: \"100%\",\n    margin: \"8px\"\n  },\n  container: {\n    paddingTop: \"8px\",\n    paddingLeft: \"8px\",\n    paddingRight: \"8px\"\n  },\n  calendar: {\n    marginRight: \"4px\"\n  },\n  calendarContainer: {\n    minWidth: \"250px\"\n  },\n  bookingContainer: {\n    minWidth: \"400px\",\n    marginLeft: \"30px\",\n    marginTop: \"10px\"\n  },\n  mapContainer: {\n    minWidth: \"400px\",\n    marginRight: \"30px\",\n    marginTop: \"10px\"\n  },\n  image: {\n    width: 180,\n    height: 180\n  },\n  img: {\n    margin: \"auto\",\n    display: \"block\",\n    maxWidth: \"100%\",\n    maxHeight: \"100%\"\n  },\n  button: {\n    margin: theme.spacing.unit\n  },\n  input: {\n    marginLeft: 8,\n    flex: 1\n  },\n  iconButton: {\n    padding: 10\n  },\n  typography: {\n    margin: theme.spacing.unit * 2\n  },\n  error: {\n    textAlign: \"center\",\n    marginTop: \"3px\"\n  }\n});\n\nclass SearchResult extends Component {\n  state = {\n    //Dialog\n    open: false,\n    currentModalId: this.props.id,\n    //end Dialog\n    addressQuery: \"\",\n    latitude: 39.952309,\n    longitude: -75.163856,\n    selectedDays: [],\n    markerData: [],\n    cardsArray: [],\n    idToBook: \"\",\n    user: {},\n    address: \"\",\n    searchState: false,\n    photo: \"\",\n    title: \"\",\n    href: \"\",\n    city: \"\",\n    state: \"\",\n    zipcode: \"\",\n    price: \"\",\n    id: \"\",\n    fullWidth: true,\n    maxWidth: \"sm\",\n    buttonClicked: false,\n    isFetching: false,\n    anchorEl: null\n  };\n\n  constructor(props) {\n    super(props);\n    this.handleDayClick = this.handleDayClick.bind(this);\n  }\n\n  componentDidMount() {\n    // Setup map render\n    console.log(\"Setting up the Map\");\n    loadScript(\n        \"https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo&callback=initializeMap\"\n    );\n    window.initializeMap = this.initializeMap;\n    // End map render\n    this.userInfo().then(response =>\n        this.setState(\n            {\n              user: response.data.user\n            },\n        )\n    );\n  }\n\n  initializeMap = () => {\n    console.log(\"We are initializing the map\");\n    window.map = new window.google.maps.Map(document.getElementById(\"map\"), {\n      center: {lat: this.state.latitude, lng: this.state.longitude},\n      zoom: 15\n    });\n  };\n\n  componentDidUpdate(prevProps, prevState, snapshot) {\n    if (prevState.longitude !== this.state.longitude || prevState.latitude !== this.state.latitude) {\n      console.log(\"State Changed for Long and Latitude\", this.state.longitude, this.state.latitude, \"Previous Data: \", prevState.longitude, prevState.latitude);\n      // We only care to find listing if the Long/Late Change\n      this.findRelevantListings();\n    }\n  }\n\n  handleChange = key => (event, value) => {\n    this.setState({\n      [key]: value\n    });\n  };\n\n\n\n  handleClickOpen = (id, address, title, href, city, state, zipcode, price) => {\n    this.setState({\n      open: true,\n      title: title,\n      address: address,\n      href: href,\n      city: city,\n      state: state,\n      zipcode: zipcode,\n      price: price,\n      id: id\n    });\n  };\n\n  handleClose = () => {\n    this.setState({ open: false });\n  };\n\n  handleClick = event => {\n    this.setState({\n      anchorEl: event.currentTarget\n    });\n  };\n\n  handlePopClose = () => {\n    this.setState({\n      anchorEl: null\n    });\n  };\n\n  userInfo() {\n    return axios.get(\"/user/\");\n  }\n\n  handleBookClick = (id, address, title, href, city, state, zipcode, price) => {\n    this.setState({\n      title: title,\n      address: address,\n      href: href,\n      city: city,\n      state: state,\n      zipcode: zipcode,\n      price: price,\n      id: id\n    });\n\n    for (var i = 0; i < this.state.selectedDays.length; i++) {\n      API.updateAvailability({\n        date: this.state.selectedDays[i],\n        listing: id,\n        userId: this.state.user._id,\n        address: address + \", \" + city + \", \" + state + \" \" + zipcode,\n        title: title,\n        price: price,\n        photo: href\n      }).then(res => console.log(res));\n    }\n    this.getAddress();\n    this.handleClose();\n  };\n\n  handleDayClick(day, { selected }) {\n    const {selectedDays} = this.state;\n    if (selected) {\n      const selectedIndex = selectedDays.findIndex(selectedDay => {\n        DateUtils.isSameDay(selectedDay, day);\n      });\n      selectedDays.splice(selectedIndex, 1);\n    } else {\n      selectedDays.push(day);\n    }\n\n    this.setState({selectedDays});\n    this.setState({buttonClicked: false});\n  }\n\n  handleInputChange = event => {\n    this.setState({\n      [event.target.name]: event.target.value\n    });\n  };\n\n  handleSubmitSearch = e => {\n    e.preventDefault();\n    this.getLongitudeLatitude();\n  };\n\n  getLongitudeLatitude = () => {\n    this.setState({isFetching: false, buttonClicked: true});\n    if (this.state.addressQuery) {\n      console.log(\"Calling Google Maps API for Long/Lat Data\");\n      this.setState({isFetching: true});\n      let location = this.state.addressQuery;\n      axios\n          .get(\"https://maps.googleapis.com/maps/api/geocode/json\", {\n            params: {\n              address: location,\n              key: \"AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo\"\n            }\n          })\n          .then(response => {\n            var latitude = response.data.results[0].geometry.location.lat;\n            var longitude = response.data.results[0].geometry.location.lng;\n            this.setState({latitude, longitude});\n          });\n    }\n  };\n\n  findRelevantListings = () => {\n    this.setState({cardsArray: [], markerData: [], listings: []});\n    const formattedDates = this.state.selectedDays.map(date =>\n        date.toISOString()\n    );\n    API.getAvailableListings(formattedDates)\n        .then(res => {\n          this.setState({isFetching: false});\n          res.data.map(availability => {\n            getListingById(availability.listing).then(listing => {\n              console.log(\"Listing Fetched by Id: \", listing);\n              const data = listing.data[0];\n              this.setState({\n                cardsArray: [...this.state.cardsArray, [data]],\n                markerData: [\n                  ...this.state.markerData,\n                  [\n                    data.address,\n                    data.location.coordinates[1],\n                    data.location.coordinates[0],\n                    data.title,\n                    data.streetName,\n                    data.neighborhood,\n                    data.photo,\n                    data._id,\n                    data.city,\n                    data.state,\n                    data.zipcode,\n                    data.price,\n                    data.parkingtype\n                  ]\n                ]\n              });\n            })\n          })\n        }).then(() => {\n      setTimeout(this.drawOnTheMap, 2000);\n    });\n  };\n\n  drawOnTheMap = () => {\n    console.log(\"Starting to draw on the map: \", this.state.cardsArray);\n    var panPoint = new window.google.maps.LatLng(this.state.latitude, this.state.longitude);\n    window.map.setCenter(panPoint);\n    // Create An InfoWindow\n    var infoWindow = new window.google.maps.InfoWindow();\n    for (let i = 0; i < this.state.cardsArray.length; i++) {\n      console.log(\"Starting for loop\", this.state.cardsArray.length, i);\n      let latitude = this.state.cardsArray[i][0].location.coordinates[1];\n      let longitude = this.state.cardsArray[i][0].location.coordinates[0];\n      console.log(\"Creating marker for listing\", this.state.cardsArray[i][0].title);\n      var position = new window.google.maps.LatLng(latitude, longitude);\n      var marker = new window.google.maps.Marker({\n        position: position,\n        icon: \"https://img.icons8.com/color/40/000000/car.png\",\n        map: window.map,\n        title: this.state.cardsArray[i][0].title\n      });\n\n      // Allow each marker to have an info window\n      new window.google.maps.event.addListener(\n          marker,\n          \"click\",\n          ((marker, i) => {\n            return () => {\n              infoWindow.setContent(\n                  \"<img width='100px' src=\" +\n                  this.state.cardsArray[i][0].photo +\n                  \" />\" +\n                  \"</br>\" +\n                  \"<span style='margin-top:10px;color:black;font-weight:bold;font-size:14px;'>\" +\n                  (i + 1) +\n                  \". \" +\n                  \"<span/>\" +\n                  \"<span>\" +\n                  this.state.cardsArray[i][0].title +\n                  \"</span>\" +\n                  \"</br>\" +\n                  \"<p style='font-weight:normal;font-size:12px;'> $\" +\n                  this.state.cardsArray[i][0].price +\n                  \" / day\" +\n                  \"</p>\" +\n                  \"<p style='margin-bottom:0px;font-weight:normal;font-size:12px;'> Type: \" +\n                  this.state.cardsArray[i][0].parkingtype +\n                  \"</p>\"\n              );\n              infoWindow.open(window.map, marker);\n            };\n          })(marker, i)\n      );\n    }\n  };\n\n  render() {\n    const { classes } = this.props;\n    const { spacing } = this.state;\n    const { anchorEl } = this.state;\n    const open = Boolean(anchorEl);\n    return (\n      <div>\n        <Nav />\n        <div className={classes.root}>\n          <Grid item xs={12}>\n            <Paper className={classes.searchPaper} elevation={0}>\n              <form onSubmit={this.handleSubmitSearch}>\n                <Paper className={classes.searchBar} elevation={1}>\n                  <IconButton\n                    className={classes.iconButton}\n                    aria-label=\"Search\"\n                    type=\"submit\"\n                    id=\"queryAddress\"\n                  >\n                    <RoomIcon />\n                  </IconButton>\n                  <InputBase\n                    className={classes.input}\n                    placeholder=\"Where?\"\n                    type=\"search\"\n                    name=\"addressQuery\"\n                    value={this.state.addressQuery}\n                    onChange={this.handleInputChange}\n                    disabled={false}\n                  />\n                </Paper>\n                {this.state.addressQuery.length === 0 &&\n                this.state.buttonClicked === true ? (\n                  <div style={{ color: \"red\", fontFamily: \"Roboto\" }}>\n                    Please provide a valid address\n                  </div>\n                ) : (\n                  \" \"\n                )}\n              </form>\n\n              <form onClick={this.handleClick}>\n                <Paper className={classes.dateBar} elevation={1}>\n                  <IconButton\n                    className={classes.iconButton}\n                    aria-label=\"Search\"\n                    type=\"submit\"\n                  >\n                    <DateRangeIcon />\n                  </IconButton>\n                  <InputBase\n                    className={classes.input}\n                    placeholder={\n                      this.state.selectedDays.length === 0\n                        ? \"When?\"\n                        : \"Date(s) Selected!\"\n                    }\n                    type=\"search\"\n                    disabled={false}\n                  />\n                </Paper>\n                {this.state.selectedDays.length === 0 &&\n                this.state.addressQuery.length > 0 &&\n                this.state.buttonClicked === true ? (\n                  <div style={{ color: \"red\", fontFamily: \"Roboto\" }}>\n                    Please select a date(s)\n                  </div>\n                ) : (\n                  \" \"\n                )}\n              </form>\n              <Button\n                className={classes.searchButton}\n                onClick={this.handleSubmitSearch}\n              >\n                <SearchIcon />\n              </Button>\n\n              <Popover\n                id=\"simple-popper\"\n                open={open}\n                anchorEl={anchorEl}\n                onClose={this.handlePopClose}\n                anchorOrigin={{\n                  vertical: \"bottom\",\n                  horizontal: \"center\"\n                }}\n                transformOrigin={{\n                  vertical: \"top\",\n                  horizontal: \"center\"\n                }}\n              >\n                <Typography className={classes.typography}>\n                  <div>\n                    <DayPicker\n                      locale=\"en\"\n                      selectedDays={this.state.selectedDays}\n                      onDayClick={this.handleDayClick}\n                    />\n                  </div>\n                </Typography>\n              </Popover>\n            </Paper>\n          </Grid>\n\n          <Grid className={classes.container} container spacing={8}>\n            <Grid className={classes.bookingContainer} item xs>\n              <Paper\n                className={classes.paper}\n                elevation={0}\n                style={{ fontFamily: \"Roboto\" }}\n              >\n                <div>\n                  <GridList cellHeight={600} className={classes.gridList}>\n                    {/* {this.state.isFetching && this.state.cardsArray.length ? (<Loader />) : ( <h1 className=\"text-center\" style={{ width: \"100%\" }}>\n                        No Spots to Display\n                      </h1>) }   */}\n\n                    {this.state.isFetching && <Loader />}\n\n                    {!this.state.markerData.length && !this.state.isFetching ? (\n                      <h1 className=\"text-center\" style={{ width: \"100%\" }}>\n                        No Spots to Display\n                      </h1>\n                    ) : (\n                      <div id=\"testing\" style={{ width: \"100%\" }}>\n                        {this.state.cardsArray.map((spot, i) => {\n                          return (\n                            <div>\n                              <div className={classes.root}>\n                                <Paper className={classes.paper}>\n                                  <Grid container spacing={16}>\n                                    <Grid item>\n                                      <ButtonBase\n                                        className={classes.image}\n                                        key={spot[0]._id}\n                                        title={spot[0].title}\n                                        href={spot[0].photo}\n                                        street={spot[0].streetName}\n                                        neighborhood={spot[0].neighborhood}\n                                        id={spot[0]._id}\n                                        city={spot[0].city}\n                                        state={spot[0].state}\n                                        zipcode={spot[0].zipcode}\n                                        address={spot[0].address}\n                                        price={spot[0].price}\n                                        parkingtype={spot[0].parkingtype}\n                                        handleBookClick={this.handleBookClick}\n                                      >\n                                        <img\n                                          className={classes.img}\n                                          alt=\"complex\"\n                                          src={spot[0].photo}\n                                        />\n                                      </ButtonBase>\n                                    </Grid>\n                                    <Grid item xs={12} sm container>\n                                      <Grid item xs spacing={16}>\n                                        <Grid item xs>\n                                          <Typography\n                                            gutterBottom\n                                            variant=\"heading\"\n                                            style={{\n                                              paddingTop: \"12px\",\n                                              color: \"#545454\"\n                                            }}\n                                          >\n                                            {i + 1}. {spot[0].title}\n                                          </Typography>\n                                          <Typography gutterBottom>\n                                            {spot[0].streetName}\n                                          </Typography>\n                                          <Typography color=\"textSecondary\">\n                                            {spot[0].neighborhood}\n                                          </Typography>\n                                          <Typography color=\"textSecondary\">\n                                            {spot[0].parkingtype}\n                                          </Typography>\n                                        </Grid>\n                                        <Grid item>\n                                          <Button\n                                            variant=\"outlined\"\n                                            color=\"primary\"\n                                            aria-label=\"Booking Summary\"\n                                            className={classes.button}\n                                            onClick={event => {\n                                              event.preventDefault();\n                                              this.handleClickOpen(\n                                                spot[0]._id,\n                                                spot[0].address,\n                                                spot[0].title,\n                                                spot[0].photo,\n                                                spot[0].city,\n                                                spot[0].state,\n                                                spot[0].zipcode,\n                                                spot[0].price\n                                              );\n                                            }}\n                                          >\n                                            Book Now\n                                          </Button>\n                                        </Grid>\n                                      </Grid>\n                                      <Grid item style={{ margin: \"10px\" }}>\n                                        <Typography\n                                          variant=\"subtitle1\"\n                                          style={{\n                                            color: \"#DB5461\",\n                                            fontWeight: \"bold\",\n                                            fontSize: \"20px\"\n                                          }}\n                                        >\n                                          ${spot[0].price}\n                                        </Typography>\n                                        <Typography\n                                          variant=\"subtitle1\"\n                                          style={{ fontSize: \"10px\" }}\n                                        >\n                                          per day\n                                        </Typography>\n                                      </Grid>\n                                    </Grid>\n                                  </Grid>\n                                  <Dialog\n                                    open={this.state.open}\n                                    handleClickOpen={this.handleClickOpen}\n                                    fullWidth={this.state.fullWidth}\n                                    maxWidth={this.state.maxWidth}\n                                  >\n                                    <DialogTitle\n                                      id=\"form-dialog-title\"\n                                      style={{\n                                        display: \"flex\",\n                                        flexDirection: \"column\",\n                                        alignItems: \"center\",\n                                        color: \"93b7be\",\n                                        fontFamily: \"Roboto\"\n                                      }}\n                                    >\n                                      <CheckCircleIcon\n                                        style={{\n                                          color: \"93b7be\",\n                                          width: 75,\n                                          height: 75,\n                                          marginTop: 20\n                                        }}\n                                      />\n                                    </DialogTitle>\n                                    <DialogContent\n                                      style={{\n                                        display: \"flex\",\n                                        flexDirection: \"column\",\n                                        alignItems: \"center\",\n                                        fontFamily: \"Roboto\"\n                                      }}\n                                    >\n                                      <Typography\n                                        style={{\n                                          color: \"#93b7be\",\n                                          fontSize: 20,\n                                          fontWeight: \"bold\"\n                                        }}\n                                      >\n                                        BOOKING CONFIRMATION\n                                      </Typography>\n                                      <Card\n                                        elevation={0}\n                                        style={{\n                                          padding: \"10px 60px\",\n                                          border: \"1px solid  #93b7be\",\n                                          marginTop: 20\n                                        }}\n                                      >\n                                        <h3 style={{ color: \"#545454\" }}>\n                                          {this.state.title.toUpperCase()}\n                                        </h3>\n                                        <p>{this.state.address}</p>\n                                        <p>\n                                          {this.state.city + \", \"}\n                                          <span>{this.state.state + \", \"}</span>\n                                          <span>{this.state.zipcode}</span>\n                                        </p>\n                                        <h3 style={{ color: \"#545454\" }}>\n                                          Dates Booked:\n                                        </h3>\n                                        <p>\n                                          {this.state.selectedDays.map(date => {\n                                            return (\n                                              <p>\n                                                {moment(date).format(\"LL\")}{\" \"}\n                                              </p>\n                                            );\n                                          })}\n                                        </p>\n                                        <h3 style={{ color: \"#545454\" }}>\n                                          Total:\n                                          <span>\n                                            {\" \"}\n                                            $\n                                            {this.state.price *\n                                              this.state.selectedDays.length}\n                                          </span>\n                                        </h3>\n                                      </Card>\n                                    </DialogContent>\n                                    <DialogActions>\n                                      <Button\n                                        onClick={event => {\n                                          event.preventDefault();\n                                          this.handleBookClick(\n                                            this.state.id,\n                                            this.state.address,\n                                            this.state.title,\n                                            this.state.href,\n                                            this.state.city,\n                                            this.state.state,\n                                            this.state.zipcode,\n                                            this.state.price\n                                          );\n                                        }}\n                                        variant=\"outlined\"\n                                        color=\"secondary\"\n                                      >\n                                        Confirm Booking\n                                      </Button>\n                                      <Button\n                                        onClick={event => {\n                                          event.preventDefault();\n                                          this.handleClose();\n                                        }}\n                                        variant=\"outlined\"\n                                        color=\"primary\"\n                                      >\n                                        Cancel\n                                      </Button>\n                                    </DialogActions>\n                                  </Dialog>\n                                </Paper>\n                              </div>\n                            </div>\n                          );\n                        })}\n                      </div>\n                    )}\n                  </GridList>\n                </div>\n              </Paper>\n            </Grid>\n            <Grid className={classes.mapContainer} item xs>\n              <Paper className={classes.paper} elevation={0}>\n                <main>\n                  <div id=\"map\"/>\n                </main>\n              </Paper>\n            </Grid>\n          </Grid>\n        </div>\n      </div>\n    );\n  }\n}\nSearchResult.propTypes = {\n  classes: PropTypes.object.isRequired\n};\nfunction loadScript(url) {\n  let index = window.document.getElementsByTagName(\"script\")[0];\n  let script = window.document.createElement(\"script\");\n  script.src = url;\n  script.async = true;\n  script.defer = true;\n  index.parentNode.insertBefore(script, index);\n}\nexport default withStyles(styles)(SearchResult);\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- client/src/pages/SearchResult/index.js	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ client/src/pages/SearchResult/index.js	(date 1580326306844)
+@@ -30,7 +30,7 @@
+ import GridList from "@material-ui/core/GridList";
+ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+ import Loader from "../../components/Loader";
+-import {getListingById} from "./functions";
++import {findAllAvailAndNear} from "./functions";
+ //Material UI Popover
+ import Popover from "@material-ui/core/Popover";
+ import DateRangeIcon from "@material-ui/icons/DateRange";
+@@ -164,7 +164,7 @@
+ 
+   componentDidMount() {
+     // Setup map render
+-    console.log("Setting up the Map");
++    console.log("Mounted and setting up the Map Script");
+     loadScript(
+         "https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo&callback=initializeMap"
+     );
+@@ -190,7 +190,8 @@
+   componentDidUpdate(prevProps, prevState, snapshot) {
+     if (prevState.longitude !== this.state.longitude || prevState.latitude !== this.state.latitude) {
+       console.log("State Changed for Long and Latitude", this.state.longitude, this.state.latitude, "Previous Data: ", prevState.longitude, prevState.latitude);
+-      // We only care to find listing if the Long/Late Change
++      // Find Relevant Listings can just be called anytime now. As features change or UX needs change we have a safe
++      // function that just takes the state long / lat and finds listings. It's not connected to any other calls.
+       this.findRelevantListings();
+     }
+   }
+@@ -201,8 +202,6 @@
+     });
+   };
+ 
+-
+-
+   handleClickOpen = (id, address, title, href, city, state, zipcode, price) => {
+     this.setState({
+       open: true,
+@@ -316,39 +315,38 @@
+     const formattedDates = this.state.selectedDays.map(date =>
+         date.toISOString()
+     );
+-    API.getAvailableListings(formattedDates)
++    findAllAvailAndNear(formattedDates, [this.state.longitude, this.state.latitude])
+         .then(res => {
++
+           this.setState({isFetching: false});
+-          res.data.map(availability => {
+-            getListingById(availability.listing).then(listing => {
+-              console.log("Listing Fetched by Id: ", listing);
+-              const data = listing.data[0];
+-              this.setState({
+-                cardsArray: [...this.state.cardsArray, [data]],
+-                markerData: [
+-                  ...this.state.markerData,
+-                  [
+-                    data.address,
+-                    data.location.coordinates[1],
+-                    data.location.coordinates[0],
+-                    data.title,
+-                    data.streetName,
+-                    data.neighborhood,
+-                    data.photo,
+-                    data._id,
+-                    data.city,
+-                    data.state,
+-                    data.zipcode,
+-                    data.price,
+-                    data.parkingtype
+-                  ]
+-                ]
+-              });
+-            })
+-          })
+-        }).then(() => {
+-      setTimeout(this.drawOnTheMap, 2000);
+-    });
++          // res.data.map(availability => {
++          //   getListingById(availability.listing).then(listing => {
++          //     console.log("Listing Fetched by Id: ", listing);
++          //     const data = listing.data[0];
++          //     this.setState({
++          //       cardsArray: [...this.state.cardsArray, [data]],
++          //       markerData: [
++          //         ...this.state.markerData,
++          //         [
++          //           data.address,
++          //           data.location.coordinates[1],
++          //           data.location.coordinates[0],
++          //           data.title,
++          //           data.streetName,
++          //           data.neighborhood,
++          //           data.photo,
++          //           data._id,
++          //           data.city,
++          //           data.state,
++          //           data.zipcode,
++          //           data.price,
++          //           data.parkingtype
++          //         ]
++          //       ]
++          //     });
++          //   })
++          // })
++        })
+   };
+ 
+   drawOnTheMap = () => {
+@@ -406,7 +404,6 @@
+ 
+   render() {
+     const { classes } = this.props;
+-    const { spacing } = this.state;
+     const { anchorEl } = this.state;
+     const open = Boolean(anchorEl);
+     return (
+@@ -476,7 +473,6 @@
+                 )}
+               </form>
+               <Button
+-                className={classes.searchButton}
+                 onClick={this.handleSubmitSearch}
+               >
+                 <SearchIcon />
+@@ -517,42 +513,37 @@
+                 style={{ fontFamily: "Roboto" }}
+               >
+                 <div>
+-                  <GridList cellHeight={600} className={classes.gridList}>
+-                    {/* {this.state.isFetching && this.state.cardsArray.length ? (<Loader />) : ( <h1 className="text-center" style={{ width: "100%" }}>
+-                        No Spots to Display
+-                      </h1>) }   */}
+-
+-                    {this.state.isFetching && <Loader />}
+-
++                  <GridList cellHeight={600}>
++                    {this.state.isFetching && <Loader/>}
+                     {!this.state.markerData.length && !this.state.isFetching ? (
+-                      <h1 className="text-center" style={{ width: "100%" }}>
+-                        No Spots to Display
+-                      </h1>
++                        <h1 className="text-center" style={{width: "100%"}}>
++                          No Spots to Display
++                        </h1>
+                     ) : (
+-                      <div id="testing" style={{ width: "100%" }}>
+-                        {this.state.cardsArray.map((spot, i) => {
+-                          return (
+-                            <div>
+-                              <div className={classes.root}>
+-                                <Paper className={classes.paper}>
+-                                  <Grid container spacing={16}>
+-                                    <Grid item>
+-                                      <ButtonBase
+-                                        className={classes.image}
+-                                        key={spot[0]._id}
+-                                        title={spot[0].title}
+-                                        href={spot[0].photo}
+-                                        street={spot[0].streetName}
+-                                        neighborhood={spot[0].neighborhood}
+-                                        id={spot[0]._id}
+-                                        city={spot[0].city}
+-                                        state={spot[0].state}
+-                                        zipcode={spot[0].zipcode}
+-                                        address={spot[0].address}
+-                                        price={spot[0].price}
+-                                        parkingtype={spot[0].parkingtype}
+-                                        handleBookClick={this.handleBookClick}
+-                                      >
++                        <div id="testing" style={{width: "100%"}}>
++                          {this.state.cardsArray.map((spot, i) => {
++                            return (
++                                <div>
++                                  <div className={classes.root}>
++                                    <Paper className={classes.paper}>
++                                      <Grid container spacing={16}>
++                                        <Grid item>
++                                          <ButtonBase
++                                              className={classes.image}
++                                              key={spot[0]._id}
++                                              title={spot[0].title}
++                                              href={spot[0].photo}
++                                              street={spot[0].streetName}
++                                              neighborhood={spot[0].neighborhood}
++                                              id={spot[0]._id}
++                                              city={spot[0].city}
++                                              state={spot[0].state}
++                                              zipcode={spot[0].zipcode}
++                                              address={spot[0].address}
++                                              price={spot[0].price}
++                                              parkingtype={spot[0].parkingtype}
++                                              handleBookClick={this.handleBookClick}
++                                          >
+                                         <img
+                                           className={classes.img}
+                                           alt="complex"
+Index: client/package-lock.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- client/package-lock.json	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ client/package-lock.json	(date 1580326306844)
+@@ -12796,7 +12796,7 @@
+     "prop-types": {
+       "version": "15.7.2",
+       "resolved": "https://registry.npmjs.org/prop-types/-/prop-types-15.7.2.tgz",
+-      "integrity": "sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==",
++      "integrity": "sha1-UsQedbjIfnK52TYOAga5ncv/psU=",
+       "requires": {
+         "loose-envify": "^1.4.0",
+         "object-assign": "^4.1.1",
+@@ -13126,7 +13126,7 @@
+     "react-is": {
+       "version": "16.12.0",
+       "resolved": "https://registry.npmjs.org/react-is/-/react-is-16.12.0.tgz",
+-      "integrity": "sha512-rPCkf/mWBtKc97aLL9/txD8DZdemK0vkA3JMLShjlJB3Pj3s+lpf1KaBzMfQrAmhMQB0n1cU/SUGgKKBCe837Q=="
++      "integrity": "sha1-LMD+D7p0LZf9UnxCoTvsTusGJBw="
+     },
+     "react-router": {
+       "version": "4.3.1",
+Index: client/src/utils/API.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import axios from \"axios\";\n\nexport default {\n  saveListing: function(listingData) {\n    return axios.post(\"/api/listing\", listingData);\n  },\n  getUser: function() {\n    return axios.get(\"/user/\");\n  },\n  getListings: function() {\n    return axios.get(\"/api/listing\");\n  },\n  getListingsForProf: function() {\n    return axios.get(\"/api/listing/profile\");\n  },\n  getReservForProf: function(id) {\n    // console.log(id);\n    return axios.get(\"/api/listing/reserved/\");\n  },\n  getListingById: function(id) {\n    return axios.get(\"api/listing\", {\n      params: {\n        id\n      }\n    });\n  },\n  getListingByIdAndProximity: async function(data) {\n    return axios.get(\"api/listing/near\", {\n      params: {\n        data\n      }\n    });\n  },\n  updateAvailability: function(availabilityData) {\n    console.log(\"updateAvailability.API availDATA\", availabilityData);\n    return axios.put(\"api/availability\", availabilityData);\n  },\n  createAvailability: function (availabilityData) {\n    return axios.post(\"api/availability\", availabilityData);\n  },\n  deleteAvailability: function (id) {\n    console.log(\"ksmdkamsd\", id)\n    return axios.delete(`/api/availability/${id}`);\n  },\n  getAvailableListings: function (dates) {\n    return axios.get(\"api/availability\", {\n      params: {\n        dates\n      }\n    });\n  },\n  editListing: function (listing) {\n    return axios.put(\"api/listing/profile\", {listing});\n  },\n  deleteListing: function (id) {\n    return axios.delete(\"/api/listing/profile/\" + id);\n  },\n  getAvailabilitiesByListingId: function(id) {\n    return axios.get(`/api/availability/${id}`);\n  }\n};\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- client/src/utils/API.js	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ client/src/utils/API.js	(date 1580326306844)
+@@ -13,17 +13,9 @@
+   getListingsForProf: function() {
+     return axios.get("/api/listing/profile");
+   },
+-  getReservForProf: function(id) {
+-    // console.log(id);
++  getReservForProf: function () {
+     return axios.get("/api/listing/reserved/");
+   },
+-  getListingById: function(id) {
+-    return axios.get("api/listing", {
+-      params: {
+-        id
+-      }
+-    });
+-  },
+   getListingByIdAndProximity: async function(data) {
+     return axios.get("api/listing/near", {
+       params: {
+@@ -39,7 +31,7 @@
+     return axios.post("api/availability", availabilityData);
+   },
+   deleteAvailability: function (id) {
+-    console.log("ksmdkamsd", id)
++    console.log("Deleting Id: ", id);
+     return axios.delete(`/api/availability/${id}`);
+   },
+   getAvailableListings: function (dates) {
+Index: client/src/App.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, { Component } from \"react\";\nimport { BrowserRouter as Router, Route, Switch } from \"react-router-dom\";\nimport axios from \"axios\";\nimport SignUp from \"./pages/SignUp/index\";\nimport SignIn from \"./pages/Signin/index\";\nimport Main from \"./pages/Main/index\";\nimport AddListing from \"./pages/AddListing\";\nimport Calendar from \"./pages/Calendar\";\nimport Profile from \"./pages/Profile\";\nimport SearchResult from \"./pages/SearchResult\";\n\nclass App extends Component {\n  constructor() {\n    super();\n    this.state = {\n      loggedIn: false,\n      username: null,\n      id: null,\n      role: null\n    };\n\n    this.getUser = this.getUser.bind(this);\n    this.componentDidMount = this.componentDidMount.bind(this);\n    this.updateUser = this.updateUser.bind(this);\n  }\n\n  componentDidMount() {\n    this.getUser();\n  }\n\n  updateUser(userObject) {\n    this.setState(userObject);\n  }\n\n  getUser() {\n    axios.get(\"/user/\").then(response => {\n      console.log(response.data);\n      if (response.data.user) {\n        this.setState({\n          loggedIn: true,\n          username: response.data.user.username,\n          id: response.data.user._id,\n          role: response.data.user.role\n        });\n      } else {\n        console.log(\"Get user: no user\");\n        this.setState({\n          loggedIn: false,\n          username: null\n        });\n      }\n    });\n  }\n\n  render() {\n    return (\n      <Router>\n        <div>\n          <Switch>\n            <Route exact path=\"/main\" component={Main} />\n            <Route exact path=\"/\" component={SignIn} />\n            <Route exact path=\"/signup\" component={SignUp} />\n            <Route exact path=\"/signin\" component={SignIn} />\n            <Route exact path=\"/addlisting\" component={AddListing} />\n            <Route exact path=\"/profile\" component={Profile} />\n            <Route exact path=\"/searchresult\" component={SearchResult} />\n            <Route exact path=\"/calendar\" component={Calendar} />\n          </Switch>\n        </div>\n      </Router>\n    );\n  }\n}\n\nexport default App;\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- client/src/App.js	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ client/src/App.js	(date 1580326306844)
+@@ -1,5 +1,5 @@
+-import React, { Component } from "react";
+-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
++import React, {Component} from "react";
++import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+ import axios from "axios";
+ import SignUp from "./pages/SignUp/index";
+ import SignIn from "./pages/Signin/index";
+@@ -16,11 +16,11 @@
+       loggedIn: false,
+       username: null,
+       id: null,
++      _id: '',
+       role: null
+     };
+ 
+     this.getUser = this.getUser.bind(this);
+-    this.componentDidMount = this.componentDidMount.bind(this);
+     this.updateUser = this.updateUser.bind(this);
+   }
+ 
+@@ -33,7 +33,7 @@
+   }
+ 
+   getUser() {
+-    axios.get("/user/").then(response => {
++    axios.get("/user/:id").then(response => {
+       console.log(response.data);
+       if (response.data.user) {
+         this.setState({
+Index: client/src/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React from \"react\";\nimport ReactDOM from \"react-dom\";\nimport App from \"./App\";\nimport \"./index.css\";\nimport CssBaseline from \"@material-ui/core/CssBaseline\";\nimport { MuiThemeProvider } from \"@material-ui/core/styles\";\nimport theme from \"./theme\";\n\n// ReactDOM.render(<App />, document.getElementById(\"root\"));\n\nReactDOM.render(\n  <MuiThemeProvider theme={theme}>\n    {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}\n    <CssBaseline />\n    <App />\n  </MuiThemeProvider>,\n  document.getElementById(\"root\")\n);\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- client/src/index.js	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ client/src/index.js	(date 1580326306844)
+@@ -3,11 +3,9 @@
+ import App from "./App";
+ import "./index.css";
+ import CssBaseline from "@material-ui/core/CssBaseline";
+-import { MuiThemeProvider } from "@material-ui/core/styles";
++import {MuiThemeProvider} from "@material-ui/core/styles";
+ import theme from "./theme";
+ 
+-// ReactDOM.render(<App />, document.getElementById("root"));
+-
+ ReactDOM.render(
+   <MuiThemeProvider theme={theme}>
+     {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+Index: client/dbconnection/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const mongoose = require('mongoose')\nmongoose.Promise = global.Promise\n\nconst uri = (process.env.MONGODB_URI || \"mongodb://localhost/parky\")\n\nmongoose.connect(uri).then(\n    () => { \n        console.log('Connected to Mongo');\n        \n    },\n    err => {\n         console.log(err);\n        }\n  );\n\nmodule.exports = mongoose.connection
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- client/dbconnection/index.js	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ client/dbconnection/index.js	(date 1580326306840)
+@@ -1,16 +1,14 @@
+-const mongoose = require('mongoose')
+-mongoose.Promise = global.Promise
++const mongoose = require('mongoose');
++mongoose.Promise = global.Promise;
+ 
+-const uri = (process.env.MONGODB_URI || "mongodb://localhost/parky")
++const uri = (process.env.MONGODB_URI || "mongodb://localhost/parky");
+ 
+-mongoose.connect(uri).then(
+-    () => { 
+-        console.log('Connected to Mongo');
+-        
++mongoose.connect(uri).then(() => {
++        console.log('Connected to Mongo')
+     },
+     err => {
+-         console.log(err);
+-        }
+-  );
++        console.log(err)
++    }
++);
+ 
+-module.exports = mongoose.connection
+\ No newline at end of file
++module.exports = mongoose.connection;
+\ No newline at end of file
+Index: client/src/theme.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import { red, blueGrey } from \"@material-ui/core/colors\";\nimport { createMuiTheme } from \"@material-ui/core/styles\";\n\n// A custom theme for this app\nconst theme = createMuiTheme({\n  palette: {\n    primary: {\n      main: \"#93b7be\"\n    },\n    secondary: {\n      main: \"#84817a\"\n    },\n    error: {\n      main: \"#f1ab86\"\n    },\n    background: {\n      default: \"#f1f1f1\"\n    }\n  },\n  typography: {\n    // Use the system font instead of the default Roboto font.\n    navFont: [\"'Lobster', cursive\"].join(\",\")\n  }\n});\n\nexport default theme;\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- client/src/theme.js	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ client/src/theme.js	(date 1580326306844)
+@@ -1,5 +1,4 @@
+-import { red, blueGrey } from "@material-ui/core/colors";
+-import { createMuiTheme } from "@material-ui/core/styles";
++import {createMuiTheme} from "@material-ui/core/styles";
+ 
+ // A custom theme for this app
+ const theme = createMuiTheme({
+Index: controllers/listingController.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const db = require(\"../models\");\nconst mongoose = require(\"mongoose\");\n\nmodule.exports = {\n  findAll: function(req, res) {\n    db.Listing.find({ _id: req.query.id })\n      .then(dbModel => res.json(dbModel))\n      .catch(err => res.status(422).json(err));\n  },\n  findReserved: function(req, res) {\n    db.Availability.find({ renter: { $ne: null } })\n      .then(dbModel => res.json(dbModel))\n      .catch(err => res.status(422).json(err));\n  },\n  findReservedById: function(req, res) {\n    db.Availability.find({ renter: req.query.id })\n      .then(dbModel => res.json(dbModel))\n      .catch(err => res.status(422).json(err));\n  },\n  createListing: function(req, res) {\n    console.log(\"+++++++++++REQ.BODY CREATE LISTING+++++++++++++\")\n    console.dir(req.body);\n    console.log(\"--\")\n    console.dir(req.body.location.coordinates[0]); \n    console.log(\"++++++++++++++++++++++++\")\n    var a = req.body.location;\n    var aTYPEOF = typeof a; \n    console.log(\"typeof is: \", a);\n\n    req.body.location.type = 'Point'\n\n    db.Listing.create(req.body)\n      .then(dbModel => res.json(dbModel))\n      .catch(err => res.status(422).json(err));\n  },\n  createAvailability: function(req, res) {\n    db.Availability.create(req.body)\n      .then(dbModel => res.json(dbModel))\n      .catch(err => res.status(422).json(err));\n  },\n  findAllAvailable: function(req, res) {\n    console.log(\"Starting to Find All Available\");\n    const dates = req.query.dates;\n    const startDay = dates[0];\n    const endDay = dates.length === 1 ? startDay : dates[req.query.dates.length - 1];\n    console.log(\"startDay is\", startDay, \"endDay is\", endDay);\n    db.Availability.find({\n      date: {\n        $gte: startDay,\n        $lte: endDay\n      },\n      renter: null\n    })\n    .then(dbModel => {\n      res.json(dbModel);\n    }).catch(err => res.status(422).json(err));\n  },\n  findAllProfListing: function(req, res) {\n    db.Listing.find(req.query)\n      .then(dbModel => res.json(dbModel))\n      .catch(err => res.status(422).json(err));\n  },\n  editListing: function(req, res) {\n    console.dir(req.body);\n    console.dir(req.body.listing.currentModalId);\n    db.Listing.findOneAndUpdate(\n      { _id: req.body.listing.currentModalId },\n      {\n        $set: {\n          title: req.body.listing.title,\n          address: req.body.listing.address,\n          city: req.body.listing.city,\n          state: req.body.listing.state,\n          zipcode: req.body.listing.zipcode\n        }\n      }\n    )\n      .then(dbModel => res.json(dbModel))\n      .catch(err => res.json(err));\n  },\n  findAllNear: function(req, res) {\n    console.log(\"Find all near start\");\n    var long = req.query.data[0];\n    var lat = req.query.data[1];\n\n    long.type = 'Point';\n    lat.type = 'Point';\n\n    var floatLong = parseFloat(long);\n    var floatLat = parseFloat(lat);\n\n    console.log(\"Find all near end\");\n    db.Listing.syncIndexes().then((index) => {\n      console.log(\"indexes:\", index);\n    });\n    db.Listing.find(\n        {\n          location:\n              {\n                $near:\n                    {\n                      $maxDistance: 900,\n                      $geometry: {\n                        type: \"Point\",\n                        coordinates: [floatLong, floatLat]\n                      }\n                    }\n              }\n        })\n        .find((error, results) => {\n          if (error) console.log(error);\n        })\n      .then(data => res.json(data))\n      .catch(err => res.status(422).json(err))\n      \n  },\n  updateAvailabilityUser: function(req, res) {\n    console.log(\"UPDATE USER\", req.body);\n\n    const earning = req.body.price\n    const date = new Date()\n    const earningObject = { amount: earning, date: date}\n\n    console.log(\"line 154: \", req.body.renter); \n\n    //Find a listing and push an earning into it's earning array\n    db.Listing.findOneAndUpdate({_id: req.body.listing}, {$push: {earnings: earningObject}}, {\"new\": true, \"upsert\": true})\n    .then(() => {\n      // Find an availability and update it with new availability info\n      console.log(\"req.body inside of findeOne\", req.body);\n      db.Availability.findOneAndUpdate(\n        {\n          listing: req.body.listing,\n          date: req.body.date\n        },\n        {\n          $set: {\n            renter: mongoose.Types.ObjectId(req.body.userId),\n            address: req.body.address,\n            title: req.body.title,\n            photo: req.body.photo,\n            price: req.body.price\n          }\n        }\n      )\n      .then(function(dbListing) {\n        res.json(dbListing);\n      })\n\n\n    })\n    .catch((error) => {\n      res.status(400).json({\n        error: error\n      })\n    })\n  },\n  deleteListing: function(req, res) {\n    db.Listing.findById({ _id: req.params.id })\n      .then(dbModel => dbModel.deleteOne())\n      .then(dbModel => res.json(dbModel))\n      .catch(err => res.status(422).json(err));\n  },\n  getAvailabilityByListingId: function(req, res) {\n    const {id} = req.params\n    db.Availability.find({listing: id})\n    .then(dbModel => res.json(dbModel))\n    .catch(err => res.status(422).json(err));\n  },\n  deleteAvailability: function (req, res) {\n    console.log(\"req.params deleteAvailability\", req.params)\n    const {id} = req.params\n    db.Availability.findOneAndUpdate({_id: id}, {$set: {renter: null, price: 0}})\n        .then(dbModel => res.json(dbModel))\n        .catch(err => res.status(422).json(err));\n  },\n\n  findUser: function (req, res) {\n    db.User.findOne({_id: req.user._id})\n        .then(dbModel => res.json({\n          user: dbModel,\n          userId: dbModel._id\n        }))\n        .catch(err => res.json(err));\n  }\n};\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- controllers/listingController.js	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ controllers/listingController.js	(date 1580326306844)
+@@ -18,20 +18,17 @@
+       .catch(err => res.status(422).json(err));
+   },
+   createListing: function(req, res) {
+-    console.log("+++++++++++REQ.BODY CREATE LISTING+++++++++++++")
++    console.log("+++++++++++REQ.BODY CREATE LISTING+++++++++++++");
+     console.dir(req.body);
+-    console.log("--")
+-    console.dir(req.body.location.coordinates[0]); 
+-    console.log("++++++++++++++++++++++++")
+-    var a = req.body.location;
+-    var aTYPEOF = typeof a; 
+-    console.log("typeof is: ", a);
++    console.log("--");
++    console.dir(req.body.location.coordinates[0]);
++    console.log("++++++++++++++++++++++++");
+ 
+-    req.body.location.type = 'Point'
++    req.body.location.type = 'Point';
+ 
+     db.Listing.create(req.body)
+-      .then(dbModel => res.json(dbModel))
+-      .catch(err => res.status(422).json(err));
++        .then(dbModel => res.json(dbModel))
++        .catch(err => res.status(422).json(err));
+   },
+   createAvailability: function(req, res) {
+     db.Availability.create(req.body)
+@@ -50,7 +47,7 @@
+         $lte: endDay
+       },
+       renter: null
+-    })
++    }).populate('listing')
+     .then(dbModel => {
+       res.json(dbModel);
+     }).catch(err => res.status(422).json(err));
+@@ -93,63 +90,55 @@
+     db.Listing.syncIndexes().then((index) => {
+       console.log("indexes:", index);
+     });
+-    db.Listing.find(
+-        {
+-          location:
+-              {
+-                $near:
+-                    {
+-                      $maxDistance: 900,
+-                      $geometry: {
+-                        type: "Point",
+-                        coordinates: [floatLong, floatLat]
+-                      }
+-                    }
+-              }
++    db.Listing
++        .find({
++          location: {
++            $near: {
++              $maxDistance: 900,
++              $geometry: {
++                type: "Point",
++                coordinates: [floatLong, floatLat]
++              }
++            }
++          }
+         })
+-        .find((error, results) => {
++        .find((error) => {
+           if (error) console.log(error);
+         })
+-      .then(data => res.json(data))
+-      .catch(err => res.status(422).json(err))
+-      
++        .then(data => res.json(data))
++        .catch(err => res.status(422).json(err.message))
+   },
+   updateAvailabilityUser: function(req, res) {
+     console.log("UPDATE USER", req.body);
+-
+-    const earning = req.body.price
+-    const date = new Date()
+-    const earningObject = { amount: earning, date: date}
+-
+-    console.log("line 154: ", req.body.renter); 
+-
++    const earning = req.body.price;
++    const date = new Date();
++    const earningObject = {amount: earning, date: date};
++    console.log("line 154: ", req.body.renter);
+     //Find a listing and push an earning into it's earning array
+-    db.Listing.findOneAndUpdate({_id: req.body.listing}, {$push: {earnings: earningObject}}, {"new": true, "upsert": true})
+-    .then(() => {
++    db.Listing.findOneAndUpdate({_id: req.body.listing}, {$push: {earnings: earningObject}}, {
++      "new": true,
++      "upsert": true
++    }).then(() => {
+       // Find an availability and update it with new availability info
+       console.log("req.body inside of findeOne", req.body);
+       db.Availability.findOneAndUpdate(
+-        {
+-          listing: req.body.listing,
+-          date: req.body.date
+-        },
+-        {
+-          $set: {
+-            renter: mongoose.Types.ObjectId(req.body.userId),
+-            address: req.body.address,
+-            title: req.body.title,
+-            photo: req.body.photo,
+-            price: req.body.price
+-          }
+-        }
+-      )
+-      .then(function(dbListing) {
++          {
++            listing: req.body.listing,
++            date: req.body.date
++          },
++          {
++            $set: {
++              renter: mongoose.Types.ObjectId(req.body.userId),
++              address: req.body.address,
++              title: req.body.title,
++              photo: req.body.photo,
++              price: req.body.price
++            }
++          }
++      ).then(function (dbListing) {
+         res.json(dbListing);
+       })
+-
+-
+-    })
+-    .catch((error) => {
++    }).catch((error) => {
+       res.status(400).json({
+         error: error
+       })
+@@ -162,21 +151,21 @@
+       .catch(err => res.status(422).json(err));
+   },
+   getAvailabilityByListingId: function(req, res) {
+-    const {id} = req.params
++    const {id} = req.params;
+     db.Availability.find({listing: id})
+     .then(dbModel => res.json(dbModel))
+     .catch(err => res.status(422).json(err));
+   },
+   deleteAvailability: function (req, res) {
+-    console.log("req.params deleteAvailability", req.params)
+-    const {id} = req.params
++    console.log("req.params deleteAvailability", req.params);
++    const {id} = req.params;
+     db.Availability.findOneAndUpdate({_id: id}, {$set: {renter: null, price: 0}})
+         .then(dbModel => res.json(dbModel))
+         .catch(err => res.status(422).json(err));
+   },
+-
+   findUser: function (req, res) {
+-    db.User.findOne({_id: req.user._id})
++    console.log("Req for FindUser: ", req.query.id);
++    db.User.findOne({_id: req.query.id})
+         .then(dbModel => res.json({
+           user: dbModel,
+           userId: dbModel._id
+Index: client/src/components/Nav/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, { Component } from \"react\";\nimport { Redirect, Link } from \"react-router-dom\";\nimport axios from \"axios\";\nimport \"./style.css\";\n// Material UI App Bar Imports\nimport PropTypes from \"prop-types\";\nimport { withStyles } from \"@material-ui/core/styles\";\nimport AppBar from \"@material-ui/core/AppBar\";\nimport Toolbar from \"@material-ui/core/Toolbar\";\nimport Typography from \"@material-ui/core/Typography\";\nimport Button from \"@material-ui/core/Button\";\nimport IconButton from \"@material-ui/core/IconButton\";\n// import MenuIcon from \"@material-ui/icons/Menu\";\nimport ExitToAppIcon from \"@material-ui/icons/ExitToApp\";\nimport AccountCircleIcon from \"@material-ui/icons/AccountCircle\";\nimport { withTheme } from \"@material-ui/core/styles\";\n\nconst styles = {\n  root: {\n    flexGrow: 1\n  },\n  grow: {\n    flexGrow: 1\n  },\n  menuButton: {\n    marginLeft: -12,\n    marginRight: 20\n  }\n};\n\nclass Nav extends Component {\n  constructor() {\n    super();\n    this.logout = this.logout.bind(this);\n    this.state = {\n      redirect: false,\n      user: {}\n    };\n  }\n\n  componentDidMount() {\n    this.userInfo().then(response =>\n      this.setState(\n        {\n          user: response.data.user\n        },\n        () => this.tester()\n      )\n    );\n  }\n\n  tester() {\n    console.log(this.state.user);\n  }\n\n  userInfo() {\n    return axios.get(\"/user/\");\n  }\n\n  logout(event) {\n    event.preventDefault();\n    console.log(\"logging out\");\n    axios\n      .post(\"/user/logout\")\n      .then(response => {\n        console.log(response.data);\n        this.setState({ redirect: true });\n      })\n      .catch(error => {\n        console.log(\"Logout error\");\n      });\n  }\n\n  renderRedirect = () => {\n    if (this.state.redirect) {\n      return <Redirect to=\"/signin\" />;\n    }\n  };\n\n  render() {\n    const { classes } = this.props;\n    return (\n      <div className={classes.root}>\n        <AppBar\n          position=\"static\"\n          style={{\n            background: \"#fff5b5\"\n          }}\n          elevation={1}\n        >\n          <Toolbar\n            style={{\n              fontFamily: this.props.theme.typography.navFont\n            }}\n          >\n            <Typography\n              variant=\"h6\"\n              color=\"secondary\"\n              className={classes.grow}\n              style={{ fontFamily: \"Galada\", fontSize: \"34px\" }}\n            >\n              <a href=\"/searchresult\">Parky</a>\n            </Typography>\n            <Button color=\"secondary\" href=\"/searchresult\">\n              Search\n            </Button>\n            <Button color=\"secondary\" href=\"/addlisting\">\n              Create\n            </Button>\n\n            {this.renderRedirect()}\n            <Button color=\"secondary\" title=\"Account\" href=\"/profile\">\n              <AccountCircleIcon />\n            </Button>\n            <Button\n              color=\"secondary\"\n              title=\"Logout\"\n              onClick={this.logout}\n              href=\"/signin\"\n            >\n              <ExitToAppIcon />\n            </Button>\n          </Toolbar>\n        </AppBar>\n      </div>\n    );\n  }\n}\n\nNav.propTypes = {\n  classes: PropTypes.object.isRequired\n};\n\nexport default withStyles(styles)(withTheme()(Nav));\n\n// export default withTheme()(MyComponent);\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- client/src/components/Nav/index.js	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ client/src/components/Nav/index.js	(date 1580326306844)
+@@ -1,19 +1,16 @@
+-import React, { Component } from "react";
+-import { Redirect, Link } from "react-router-dom";
++import React, {Component} from "react";
++import {Redirect} from "react-router-dom";
+ import axios from "axios";
+ import "./style.css";
+ // Material UI App Bar Imports
+ import PropTypes from "prop-types";
+-import { withStyles } from "@material-ui/core/styles";
++import {withStyles, withTheme} from "@material-ui/core/styles";
+ import AppBar from "@material-ui/core/AppBar";
+ import Toolbar from "@material-ui/core/Toolbar";
+ import Typography from "@material-ui/core/Typography";
+ import Button from "@material-ui/core/Button";
+-import IconButton from "@material-ui/core/IconButton";
+-// import MenuIcon from "@material-ui/icons/Menu";
+ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+-import { withTheme } from "@material-ui/core/styles";
+ 
+ const styles = {
+   root: {
+@@ -132,5 +129,3 @@
+ };
+ 
+ export default withStyles(styles)(withTheme()(Nav));
+-
+-// export default withTheme()(MyComponent);
+Index: routes/user.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const express = require('express')\nconst router = express.Router()\nconst User = require('../models/user')\nconst passport = require('../client/src/utils/passport')\nconst listingController = require('../controllers/listingController')\n\nrouter.post('/', (req, res) => {\n    console.log('user signup');\n    const { username, password, firstname, lastname, email, dob, license } = req.body\n    User.findOne({ username: username }, (err, user) => {\n        if (err) {\n            console.log('User.js post error: ', err)\n        } else if (user) {\n            res.json({\n                error: `Sorry, already a user with the username: ${username}`\n            })\n        }\n        else {\n            const newUser = new User({\n                username: username,\n                password: password,\n                firstname: firstname,\n                lastname: lastname,\n                email: email,\n                dob: dob,\n                license: license\n\n            })\n            newUser.save((err, savedUser) => {\n                if (err) return res.json(err)\n                res.json(savedUser)\n            })\n        }\n    })\n})\n\nrouter.post(\n    '/login',\n    function (req, res, next) {\n        console.log(req.body)\n        next()\n    },\n    passport.authenticate('local'),\n    (req, res) => {\n        console.log('logged in', req.user);\n        var userInfo = {\n            username: req.user.username,\n            firstname: req.user.firstname,\n            lastname: req.user.lastname\n\n        };\n        res.send(userInfo);\n    }\n)\n\nrouter.route(\"/\").get(listingController.findUser)\n\n// router.get('/', (req, res) => {\n    \n//     console.log(req.user)\n//     if (req.user) {\n        // res.json({ \n        //     user: req.user,\n        //     userId: req.user._id,\n        //     firstname: req.user.firstname,\n        // })\n//     } else {\n//         res.json({ user: null })\n//     }\n// })\n\nrouter.post('/logout', (req, res) => {\n    if (req.user) {\n        req.logout()\n        res.send({ msg: 'logging out' })\n    } else {\n        res.send({ msg: 'no user to log out' })\n    }\n})\n\nmodule.exports = router
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- routes/user.js	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ routes/user.js	(date 1580326306844)
+@@ -1,21 +1,20 @@
+-const express = require('express')
+-const router = express.Router()
+-const User = require('../models/user')
+-const passport = require('../client/src/utils/passport')
+-const listingController = require('../controllers/listingController')
++const express = require('express');
++const router = express.Router();
++const User = require('../models/user');
++const passport = require('../client/src/utils/passport');
++const listingController = require('../controllers/listingController');
+ 
+ router.post('/', (req, res) => {
+     console.log('user signup');
+-    const { username, password, firstname, lastname, email, dob, license } = req.body
+-    User.findOne({ username: username }, (err, user) => {
++    const {username, password, firstname, lastname, email, dob, license} = req.body;
++    User.findOne({username: username}, (err, user) => {
+         if (err) {
+             console.log('User.js post error: ', err)
+         } else if (user) {
+             res.json({
+                 error: `Sorry, already a user with the username: ${username}`
+             })
+-        }
+-        else {
++        } else {
+             const newUser = new User({
+                 username: username,
+                 password: password,
+@@ -24,20 +23,18 @@
+                 email: email,
+                 dob: dob,
+                 license: license
+-
+-            })
++            });
+             newUser.save((err, savedUser) => {
+-                if (err) return res.json(err)
++                if (err) return res.json(err);
+                 res.json(savedUser)
+             })
+         }
+     })
+-})
+-
++});
+ router.post(
+     '/login',
+     function (req, res, next) {
+-        console.log(req.body)
++        console.log(req.body);
+         next()
+     },
+     passport.authenticate('local'),
+@@ -51,31 +48,15 @@
+         };
+         res.send(userInfo);
+     }
+-)
+-
+-router.route("/").get(listingController.findUser)
+-
+-// router.get('/', (req, res) => {
+-    
+-//     console.log(req.user)
+-//     if (req.user) {
+-        // res.json({ 
+-        //     user: req.user,
+-        //     userId: req.user._id,
+-        //     firstname: req.user.firstname,
+-        // })
+-//     } else {
+-//         res.json({ user: null })
+-//     }
+-// })
+-
++);
++router.route("/:id").get(listingController.findUser);
+ router.post('/logout', (req, res) => {
+     if (req.user) {
+-        req.logout()
+-        res.send({ msg: 'logging out' })
++        req.logout();
++        res.send({msg: 'logging out'})
+     } else {
+-        res.send({ msg: 'no user to log out' })
++        res.send({msg: 'no user to log out'})
+     }
+-})
++});
+ 
+-module.exports = router
+\ No newline at end of file
++module.exports = router;
+Index: models/availability.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const mongoose = require(\"mongoose\");\nconst Schema = mongoose.Schema;\nmongoose.promise = Promise;\n\nconst availabilitySchema = new Schema({\n  date: { type: Date, unique: false, required: false },\n  listing: { type: Schema.Types.ObjectId, ref: \"Listing\" },\n  renter: { type: Schema.Types.ObjectId, default: null},\n  revenue: { type: Number, unqiue: false, required: false },\n  address: { type: String, unique: false, required: false },\n  title: { type: String, unique: false, required: false },\n  photo: {type: String, unique: false, required: false },\n  price: { type: Number, unique: false, required: false, default: 0 }\n\n\n  // reserved: {\n  //   type: String,\n  //   default: false\n  // },\n});\n\nconst Availability = mongoose.model(\"Availability\", availabilitySchema);\nmodule.exports = Availability;\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- models/availability.js	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ models/availability.js	(date 1580326306844)
+@@ -11,12 +11,6 @@
+   title: { type: String, unique: false, required: false },
+   photo: {type: String, unique: false, required: false },
+   price: { type: Number, unique: false, required: false, default: 0 }
+-
+-
+-  // reserved: {
+-  //   type: String,
+-  //   default: false
+-  // },
+ });
+ 
+ const Availability = mongoose.model("Availability", availabilitySchema);
+Index: client/src/pages/Signin/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, { Component } from \"react\";\nimport { Redirect } from \"react-router-dom\";\nimport axios from \"axios\";\nimport \"./style.css\";\nimport App from \"../../App\";\n\n//\nimport Avatar from \"@material-ui/core/Avatar\";\nimport Button from \"@material-ui/core/Button\";\nimport CssBaseline from \"@material-ui/core/CssBaseline\";\nimport TextField from \"@material-ui/core/TextField\";\nimport FormControlLabel from \"@material-ui/core/FormControlLabel\";\nimport Checkbox from \"@material-ui/core/Checkbox\";\nimport Link from \"@material-ui/core/Link\";\nimport Grid from \"@material-ui/core/Grid\";\nimport LockOutlinedIcon from \"@material-ui/icons/LockOutlined\";\nimport Typography from \"@material-ui/core/Typography\";\nimport Paper from \"@material-ui/core/Paper\";\nimport PropTypes from \"prop-types\";\nimport { withStyles } from \"@material-ui/core/styles\";\nimport { spacing } from \"@material-ui/system\";\n//SignUp Dialog\nimport Dialog from \"@material-ui/core/Dialog\";\nimport DialogActions from \"@material-ui/core/DialogActions\";\nimport DialogContent from \"@material-ui/core/DialogContent\";\nimport DialogContentText from \"@material-ui/core/DialogContentText\";\nimport DialogTitle from \"@material-ui/core/DialogTitle\";\n//end Dialog\n\nconst styles = theme => ({\n  paper: {\n    display: \"flex\",\n    flexDirection: \"column\",\n    alignItems: \"center\",\n    backgroundColor: \"#f1f1f1\"\n  },\n  form: {\n    width: \"100%\" // Fix IE 11 issue.\n  },\n  root: {\n    ...theme.mixins.gutters(),\n    paddingTop: theme.spacing.unit * 2,\n    paddingBottom: theme.spacing.unit * 2\n  },\n  avatar: {\n    margin: \"0 auto\",\n    marginBottom: \"12px\",\n    marginTop: \"12px\",\n    backgroundColor: theme.palette.error.main\n  }\n});\n\nclass LoginForm extends Component {\n  constructor() {\n    super();\n    this.state = {\n      open: false,\n      openInfoModal: false,\n      fullWidth: true,\n      maxWidth: \"sm\",\n      username: \"\",\n      password: \"\",\n      redirectTo: null,\n      firstname: \"\",\n      lastname: \"\",\n      email: \"\",\n      dob: \"\",\n      license: \"\",\n      //error messages\n      usernameError: \"\",\n      passwordError: \"\",\n      firstnameError: \"\",\n      lastnameError: \"\",\n      emailError: \"\",\n      // dobError: \"\",\n      licenseError: \"\"\n      // updateUser: \"\"\n    };\n    this.handleSubmit = this.handleSubmit.bind(this);\n    this.handleChange = this.handleChange.bind(this);\n    this.handleSubmitForm = this.handleSubmitForm.bind(this);\n  }\n  handleClickOpen = () => {\n    this.setState({\n      open: true,\n      usernameError: \"\",\n      passwordError: \"\",\n      firstnameError: \"\",\n      lastnameError: \"\",\n      emailError: \"\",\n      // dobError: \"\",\n      licenseError: \"\"\n    });\n  };\n\n  handleClickOpen2 = () => {\n    this.setState({\n      openInfoModal: true\n    });\n  };\n  handleClose2 = () => {\n    this.setState({ openInfoModal: false });\n  };\n\n  handleClose = () => {\n    this.setState({ open: false });\n  };\n\n  handleChange(event) {\n    this.setState({\n      [event.target.name]: event.target.value\n    });\n  }\n\n  // Form Validation function\n\n  validate = () => {\n    let usernameError = \"\";\n    let passwordError = \"\";\n    let firstnameError = \"\";\n    let lastnameError = \"\";\n    let emailError = \"\";\n    // let dobError = \"\";\n    let licenseError = \"\";\n\n    if (!this.state.username) {\n      usernameError = \"username cannot be empty\";\n    }\n    if (!this.state.firstname) {\n      firstnameError = \"first name cannot be empty\";\n    }\n    if (!this.state.lastname) {\n      lastnameError = \"last name cannot be empty\";\n    }\n    if (!this.state.password) {\n      passwordError = \"no password provided\";\n    }\n    if (isNaN(this.state.license) || !this.state.license) {\n      licenseError = \"invalid license number\";\n    }\n    // if (isNaN(this.state.dob) ||  !this.state.dob) {\n    //   dobError = \"invalid date of birth\"\n    // }\n    if (!this.state.email.includes(\"@\") || !this.state.email) {\n      emailError = \"invalid email\";\n    }\n    if (\n      emailError ||\n      usernameError ||\n      firstnameError ||\n      lastnameError ||\n      passwordError ||\n      licenseError\n    ) {\n      this.setState({\n        emailError,\n        usernameError,\n        firstnameError,\n        lastnameError,\n        passwordError,\n        licenseError\n      });\n      return false;\n    }\n\n    return true;\n  };\n\n  handleSubmit(event) {\n    event.preventDefault();\n    console.log(\"handleSubmit\");\n\n    axios\n      .post(\"/user/login\", {\n        username: this.state.username,\n        password: this.state.password\n      })\n      .then(response => {\n        console.log(\"login response: \");\n        console.log(response);\n        if (response.status === 200) {\n          // update App.js state\n          // this.props.updateUser({\n          //     loggedIn: true,\n          //     username: response.data.username\n          // })\n          // update the state to redirect to home\n          this.setState({\n            redirectTo: \"/searchresult\"\n          });\n        }\n      })\n      .catch(error => {\n        console.log(\"login error: \");\n        console.log(error);\n      });\n  }\n\n  handleSubmitForm(event) {\n    // event.preventDefault();\n\n    //FORM VALIDATION\n    const isValid = this.validate();\n    if (isValid) {\n      console.log(this.state);\n      this.setState({\n        username: \"\",\n        password: \"\",\n        firstname: \"\",\n        lastname: \"\",\n        email: \"\",\n        dob: \"\",\n        license: \"\"\n      });\n\n      axios\n        .post(\"/user/\", {\n          username: this.state.username,\n          password: this.state.password,\n          firstname: this.state.firstname,\n          lastname: this.state.lastname,\n          email: this.state.email,\n          dob: this.state.dob,\n          license: this.state.license\n        })\n        .then(response => {\n          // console.log(response);\n          if (!response.data.errmsg) {\n            console.log(\"successful signup\");\n            this.setState({ open: false });\n          } else {\n            console.log(\"username already taken\");\n          }\n        })\n        .catch(error => {\n          console.log(\"signup error: \");\n          console.log(error);\n        });\n    } else {\n      this.setState({ open: true });\n    }\n  }\n\n  render() {\n    const { classes } = this.props;\n    if (this.state.redirectTo) {\n      return <Redirect to={{ pathname: this.state.redirectTo }} />;\n    } else {\n      return (\n        <Grid\n          container\n          spacing={0}\n          direction=\"column\"\n          alignItems=\"center\"\n          justify=\"center\"\n          style={{\n            minHeight: \"100vh\",\n            backgroundImage:\n              \"url('https://images.unsplash.com/photo-1470224114660-3f6686c562eb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80')\",\n            backgroundSize: \"cover\",\n            backgroundPosition: \"center\",\n            backgroundRepeat: \"no-repeat\"\n          }}\n        >\n          <h1\n            style={{\n              fontFamily: \"Galada\",\n              color: \"white\",\n              fontSize: \"75px\",\n              margin: \"0\",\n              zIndex: 99\n            }}\n          >\n            Parky\n          </h1>\n          <Grid\n            item\n            xs={3}\n            style={{\n              minWidth: \"250px\",\n              zIndex: 99\n            }}\n          >\n            <Paper id=\"signin\" className={classes.root} elevation={1} mx=\"auto\">\n              <Avatar className={classes.avatar} color=\"primary\">\n                <LockOutlinedIcon />\n              </Avatar>\n              <Typography component=\"h1\" variant=\"h5\" align=\"center\">\n                Sign in\n              </Typography>\n              <form className={classes.form} noValidate>\n                <TextField\n                  variant=\"outlined\"\n                  margin=\"normal\"\n                  required\n                  fullWidth\n                  value={this.state.username}\n                  onChange={this.handleChange}\n                  id=\"username\"\n                  label=\"username\"\n                  name=\"username\"\n                  autoComplete=\"username\"\n                  autoFocus\n                />\n\n                <TextField\n                  variant=\"outlined\"\n                  margin=\"normal\"\n                  required\n                  fullWidth\n                  name=\"password\"\n                  label=\"Password\"\n                  type=\"password\"\n                  id=\"password\"\n                  autoComplete=\"current-password\"\n                  value={this.state.password}\n                  onChange={this.handleChange}\n                />\n\n                <Button\n                  type=\"submit\"\n                  fullWidth\n                  variant=\"contained\"\n                  color=\"primary\"\n                  className={classes.submit}\n                  onClick={this.handleSubmit}\n                >\n                  Sign In\n                </Button>\n                <Grid container style={{ margin: \"12px 0 0 0\" }}>\n                  <Grid item>\n                    <Link\n                      style={{ cursor: \"pointer\" }}\n                      onClick={() => this.handleClickOpen()}\n                      variant=\"body2\"\n                    >\n                      {\"Don't have an account? Sign Up\"}\n                    </Link>\n                  </Grid>\n                </Grid>\n              </form>\n\n              <Dialog\n                open={this.state.open}\n                handleClickOpen={this.handleClickOpen}\n                style={{ fontFamily: \"Roboto\" }}\n              >\n                <DialogTitle id=\"form-dialog-title\">\n                  Create an Account\n                </DialogTitle>\n                <DialogContent style={{ fontFamily: \"Roboto\" }}>\n                  <form\n                    className={classes.container}\n                    noValidate\n                    autoComplete=\"off\"\n                  >\n                    <TextField\n                      autoFocus\n                      label=\"Username\"\n                      variant=\"outlined\"\n                      margin=\"normal\"\n                      required\n                      id=\"username\"\n                      name=\"username\"\n                      type=\"text\"\n                      placeholder=\"username\"\n                      fullWidth\n                      value={this.state.username}\n                      onChange={this.handleChange}\n                    />\n                    <div\n                      style={{\n                        fontFamily: \"Roboto\",\n                        color: \"#DB5461\",\n                        fontSize: \"12px\"\n                      }}\n                    >\n                      {this.state.usernameError}\n                    </div>\n                    <TextField\n                      label=\"Password\"\n                      autoFocus\n                      variant=\"outlined\"\n                      margin=\"normal\"\n                      required\n                      name=\"password\"\n                      id=\"password\"\n                      type=\"password\"\n                      fullWidth\n                      value={this.state.password}\n                      onChange={this.handleChange}\n                    />\n                    <div\n                      style={{\n                        fontFamily: \"Roboto\",\n                        color: \"#DB5461\",\n                        fontSize: \"12px\"\n                      }}\n                    >\n                      {this.state.passwordError}\n                    </div>\n                    <TextField\n                      label=\"First Name\"\n                      autoFocus\n                      variant=\"outlined\"\n                      margin=\"normal\"\n                      required\n                      id=\"firstname\"\n                      name=\"firstname\"\n                      placeholder=\"First name\"\n                      fullWidth\n                      value={this.state.firstname}\n                      onChange={this.handleChange}\n                    />\n                    <div\n                      style={{\n                        fontFamily: \"Roboto\",\n                        color: \"#DB5461\",\n                        fontSize: \"12px\"\n                      }}\n                    >\n                      {this.state.firstnameError}\n                    </div>\n                    <TextField\n                      label=\"Last Name\"\n                      autoFocus\n                      variant=\"outlined\"\n                      margin=\"normal\"\n                      required\n                      type=\"text\"\n                      id=\"lastname\"\n                      name=\"lastname\"\n                      placeholder=\"Last name\"\n                      fullWidth\n                      value={this.state.lastname}\n                      onChange={this.handleChange}\n                    />\n                    <div\n                      style={{\n                        fontFamily: \"Roboto\",\n                        color: \"#DB5461\",\n                        fontSize: \"12px\"\n                      }}\n                    >\n                      {this.state.lastnameError}\n                    </div>\n\n                    <TextField\n                      label=\"Email Address\"\n                      autoFocus\n                      variant=\"outlined\"\n                      margin=\"normal\"\n                      required\n                      type=\"email\"\n                      id=\"email\"\n                      name=\"email\"\n                      placeholder=\"email@email.com\"\n                      fullWidth\n                      value={this.state.email}\n                      onChange={this.handleChange}\n                    />\n                    <div\n                      style={{\n                        fontFamily: \"Roboto\",\n                        color: \"#DB5461\",\n                        fontSize: \"12px\"\n                      }}\n                    >\n                      {this.state.emailError}\n                    </div>\n\n                    <TextField\n                      label=\"Date of Birth\"\n                      variant=\"outlined\"\n                      margin=\"normal\"\n                      required\n                      type=\"date\"\n                      defaultValue=\"01-01-1990\"\n                      id=\"dob\"\n                      name=\"dob\"\n                      value={this.state.dob}\n                      onChange={this.handleChange}\n                      fullWidth\n                      InputLabelProps={{\n                        shrink: true\n                      }}\n                    />\n\n                    <TextField\n                      label=\"Driver's License ID #\"\n                      autoFocus\n                      variant=\"outlined\"\n                      margin=\"normal\"\n                      required\n                      type=\"password\"\n                      id=\"license\"\n                      name=\"license\"\n                      fullWidth\n                      placeholder=\"11-111-1111\"\n                      value={this.state.license}\n                      onChange={this.handleChange}\n                    />\n                    <div\n                      style={{\n                        fontFamily: \"Roboto\",\n                        color: \"#DB5461\",\n                        fontSize: \"12px\"\n                      }}\n                    >\n                      {this.state.licenseError}\n                    </div>\n                  </form>\n                </DialogContent>\n                <DialogActions>\n                  <Button\n                    onClick={() => this.handleSubmitForm()}\n                    color=\"error\"\n                    variant=\"outlined\"\n                  >\n                    Sign Up\n                  </Button>\n                  <Button\n                    onClick={() => this.handleClose()}\n                    color=\"error\"\n                    variant=\"outlined\"\n                  >\n                    Cancel\n                  </Button>\n                </DialogActions>\n              </Dialog>\n            </Paper>\n            <Button\n              type=\"submit\"\n              fullWidth\n              variant=\"contained\"\n              color=\"primary\"\n              // open={this.state.openInfoModal}\n              onClick={() => this.handleClickOpen2()}\n              style={{\n                fontFamily: \"Roboto\",\n                margin: \"20px 0\",\n                backgroundColor: \"#f1ab86\",\n                color: \"#f1f1f1\",\n                fontSize: \"20px\",\n                fontWeight: \"bold\"\n              }}\n            >\n              How to Use\n            </Button>\n\n            <Dialog\n              open={this.state.openInfoModal}\n              handleClickOpen={this.handleClickOpen2}\n              style={{\n                fontFamily: \"Roboto\",\n                display: \"flex\",\n                flexDirection: \"column\",\n                alignItems: \"center\",\n                color: \"#84817a\"\n              }}\n              fullWidth={this.state.fullWidth}\n              maxWidth={this.state.maxWidth}\n            >\n              <DialogTitle id=\"info-modal\">\n                <Typography\n                  style={{\n                    color: \"#93b7be\",\n                    fontSize: 20,\n                    fontWeight: \"bold\"\n                  }}\n                >\n                  How to use\n                </Typography>\n              </DialogTitle>\n              <DialogContent style={{ fontFamily: \"Roboto\" }}>\n                <Typography\n                  style={{\n                    fontFamily: \"Roboto\",\n                    color: \"#84817a\",\n                    fontSize: \"16px\"\n                  }}\n                >\n                  Parky is a full-stack web application that allows users to\n                  search, list, and rent private parking spaces.\n                </Typography>\n                <hr />\n                <Typography\n                  style={{\n                    fontFamily: \"Roboto\",\n                    fontWeight: \"bold\",\n                    color: \"#93b7be\",\n                    fontSize: \"16px\",\n                    marginTop: \"5px\"\n                  }}\n                >\n                  1. Create an account, or use our demo accounts.\n                </Typography>\n                <Typography\n                  style={{\n                    fontFamily: \"Roboto\",\n                    fontWeight: \"bold\",\n                    color: \"#ef7939\",\n                    fontSize: \"16px\",\n                    marginTop: \"5px\"\n                  }}\n                >\n                  Power User view:\n                </Typography>\n\n                <Typography\n                  style={{\n                    fontFamily: \"Roboto\",\n                    color: \"#84817a\",\n                    fontSize: \"16px\"\n                  }}\n                >\n                  <strong>Username:</strong> user\n                </Typography>\n                <Typography\n                  style={{\n                    fontFamily: \"Roboto\",\n                    color: \"#84817a\",\n                    fontSize: \"16px\"\n                  }}\n                >\n                  <strong>Password:</strong> test\n                </Typography>\n                <Typography\n                  style={{\n                    fontFamily: \"Roboto\",\n                    fontWeight: \"bold\",\n                    color: \"#ef7939\",\n                    fontSize: \"16px\",\n                    marginTop: \"5px\"\n                  }}\n                >\n                  Listing Owner view:\n                </Typography>\n\n                <Typography\n                  style={{\n                    fontFamily: \"Roboto\",\n                    color: \"#84817a\",\n                    fontSize: \"16px\"\n                  }}\n                >\n                  <strong>Username:</strong> owner\n                </Typography>\n                <Typography\n                  style={{\n                    fontFamily: \"Roboto\",\n                    color: \"#84817a\",\n                    fontSize: \"16px\"\n                  }}\n                >\n                  <strong>Password:</strong> test\n                </Typography>\n                <Typography\n                  style={{\n                    fontFamily: \"Roboto\",\n                    fontWeight: \"bold\",\n                    color: \"#93b7be\",\n                    fontSize: \"16px\",\n                    marginTop: \"5px\"\n                  }}\n                >\n                  <hr />\n                  2. Search for parking spots available for rent by location and\n                  date.\n                </Typography>\n                <Typography\n                  style={{\n                    fontFamily: \"Roboto\",\n\n                    color: \"#84817a\",\n                    fontSize: \"16px\",\n                    marginTop: \"5px\"\n                  }}\n                >\n                  Search for parking spots in June 2020.\n                  <br />\n                  Try using these Philly search queries:\n                </Typography>\n                <Typography\n                  style={{\n                    fontFamily: \"Roboto\",\n\n                    color: \"#84817a\",\n                    fontSize: \"16px\",\n                    marginTop: \"5px\"\n                  }}\n                >\n                  - Queen Village Philadelphia\n                  <br />- 2320 E Gordon St Philadelphia PA 19125\n                </Typography>\n                <Typography\n                  style={{\n                    fontFamily: \"Roboto\",\n                    fontWeight: \"bold\",\n                    color: \"#93b7be\",\n                    fontSize: \"16px\",\n                    marginTop: \"5px\"\n                  }}\n                >\n                  <hr />\n                  3. Create your own listing.\n                </Typography>\n                <Typography\n                  style={{\n                    fontFamily: \"Roboto\",\n\n                    color: \"#84817a\",\n                    fontSize: \"16px\",\n                    marginTop: \"5px\"\n                  }}\n                >\n                  Users can create listings for their own parking spots under\n                  the \"Create\" section of the application.\n                  <br />\n                  You will be guided through submitting listing details, choosing\n                  availability, and confirming the new listing.\n                </Typography>\n                <Typography\n                  style={{\n                    fontFamily: \"Roboto\",\n                    fontWeight: \"bold\",\n                    color: \"#93b7be\",\n                    fontSize: \"16px\",\n                    marginTop: \"5px\"\n                  }}\n                >\n                  <hr />\n                  4. Dashboard.\n                </Typography>\n                <Typography\n                  style={{\n                    fontFamily: \"Roboto\",\n\n                    color: \"#84817a\",\n                    fontSize: \"16px\",\n                    marginTop: \"5px\"\n                  }}\n                >\n                  The Listings view allows users to view, edit and remove all of\n                  their active listings.\n                  <br />\n                  The reservation view allows users to see all upcoming\n                  reservations, cancel reservations entirely or partially.\n                </Typography>\n              </DialogContent>\n              <DialogActions>\n                <Button\n                  onClick={() => this.handleClose2()}\n                  color=\"error\"\n                  variant=\"outlined\"\n                >\n                  Close\n                </Button>\n              </DialogActions>\n            </Dialog>\n          </Grid>\n          <div className=\"overlay\" />\n        </Grid>\n      );\n    }\n  }\n}\n\nLoginForm.propTypes = {\n  classes: PropTypes.object.isRequired\n};\n\nexport default withStyles(styles)(LoginForm);\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- client/src/pages/Signin/index.js	(revision de1301d5a7bbd42c3cc8b9edd28a358dfc7a20ee)
++++ client/src/pages/Signin/index.js	(date 1580326306844)
+@@ -1,29 +1,22 @@
+-import React, { Component } from "react";
+-import { Redirect } from "react-router-dom";
++import React, {Component} from "react";
++import {Redirect} from "react-router-dom";
+ import axios from "axios";
+ import "./style.css";
+-import App from "../../App";
+-
+ //
+ import Avatar from "@material-ui/core/Avatar";
+ import Button from "@material-ui/core/Button";
+-import CssBaseline from "@material-ui/core/CssBaseline";
+ import TextField from "@material-ui/core/TextField";
+-import FormControlLabel from "@material-ui/core/FormControlLabel";
+-import Checkbox from "@material-ui/core/Checkbox";
+ import Link from "@material-ui/core/Link";
+ import Grid from "@material-ui/core/Grid";
+ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+ import Typography from "@material-ui/core/Typography";
+ import Paper from "@material-ui/core/Paper";
+ import PropTypes from "prop-types";
+-import { withStyles } from "@material-ui/core/styles";
+-import { spacing } from "@material-ui/system";
++import {withStyles} from "@material-ui/core/styles";
+ //SignUp Dialog
+ import Dialog from "@material-ui/core/Dialog";
+ import DialogActions from "@material-ui/core/DialogActions";
+ import DialogContent from "@material-ui/core/DialogContent";
+-import DialogContentText from "@material-ui/core/DialogContentText";
+ import DialogTitle from "@material-ui/core/DialogTitle";
+ //end Dialog
+ 
+@@ -72,9 +65,7 @@
+       firstnameError: "",
+       lastnameError: "",
+       emailError: "",
+-      // dobError: "",
+       licenseError: ""
+-      // updateUser: ""
+     };
+     this.handleSubmit = this.handleSubmit.bind(this);
+     this.handleChange = this.handleChange.bind(this);
+@@ -113,14 +104,12 @@
+   }
+ 
+   // Form Validation function
+-
+   validate = () => {
+     let usernameError = "";
+     let passwordError = "";
+     let firstnameError = "";
+     let lastnameError = "";
+     let emailError = "";
+-    // let dobError = "";
+     let licenseError = "";
+ 
+     if (!this.state.username) {
+@@ -138,9 +127,6 @@
+     if (isNaN(this.state.license) || !this.state.license) {
+       licenseError = "invalid license number";
+     }
+-    // if (isNaN(this.state.dob) ||  !this.state.dob) {
+-    //   dobError = "invalid date of birth"
+-    // }
+     if (!this.state.email.includes("@") || !this.state.email) {
+       emailError = "invalid email";
+     }
+@@ -169,7 +155,6 @@
+   handleSubmit(event) {
+     event.preventDefault();
+     console.log("handleSubmit");
+-
+     axios
+       .post("/user/login", {
+         username: this.state.username,
+@@ -179,11 +164,6 @@
+         console.log("login response: ");
+         console.log(response);
+         if (response.status === 200) {
+-          // update App.js state
+-          // this.props.updateUser({
+-          //     loggedIn: true,
+-          //     username: response.data.username
+-          // })
+           // update the state to redirect to home
+           this.setState({
+             redirectTo: "/searchresult"
+@@ -197,8 +177,6 @@
+   }
+ 
+   handleSubmitForm(event) {
+-    // event.preventDefault();
+-
+     //FORM VALIDATION
+     const isValid = this.validate();
+     if (isValid) {

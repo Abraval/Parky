@@ -16,11 +16,11 @@ class App extends Component {
       loggedIn: false,
       username: null,
       id: null,
+      _id: "",
       role: null
     };
 
     this.getUser = this.getUser.bind(this);
-    this.componentDidMount = this.componentDidMount.bind(this);
     this.updateUser = this.updateUser.bind(this);
   }
 
@@ -33,7 +33,7 @@ class App extends Component {
   }
 
   getUser() {
-    axios.get("/user/").then(response => {
+    axios.get("/user/:id").then(response => {
       console.log(response.data);
       if (response.data.user) {
         this.setState({

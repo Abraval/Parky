@@ -23,9 +23,6 @@ module.exports = {
     console.log("--");
     console.dir(req.body.location.coordinates[0]);
     console.log("++++++++++++++++++++++++");
-    var a = req.body.location;
-    var aTYPEOF = typeof a;
-    console.log("typeof is: ", a);
 
     req.body.location.type = "Point";
 
@@ -52,8 +49,7 @@ module.exports = {
       },
       renter: null
     })
-      // .populate("listing")
-      // .exec()
+      .populate("listing")
       .then(dbModel => {
         res.json(dbModel);
       })
@@ -83,8 +79,7 @@ module.exports = {
       .catch(err => res.json(err));
   },
   findAllNear: function(req, res) {
-    console.log("START: ---------------");
-
+    console.log("Find all near start");
     var long = req.query.data[0];
     var lat = req.query.data[1];
 
@@ -94,19 +89,10 @@ module.exports = {
     var floatLong = parseFloat(long);
     var floatLat = parseFloat(lat);
 
-    console.log("1: ", (req.query.data[0].type = "Point"));
-    console.log("2: ", req.query.data[0].type);
-
-    console.log("line 111 typeof Long Point", long);
-
-    console.log(floatLong);
-    console.log(floatLat);
-
-    console.log("END: ---------------");
+    console.log("Find all near end");
     db.Listing.syncIndexes().then(index => {
       console.log("indexes:", index);
     });
-
     db.Listing.find({
       location: {
         $near: {
@@ -118,33 +104,30 @@ module.exports = {
         }
       }
     })
-      .find((error, results) => {
+      .find(error => {
         if (error) console.log(error);
-        console.log(JSON.stringify(results, 0, 2));
       })
       .then(data => res.json(data))
-      .catch(err => res.status(422).json(err));
+      .catch(err => res.status(422).json(err.message));
   },
   updateAvailabilityUser: function(req, res) {
     console.log("UPDATE USER", req.body);
-
     const earning = req.body.price;
     const date = new Date();
     const earningObject = { amount: earning, date: date };
-
     console.log("line 154: ", req.body.renter);
-
     //Find a listing and push an earning into it's earning array
     db.Listing.findOneAndUpdate(
       { _id: req.body.listing },
       { $push: { earnings: earningObject } },
-      { new: true, upsert: true }
+      {
+        new: true,
+        upsert: true
+      }
     )
       .then(() => {
         // Find an availability and update it with new availability info
-
         console.log("req.body inside of findeOne", req.body);
-
         db.Availability.findOneAndUpdate(
           {
             listing: req.body.listing,
@@ -168,49 +151,19 @@ module.exports = {
           error: error
         });
       });
-    // .then(function(dbAvailability) {
-    //   db.Listing.findOneAndUpdate(
-    //     {
-    //       _id: req.body.listing
-    //     },
-    //     {
-    // $set: {
-    // reserved: true,
-    // renter: mongoose.Types.ObjectId(req.body.userId)
-    // }
-    //   }
-    // )
-
-    // });
   },
   deleteListing: function(req, res) {
-    // db.Listing.remove({ _id: req.params.id })
-    const { id } = req.params.id;
-    db.Availability.remove({ listing: id })
-
-      .exec()
+    db.Listing.findById({ _id: req.params.id })
       .then(dbModel => dbModel.deleteOne())
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
-  // createAvailabilityInDialog: function(req, res) {
-  //   db.Availability.create(req.body)
-  //     .then(dbModel => res.json(dbModel))
-  //     .catch(err => res.status(422).json(err));
-  // },
   getAvailabilityByListingId: function(req, res) {
     const { id } = req.params;
     db.Availability.find({ listing: id })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
-  // deleteAvailability: function(req, res) {
-  //   console.log("req.params deleteAvailability", req.params)
-  //   const {id} = req.params
-  //   db.Availability.deleteOne({_id: id})
-  //   .then(dbModel => res.json(dbModel))
-  //   .catch(err => res.status(422).json(err));
-  // },
   deleteAvailability: function(req, res) {
     console.log("req.params deleteAvailability", req.params);
     const { id } = req.params;
@@ -221,9 +174,9 @@ module.exports = {
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
-
   findUser: function(req, res) {
-    db.User.findOne({ _id: req.user._id })
+    console.log("Req for FindUser: ", req.query.id);
+    db.User.findOne({ _id: req.query.id })
       .then(dbModel =>
         res.json({
           user: dbModel,
