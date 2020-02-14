@@ -7,13 +7,11 @@ import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import API from "../../utils/API";
 import DayPicker, { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
 // Material UI Cards imports
-import classnames from "classnames";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -94,15 +92,9 @@ class ListingCard extends React.Component {
   //You should only fetch availabilities when the modal opens
   //availabilites modal should be a class componenent.
   componentDidMount = () => {
-    console.log("props... ", this.props);
     this.processEarnings(this.props.earnings);
     API.getAvailabilitiesByListingId(this.props.id)
       .then(res => {
-        console.log("ListingCard.ComponentDIdMount res", res);
-        console.log(
-          "ListingCard.ComponentDIdMount this.props.id",
-          this.props.id
-        );
         const selectedDays = res.data.map(day => new Date(day.date));
         this.setState({
           selectedDays: [...selectedDays],
@@ -159,22 +151,16 @@ class ListingCard extends React.Component {
   handleInputChange = event => {
     let value = event.target.value;
     let name = event.target.name;
-    console.log(event.target.value);
     this.setState({
       [name]: value
     });
   };
 
   handleDateSubmit = event => {
-    console.log("this has been submitted!!");
     const currentSet = this.state.selectedDays;
 
     const initialSelectedDays = this.state.initialAvailabilities.map(
       day => new Date(day.date)
-    );
-    console.log(
-      "listingCard.handleDateSubmit initialSelectedDays",
-      initialSelectedDays
     );
     const initialSet = initialSelectedDays;
 
@@ -197,14 +183,6 @@ class ListingCard extends React.Component {
       return found;
     });
 
-    console.log(
-      "ListingCard.handleDateSubmit ",
-      "removedElements",
-      removedElements,
-      "addedElements",
-      addedElements
-    );
-
     addedElements.forEach(day => {
       API.createAvailability({
         date: day,
@@ -223,10 +201,8 @@ class ListingCard extends React.Component {
 
   handleListingUpdate = event => {
     this.setState({ open: false });
-    console.log("ListingCard.handleListingUpdate this.state", this.state);
     API.editListing(this.state)
       .then(res => {
-        console.log("ListingCard.handleListingUpdate res", res);
         this.props.loadListings();
       })
 
@@ -262,13 +238,7 @@ class ListingCard extends React.Component {
         lastMonthEarnings += earning.amount;
       }
     });
-    console.log(
-      "earnings....",
-      "Total",
-      totalEarnings,
-      lastWeekEarnings,
-      lastMonthEarnings
-    );
+
     this.setState({
       lastWeekEarnings,
       lastMonthEarnings,
@@ -295,8 +265,6 @@ class ListingCard extends React.Component {
   }
 
   handleDayClick(day, { selected }) {
-    console.log("ListingCard.handleDayClick day", day);
-    console.log("ListingCard.handleDayClick selected", selected);
     const { selectedDays } = this.state;
     if (selected) {
       const selectedIndex = selectedDays.findIndex(selectedDay =>
@@ -313,8 +281,6 @@ class ListingCard extends React.Component {
   };
 
   render() {
-    console.log(this.state);
-    console.log(this.props);
     const { classes } = this.props;
     return (
       <Card className={classes.card} style={{ position: "relative" }}>

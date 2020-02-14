@@ -5,45 +5,34 @@ import axios from "axios";
 import DayPicker, { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import API from "../../utils/API";
-import { ListingList, ListingListItem } from "../../components/ListingList";
 import moment from "moment";
 // Material UI Grid Layout imports
 import PropTypes, { func } from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import FormLabel from "@material-ui/core/FormLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import Radio from "@material-ui/core/Radio";
 import Paper from "@material-ui/core/Paper";
 //Material Dialog
-import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-//end Dialog
 // Material UI Card Imports
 import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import ButtonBase from "@material-ui/core/ButtonBase";
 //Material UI Search Bar Imports
 import InputBase from "@material-ui/core/InputBase";
-import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 //Material UI Grid List
 import GridList from "@material-ui/core/GridList";
-import GridListTile from "@material-ui/core/GridListTile";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Loader from "../../components/Loader";
+//Material UI Popover
+import Popover from "@material-ui/core/Popover";
+import DateRangeIcon from "@material-ui/icons/DateRange";
+import RoomIcon from "@material-ui/icons/Room";
 
 const styles = theme => ({
   root: {
@@ -52,9 +41,17 @@ const styles = theme => ({
   },
   searchBar: {
     padding: "2px 4px",
-    margin: "8px 0",
+    margin: "8px",
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
+    width: "400px"
+  },
+  dateBar: {
+    padding: "2px 4px",
+    margin: "8px 0px",
+    display: "flex",
+    alignItems: "center",
+    width: "200px"
   },
   paper: {
     padding: "8px 10px",
@@ -62,6 +59,15 @@ const styles = theme => ({
     textAlign: "center",
     color: theme.palette.text.secondary,
     height: "100%"
+  },
+  searchPaper: {
+    padding: "8px 10px",
+    margin: "auto",
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+    height: "100%",
+    display: "flex",
+    justifyContent: "center"
   },
   card: {
     width: "100%",
@@ -79,10 +85,14 @@ const styles = theme => ({
     minWidth: "250px"
   },
   bookingContainer: {
-    minWidth: "400px"
+    minWidth: "400px",
+    marginLeft: "30px",
+    marginTop: "10px"
   },
   mapContainer: {
-    minWidth: "400px"
+    minWidth: "400px",
+    marginRight: "30px",
+    marginTop: "10px"
   },
   image: {
     width: 180,
@@ -103,8 +113,16 @@ const styles = theme => ({
   },
   iconButton: {
     padding: 10
+  },
+  typography: {
+    margin: theme.spacing.unit * 2
+  },
+  error: {
+    textAlign: "center",
+    marginTop: "3px"
   }
 });
+
 class SearchResult extends Component {
   state = {
     //Dialog
@@ -132,8 +150,8 @@ class SearchResult extends Component {
     fullWidth: true,
     maxWidth: "sm",
     buttonClicked: false,
-    isFetching: false
-    // availId: ""
+    isFetching: false,
+    anchorEl: null
   };
 
   handleChange = key => (event, value) => {
@@ -141,8 +159,6 @@ class SearchResult extends Component {
       [key]: value
     });
   };
-
-
 
   handleClickOpen = (id, address, title, href, city, state, zipcode, price) => {
     this.setState({
@@ -162,9 +178,19 @@ class SearchResult extends Component {
     this.setState({ open: false });
   };
 
-  componentDidMount() {
-    // window.highlightCorrespondingCard = this.highlightCorrespondingCard;
+  handleClick = event => {
+    this.setState({
+      anchorEl: event.currentTarget
+    });
+  };
 
+  handlePopClose = () => {
+    this.setState({
+      anchorEl: null
+    });
+  };
+
+  componentDidMount() {
     this.renderMap();
     this.userInfo().then(response =>
       this.setState(
@@ -176,10 +202,6 @@ class SearchResult extends Component {
     );
   }
 
-  componentWillUnmount() {
-    // window.highlightCorrespondingCard = null;
-  }
-
   tester() {
     console.log(this.state.user);
   }
@@ -189,6 +211,7 @@ class SearchResult extends Component {
   }
 
   componentDidUpdate(prevProps, props) {
+<<<<<<< HEAD
     // console.log(prevProps);
     // console.log(props);
 
@@ -207,17 +230,16 @@ class SearchResult extends Component {
     // console.log(props.addressQuery === ""); 
     // console.log(props.addressQuery !== ""); 
 
+=======
+>>>>>>> 10590b525ae7c886031e29e96a5d9fb89c40a139
     if (props.searchState === true) {
-      this.renderMap(); 
+      this.renderMap();
     }
 
-
-    // this.renderMap(); 
     if (this.state.markerData !== props.markerData) {
       // console.log("componentDidUpdate called");
       // this.renderMap();
     }
-
   }
 
   handleBookClick = (id, address, title, href, city, state, zipcode, price) => {
@@ -254,7 +276,6 @@ class SearchResult extends Component {
   constructor(props) {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
-    // this.highlightCorrespondingCard = this.highlightCorrespondingCard.bind(this);
   }
 
   handleDayClick(day, { selected }) {
@@ -273,9 +294,9 @@ class SearchResult extends Component {
   }
 
   handleInputChange = event => {
-    const { name, value } = event.target; 
+    const { name, value } = event.target;
 
-    this.setState({searchState: false}); 
+    this.setState({ searchState: false });
 
     this.setState({
       [name]: value
@@ -283,33 +304,24 @@ class SearchResult extends Component {
   };
 
   checkForAddress = () => {
-
-    this.setState({ isFetching: false });
-
     this.setState({ buttonClicked: true });
 
     if (this.state.addressQuery) {
-
       this.getAddress();
 
       this.setState({ isFetching: true });
-
     }
-
-  }
+  };
 
   handleSubmitSearch = e => {
-
     e.preventDefault();
 
     this.setState({ searchState: true });
 
-    this.checkForAddress(); 
-
+    this.checkForAddress();
   };
 
   findRelevantListings = () => {
-
     const formattedDates = this.state.selectedDays.map(date =>
       date.toISOString()
     );
@@ -319,18 +331,13 @@ class SearchResult extends Component {
     this.setState({ listings: [] });
 
     API.getAvailableListings(formattedDates).then(res => {
-      // console.log("here", res);
-
       let emptyArr = []; // these are the items that we are displaying
       const datesLength = formattedDates.length;
       for (let i = 0; i < res.data.length; i++) {
         let count = 0;
         for (let j = 0; j < res.data.length; j++) {
-          // console.log(res.data[i].listing === res.data[j].listing);
           if (res.data[i].listing === res.data[j].listing) {
             count++;
-            // console.log(count);
-            // console.log(emptyArr.findIndex(x => x.listing === res.data[i].listing) === -1);
             if (
               count == datesLength &&
               emptyArr.findIndex(x => x.listing === res.data[i].listing) === -1
@@ -341,13 +348,17 @@ class SearchResult extends Component {
         }
       }
 
+      console.log("356: " + emptyArr.length);
+      if (emptyArr.length === 0) {
+        this.setState({
+          isFetching: false
+        });
+      }
+
       /******************************************Start******************************************/
 
-      // console.log("API.getAvailableListings Called");
-
-      console.log("1", this.state.latitude); 
-      console.log("1 long", this.state.longitude); 
       const promiseArray = emptyArr.map(item => {
+<<<<<<< HEAD
 
         console.log("Promise is invokved"); 
 
@@ -394,10 +405,23 @@ class SearchResult extends Component {
                 if (listing.data[0]._id === item.data[i]._id) {
                   this.setState(
                     {
+=======
+        return new Promise((resolve, reject) => {
+          return resolve(
+            API.getListingById(item.listing).then(listing => {
+              var longLatArray = [this.state.longitude, this.state.latitude];
+
+              API.getListingByIdAndProximity(longLatArray).then(item => {
+                for (let i = 0; i < item.data.length; i++) {
+                  if (listing.data[0]._id === item.data[i]._id) {
+                    this.setState({
+>>>>>>> 10590b525ae7c886031e29e96a5d9fb89c40a139
                       cardsArray: [...this.state.cardsArray, [item.data[i]]],
                       isFetching: false
                     });
+                  }
                 }
+<<<<<<< HEAD
               }
             });
   
@@ -422,22 +446,38 @@ class SearchResult extends Component {
                   data.zipcode,
                   data.price,
                   data.parkingtype
+=======
+              });
+
+              const data = listing.data[0];
+
+              this.setState({
+                markerData: [
+                  ...this.state.markerData,
+                  [
+                    data.address,
+                    data.location.coordinates[1],
+                    data.location.coordinates[0],
+                    data.title,
+                    data.streetName,
+                    data.neighborhood,
+                    data.photo,
+                    data._id,
+                    data.city,
+                    data.state,
+                    data.zipcode,
+                    data.price,
+                    data.parkingtype
+                  ]
+>>>>>>> 10590b525ae7c886031e29e96a5d9fb89c40a139
                 ]
-              ]
-            });
-  
-            
-          }))
-
-        
-
-        })
-        
-        // this.initMap(); 
-
-        // setTimeout(() => { this.initMap(); }, 2000);
+              });
+            })
+          );
+        });
       });
 
+<<<<<<< HEAD
       Promise.all(promiseArray)
         .then( () => { this.initMap();  
           // this.setState({searchState: true});   
@@ -450,21 +490,27 @@ class SearchResult extends Component {
    
 
     // this.renderMap();
+=======
+      Promise.all(promiseArray).then(() => {
+        this.initMap();
+        console.log("promise callback is invoked");
+      });
+
+      /******************************************End******************************************/
+    });
+>>>>>>> 10590b525ae7c886031e29e96a5d9fb89c40a139
   };
 
   renderMap = () => {
-  
-    console.log("renderMap"); 
+    console.log("renderMap");
     loadScript(
       "https://maps.googleapis.com/maps/api/js?key=AIzaSyAqMhysRXqdWYWpzfxHxkxe3_SqVP-UnIo&callback=initMap"
     );
     window.initMap = this.initMap;
-    // console.log(this.state.markerData);
   };
 
   initMap = () => {
-    
-    console.log("initMap"); 
+    console.log("initMap");
 
     var map = new window.google.maps.Map(document.getElementById("map"), {
       center: { lat: this.state.latitude, lng: this.state.longitude },
@@ -479,15 +525,10 @@ class SearchResult extends Component {
     var contentString = this.state.address;
 
     for (let i = 0; i < this.state.cardsArray.length; i++) {
-
       let latitude = this.state.cardsArray[i][0].location.coordinates[1];
       let longitude = this.state.cardsArray[i][0].location.coordinates[0];
 
       var position = new window.google.maps.LatLng(latitude, longitude);
-
-      // "<button " + "onclick=window.highlightCorrespondingCard()" + ">Book Now</button>
-
-      // console.log(this.state.cardsArray); 
 
       marker = new window.google.maps.Marker({
         position: position,
@@ -502,7 +543,6 @@ class SearchResult extends Component {
         "click",
         ((marker, i) => {
           return () => {
-
             infoWindow.setContent(
               "<img width='100px' src=" +
                 this.state.cardsArray[i][0].photo +
@@ -530,7 +570,6 @@ class SearchResult extends Component {
       );
     }
 
-
     var circle = new window.google.maps.Circle({
       map: map,
       radius: 900, // 10 miles in metres
@@ -539,12 +578,15 @@ class SearchResult extends Component {
       strokeWeight: 0.5,
       center: { lat: this.state.latitude, lng: this.state.longitude }
     });
+<<<<<<< HEAD
     
     // console.log(marker);
 
     // circle.bindTo('center', marker, 'position');
 
 
+=======
+>>>>>>> 10590b525ae7c886031e29e96a5d9fb89c40a139
   };
 
   getAddress = async () => {
@@ -558,80 +600,109 @@ class SearchResult extends Component {
         }
       })
       .then(response => {
-        // console.log(
-        //   "Axios.get.then is called, setting state of latitude and longitude for the map"
-        // );
         var latitude = response.data.results[0].geometry.location.lat;
         var longitude = response.data.results[0].geometry.location.lng;
         this.setState({ latitude, longitude }, () => {
-          // console.log(
-          //   "inside the callback for this.setState latitude and longitude"
-          // );
-          // this.renderMap();
           this.findRelevantListings();
-          // this.functionA();
         });
-        // this.renderMap();
       });
   };
 
   render() {
     console.log(this.state.searchState); 
     const { classes } = this.props;
-    const { spacing } = this.state;
-    // console.log(this.state.markerData);
-    // console.log(this.state.cardsArray);
-    // console.log(this.state);
+    const { anchorEl } = this.state;
+    const open = Boolean(anchorEl);
     return (
       <div>
-        {/* {console.log(this.state.cardsArray)} */}
         <Nav />
         <div className={classes.root}>
-          <Grid className={classes.container} container spacing={8}>
-            <Grid className={classes.calendarContainer} item width={1 / 4}>
-              <Paper className={classes.paper} elevation={0}>
-                <form onSubmit={this.handleSubmitSearch}>
-                  <Paper className={classes.searchBar} elevation={1}>
-                    <InputBase
-                      className={classes.input}
-                      placeholder="Search for a spot"
-                      type="search"
-                      name="addressQuery"
-                      value={this.state.addressQuery}
-                      onChange={this.handleInputChange}
-                      disabled={false}
-                    />
-                    <IconButton
-                      className={classes.iconButton}
-                      aria-label="Search"
-                      type="submit"
-                      id="queryAddress"
-                    >
-                      <SearchIcon />
-                    </IconButton>
-                  </Paper>
-                </form>
-
-                {this.state.addressQuery.length === 0 && this.state.buttonClicked === true ? ( <span style={{ color: "red", fontFamily: "Roboto" }}>
-                    Please provide a valid address 
-                  </span>) : (" ")}
-
-
-                {this.state.selectedDays.length === 0 &&
-                this.state.addressQuery.length > 0 &&
+          <Grid item xs={12}>
+            <Paper className={classes.searchPaper} elevation={0}>
+              <form onSubmit={this.handleSubmitSearch}>
+                <Paper className={classes.searchBar} elevation={1}>
+                  <IconButton
+                    className={classes.iconButton}
+                    aria-label="Search"
+                    type="submit"
+                    id="queryAddress"
+                    disabled="true"
+                  >
+                    <RoomIcon />
+                  </IconButton>
+                  <InputBase
+                    className={classes.input}
+                    placeholder="Where?"
+                    type="search"
+                    name="addressQuery"
+                    value={this.state.addressQuery}
+                    onChange={this.handleInputChange}
+                    disabled={false}
+                  />
+                </Paper>
+                {this.state.addressQuery.length === 0 &&
                 this.state.buttonClicked === true ? (
-                  <span style={{ color: "red", fontFamily: "Roboto" }}>
-                    Please select a date(s)
-                  </span>
+                  <div style={{ color: "red", fontFamily: "Roboto" }}>
+                    Please provide a valid address
+                  </div>
                 ) : (
                   " "
                 )}
+              </form>
 
-                <Paper
-                  className={classes.calendar}
-                  elevation={0}
-                  style={{ fontFamily: "Roboto" }}
-                >
+              <form onClick={this.handleClick}>
+                <Paper className={classes.dateBar} elevation={1}>
+                  <IconButton
+                    className={classes.iconButton}
+                    aria-label="Search"
+                    type="submit"
+                    disabled="true"
+                  >
+                    <DateRangeIcon />
+                  </IconButton>
+                  <InputBase
+                    className={classes.input}
+                    placeholder={
+                      this.state.selectedDays.length === 0
+                        ? "When?"
+                        : "Date(s) Selected!"
+                    }
+                    type="search"
+                    disabled={false}
+                  />
+                </Paper>
+                {this.state.selectedDays.length === 0 &&
+                this.state.addressQuery.length > 0 &&
+                this.state.buttonClicked === true ? (
+                  <div style={{ color: "red", fontFamily: "Roboto" }}>
+                    Please select a date(s)
+                  </div>
+                ) : (
+                  " "
+                )}
+              </form>
+              <Button
+                className={classes.searchButton}
+                onClick={this.handleSubmitSearch}
+              >
+                <SearchIcon />
+              </Button>
+
+              <Popover
+                id="simple-popper"
+                open={open}
+                anchorEl={anchorEl}
+                onClose={this.handlePopClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center"
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center"
+                }}
+              >
+                <Typography className={classes.typography}>
                   <div>
                     <DayPicker
                       locale="en"
@@ -639,9 +710,12 @@ class SearchResult extends Component {
                       onDayClick={this.handleDayClick}
                     />
                   </div>
-                </Paper>
-              </Paper>
-            </Grid>
+                </Typography>
+              </Popover>
+            </Paper>
+          </Grid>
+
+          <Grid className={classes.container} container spacing={8}>
             <Grid className={classes.bookingContainer} item xs>
               <Paper
                 className={classes.paper}
@@ -650,16 +724,8 @@ class SearchResult extends Component {
               >
                 <div>
                   <GridList cellHeight={600} className={classes.gridList}>
+                    {this.state.isFetching && <Loader />}
 
-
-                  {/* {this.state.isFetching && this.state.cardsArray.length ? (<Loader />) : ( <h1 className="text-center" style={{ width: "100%" }}>
-                        No Spots to Display
-                      </h1>) }   */}
-
-                      {this.state.isFetching && <Loader />}
-
-
-                
                     {!this.state.markerData.length && !this.state.isFetching ? (
                       <h1 className="text-center" style={{ width: "100%" }}>
                         No Spots to Display
@@ -688,7 +754,6 @@ class SearchResult extends Component {
                                         price={spot[0].price}
                                         parkingtype={spot[0].parkingtype}
                                         handleBookClick={this.handleBookClick}
-                                        // handleDialogOpen={this.handleDialogOpen}
                                       >
                                         <img
                                           className={classes.img}
@@ -736,9 +801,7 @@ class SearchResult extends Component {
                                                 spot[0].city,
                                                 spot[0].state,
                                                 spot[0].zipcode,
-                                                spot[0].price 
-
-                                            
+                                                spot[0].price
                                               );
                                             }}
                                           >
