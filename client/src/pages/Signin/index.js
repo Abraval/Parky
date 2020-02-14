@@ -604,7 +604,7 @@ class LoginForm extends Component {
                     marginTop: "5px"
                   }}
                 >
-                  Power User view:
+                  Credentials:
                 </Typography>
 
                 <Typography
@@ -614,27 +614,7 @@ class LoginForm extends Component {
                     fontSize: "16px"
                   }}
                 >
-                  <strong>Username:</strong> user
-                </Typography>
-                <Typography
-                  style={{
-                    fontFamily: "Roboto",
-                    color: "#84817a",
-                    fontSize: "16px"
-                  }}
-                >
-                  <strong>Password:</strong> test
-                </Typography>
-                <Typography
-                  style={{
-                    fontFamily: "Roboto",
-                    fontWeight: "bold",
-                    color: "#ef7939",
-                    fontSize: "16px",
-                    marginTop: "5px"
-                  }}
-                >
-                  Listing Owner view:
+                  <strong>Username:</strong> example
                 </Typography>
 
                 <Typography
@@ -644,17 +624,9 @@ class LoginForm extends Component {
                     fontSize: "16px"
                   }}
                 >
-                  <strong>Username:</strong> owner
+                  <strong>Password:</strong> example
                 </Typography>
-                <Typography
-                  style={{
-                    fontFamily: "Roboto",
-                    color: "#84817a",
-                    fontSize: "16px"
-                  }}
-                >
-                  <strong>Password:</strong> test
-                </Typography>
+
                 <Typography
                   style={{
                     fontFamily: "Roboto",
