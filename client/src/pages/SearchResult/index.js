@@ -488,6 +488,7 @@ class SearchResult extends Component {
   };
 
   render() {
+    console.log(this.state.searchState); 
     const { classes } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
