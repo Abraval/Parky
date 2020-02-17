@@ -600,7 +600,7 @@ class LoginForm extends Component {
                 >
                   Credentials:
                 </Typography>
-
+                  {/* example credentials */}
                 <Typography
                   style={{
                     fontFamily: "Roboto",
