@@ -3,8 +3,6 @@ import { Redirect } from "react-router-dom";
 import axios from "axios";
 import "./style.css";
 import App from "../../App";
-
-//
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -120,7 +118,6 @@ class LoginForm extends Component {
     let firstnameError = "";
     let lastnameError = "";
     let emailError = "";
-    // let dobError = "";
     let licenseError = "";
 
     if (!this.state.username) {
@@ -138,9 +135,6 @@ class LoginForm extends Component {
     if (isNaN(this.state.license) || !this.state.license) {
       licenseError = "invalid license number";
     }
-    // if (isNaN(this.state.dob) ||  !this.state.dob) {
-    //   dobError = "invalid date of birth"
-    // }
     if (!this.state.email.includes("@") || !this.state.email) {
       emailError = "invalid email";
     }
@@ -689,8 +683,8 @@ class LoginForm extends Component {
                   Users can create listings for their own parking spots under
                   the "Create" section of the application.
                   <br />
-                  You will be guided through submitting listing details, choosing
-                  availability, and confirming the new listing.
+                  You will be guided through submitting listing details,
+                  choosing availability, and confirming the new listing.
                 </Typography>
                 <Typography
                   style={{

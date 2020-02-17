@@ -65,8 +65,6 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   editListing: function(req, res) {
-    console.dir(req.body);
-    console.dir(req.body.listing.currentModalId);
     db.Listing.findOneAndUpdate(
       { _id: req.body.listing.currentModalId },
       {
@@ -83,8 +81,6 @@ module.exports = {
       .catch(err => res.json(err));
   },
   findAllNear: function(req, res) {
-    console.log("START: ---------------");
-
     var long = req.query.data[0];
     var lat = req.query.data[1];
 
@@ -168,20 +164,6 @@ module.exports = {
           error: error
         });
       });
-    // .then(function(dbAvailability) {
-    //   db.Listing.findOneAndUpdate(
-    //     {
-    //       _id: req.body.listing
-    //     },
-    //     {
-    // $set: {
-    // reserved: true,
-    // renter: mongoose.Types.ObjectId(req.body.userId)
-    // }
-    //   }
-    // )
-
-    // });
   },
   deleteListing: function(req, res) {
     // db.Listing.remove({ _id: req.params.id })
@@ -193,24 +175,12 @@ module.exports = {
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
-  // createAvailabilityInDialog: function(req, res) {
-  //   db.Availability.create(req.body)
-  //     .then(dbModel => res.json(dbModel))
-  //     .catch(err => res.status(422).json(err));
-  // },
   getAvailabilityByListingId: function(req, res) {
     const { id } = req.params;
     db.Availability.find({ listing: id })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
-  // deleteAvailability: function(req, res) {
-  //   console.log("req.params deleteAvailability", req.params)
-  //   const {id} = req.params
-  //   db.Availability.deleteOne({_id: id})
-  //   .then(dbModel => res.json(dbModel))
-  //   .catch(err => res.status(422).json(err));
-  // },
   deleteAvailability: function(req, res) {
     console.log("req.params deleteAvailability", req.params);
     const { id } = req.params;
