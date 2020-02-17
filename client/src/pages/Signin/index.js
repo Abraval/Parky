@@ -643,7 +643,7 @@ class LoginForm extends Component {
                     marginTop: "5px"
                   }}
                 >
-                  Search for parking spots in June 2020.
+                  Search for parking spots during the days of April 26-30 (inclusive)
                   <br />
                   Try using these Philly search queries:
                 </Typography>
@@ -656,8 +656,8 @@ class LoginForm extends Component {
                     marginTop: "5px"
                   }}
                 >
-                  - Queen Village Philadelphia
-                  <br />- 2320 E Gordon St Philadelphia PA 19125
+                  - "Graduate Hospital Philadelphia" 
+                  <br /> - "2105 South Street Philadelphia, PA 19146"
                 </Typography>
                 <Typography
                   style={{
